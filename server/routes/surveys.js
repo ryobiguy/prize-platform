@@ -5,9 +5,11 @@ const { auth } = require('../middleware/auth');
 const crypto = require('crypto');
 
 // TheoremReach postback endpoint (called when user completes survey)
-router.get('/theoremreach/postback', async (req, res) => {
+// Accept both GET and POST requests
+const handleTheoremReachPostback = async (req, res) => {
   try {
-    const { user_id, reward_cents, transaction_id, signature } = req.query;
+    // TheoremReach can send via query params (GET) or body (POST)
+    const { user_id, reward_cents, transaction_id, signature } = req.query.user_id ? req.query : req.body;
 
     // Verify the postback is from TheoremReach (security)
     const apiKey = process.env.THEOREMREACH_API_KEY;
@@ -60,7 +62,11 @@ router.get('/theoremreach/postback', async (req, res) => {
     console.error('TheoremReach postback error:', error);
     res.status(500).send('Error');
   }
-});
+};
+
+// Register the handler for both GET and POST
+router.get('/theoremreach/postback', handleTheoremReachPostback);
+router.post('/theoremreach/postback', handleTheoremReachPostback);
 
 // Manual survey completion (for SDK callback)
 router.post('/complete', auth, async (req, res) => {
