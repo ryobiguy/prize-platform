@@ -14,9 +14,22 @@ const handleTheoremReachPostback = async (req, res) => {
       method: req.method
     });
 
-    // TheoremReach can send via query params (GET) or body (POST)
-    const params = { ...req.query, ...req.body };
-    const { user_id, reward_cents, transaction_id, signature } = params;
+    // TheoremReach sends data in body.data for POST requests
+    let user_id, reward_cents, transaction_id, signature;
+    
+    if (req.body && req.body.data) {
+      // POST request with data in body
+      user_id = req.body.data.user_id;
+      transaction_id = req.body.data.external_transaction_id;
+      reward_cents = req.body.data.reward_cents;
+      signature = req.body.data.signature;
+    } else {
+      // GET request with query params
+      user_id = req.query.user_id;
+      reward_cents = req.query.reward_cents;
+      transaction_id = req.query.transaction_id;
+      signature = req.query.signature;
+    }
 
     // Handle test/ping requests from TheoremReach (user_id '123' is their test)
     if (!user_id || !transaction_id || !reward_cents || user_id === '123') {
