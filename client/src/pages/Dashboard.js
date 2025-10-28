@@ -24,6 +24,17 @@ const Dashboard = () => {
       setDashboardData(response.data);
     } catch (error) {
       console.error('Error fetching dashboard:', error);
+      // Set empty data to prevent crashes
+      setDashboardData({
+        stats: {
+          totalEntries: 0,
+          availableEntries: 0,
+          activePrizes: 0,
+          tasksCompleted: 0,
+          totalWins: 0
+        },
+        recentActivity: []
+      });
     } finally {
       setLoading(false);
     }
@@ -61,13 +72,13 @@ const Dashboard = () => {
 
       <div className="container">
         {/* Streak and Level Display */}
-        <StreakDisplay />
+        {/* <StreakDisplay /> */}
 
         {/* Instant Win Wheel */}
-        <SpinWheel onWin={(result) => {
+        {/* <SpinWheel onWin={(result) => {
           console.log('Prize won:', result);
           fetchDashboardData(); // Refresh dashboard data
-        }} />
+        }} /> */}
 
         {/* Stats Overview */}
         <div className="stats-grid">
@@ -191,10 +202,10 @@ const Dashboard = () => {
         )}
 
         {/* Achievements */}
-        <Achievements />
+        {/* <Achievements /> */}
 
         {/* Leaderboard */}
-        <Leaderboard />
+        {/* <Leaderboard /> */}
 
         {/* Quick Actions */}
         <div className="quick-actions">
