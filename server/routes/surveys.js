@@ -8,13 +8,20 @@ const crypto = require('crypto');
 // Accept both GET and POST requests
 const handleTheoremReachPostback = async (req, res) => {
   try {
+    console.log('TheoremReach postback received:', {
+      query: req.query,
+      body: req.body,
+      method: req.method
+    });
+
     // TheoremReach can send via query params (GET) or body (POST)
-    const { user_id, reward_cents, transaction_id, signature } = req.query.user_id ? req.query : req.body;
+    const params = { ...req.query, ...req.body };
+    const { user_id, reward_cents, transaction_id, signature } = params;
 
     // Handle test/ping requests from TheoremReach
-    if (!user_id || !transaction_id) {
-      console.log('TheoremReach test ping received');
-      return res.send('1'); // Return success for test requests
+    if (!user_id || !transaction_id || !reward_cents) {
+      console.log('TheoremReach test/ping request - returning success');
+      return res.status(200).send('1');
     }
 
     // Verify the postback is from TheoremReach (security)
