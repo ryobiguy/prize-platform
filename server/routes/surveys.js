@@ -11,6 +11,12 @@ const handleTheoremReachPostback = async (req, res) => {
     // TheoremReach can send via query params (GET) or body (POST)
     const { user_id, reward_cents, transaction_id, signature } = req.query.user_id ? req.query : req.body;
 
+    // Handle test/ping requests from TheoremReach
+    if (!user_id || !transaction_id) {
+      console.log('TheoremReach test ping received');
+      return res.send('1'); // Return success for test requests
+    }
+
     // Verify the postback is from TheoremReach (security)
     const apiKey = process.env.THEOREMREACH_API_KEY;
     const expectedSignature = crypto
