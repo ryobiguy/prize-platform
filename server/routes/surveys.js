@@ -18,8 +18,8 @@ const handleTheoremReachPostback = async (req, res) => {
     const params = { ...req.query, ...req.body };
     const { user_id, reward_cents, transaction_id, signature } = params;
 
-    // Handle test/ping requests from TheoremReach
-    if (!user_id || !transaction_id || !reward_cents) {
+    // Handle test/ping requests from TheoremReach (user_id '123' is their test)
+    if (!user_id || !transaction_id || !reward_cents || user_id === '123') {
       console.log('TheoremReach test/ping request - returning success');
       return res.status(200).send('1');
     }
