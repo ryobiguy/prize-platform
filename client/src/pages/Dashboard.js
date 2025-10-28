@@ -37,6 +37,17 @@ const Dashboard = () => {
     );
   }
 
+  if (!dashboardData || !dashboardData.stats) {
+    return (
+      <div className="dashboard-page">
+        <div className="container">
+          <h2>Unable to load dashboard</h2>
+          <p>Please try refreshing the page.</p>
+        </div>
+      </div>
+    );
+  }
+
   const { stats, recentActivity } = dashboardData;
 
   return (
@@ -102,7 +113,7 @@ const Dashboard = () => {
         </div>
 
         {/* Wins Section */}
-        {stats.totalWins > 0 && (
+        {stats.totalWins > 0 && user.wins && user.wins.length > 0 && (
           <div className="section">
             <div className="section-header">
               <h2>Your Wins 🎉</h2>
@@ -124,7 +135,7 @@ const Dashboard = () => {
         )}
 
         {/* Active Prize Entries */}
-        {user.prizeEntries.length > 0 && (
+        {user.prizeEntries && user.prizeEntries.length > 0 && (
           <div className="section">
             <div className="section-header">
               <h2>Your Prize Entries</h2>
@@ -155,7 +166,7 @@ const Dashboard = () => {
         )}
 
         {/* Recent Activity */}
-        {recentActivity.length > 0 && (
+        {recentActivity && recentActivity.length > 0 && (
           <div className="section">
             <div className="section-header">
               <h2>Recent Activity</h2>
