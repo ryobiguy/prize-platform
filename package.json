@@ -1,0 +1,37 @@
+{
+  "name": "prize-platform",
+  "version": "1.0.0",
+  "description": "Prize platform where users complete tasks to win prizes",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server/index.js",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd client && npm install",
+    "seed:prizes": "node server/seedPrizes.js",
+    "seed:tasks": "node server/seedTasks.js",
+    "seed:monetizable": "node server/seedMonetizableTasks.js",
+    "seed:all": "node server/seedPrizes.js && node server/seedMonetizableTasks.js"
+  },
+  "keywords": ["prize", "rewards", "tasks"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "axios": "^1.5.1",
+    "express-validator": "^7.0.1",
+    "cookie-parser": "^1.4.6",
+    "nodemailer": "^6.9.7",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "concurrently": "^8.2.1"
+  }
+}
