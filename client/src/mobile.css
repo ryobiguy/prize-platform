@@ -25,28 +25,69 @@
   .navbar-top {
     padding: 1rem !important;
     min-height: 80px !important;
+    position: relative;
   }
 
   .logo-image {
     height: 60px !important;
   }
 
+  .navbar-actions {
+    display: none !important;
+  }
+
+  .mobile-menu-btn {
+    display: block !important;
+    position: absolute !important;
+    right: 1rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-primary) !important;
+    cursor: pointer !important;
+    z-index: 1001 !important;
+  }
+
   .navbar-bottom {
     height: auto !important;
-    min-height: 45px !important;
+    min-height: 0 !important;
+    position: relative !important;
   }
 
   .navbar-menu {
+    position: fixed !important;
+    top: 80px !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: linear-gradient(135deg, #ff6b35 0%, #e85a2a 100%) !important;
     flex-direction: column !important;
     gap: 0 !important;
     padding: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease !important;
+    z-index: 1000 !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .navbar-menu.active {
+    max-height: 500px !important;
   }
 
   .nav-link {
     width: 100% !important;
     justify-content: center !important;
-    padding: 0.75rem 1rem !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    background: transparent !important;
+    height: auto !important;
+  }
+
+  .nav-link:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
   }
 
   /* Hero Section */
