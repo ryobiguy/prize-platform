@@ -47,11 +47,12 @@ const TheoremReachSurveys = ({ userId }) => {
     }
 
     // Open TheoremReach survey wall in new window
-    const surveyUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${apiKey}&user_id=${userId}`;
+    // Using iframe embed URL format
+    const surveyUrl = `https://theoremreach.com/survey_wall/show?api_key=${apiKey}&user_id=${userId}`;
     const surveyWindow = window.open(
       surveyUrl,
       'TheoremReach Surveys',
-      'width=800,height=600,scrollbars=yes,resizable=yes'
+      'width=900,height=700,scrollbars=yes,resizable=yes'
     );
 
     if (!surveyWindow) {
