@@ -46,26 +46,27 @@ const TheoremReachSurveys = ({ userId }) => {
       return;
     }
 
-    if (window.theoremReachSurveyWall) {
-      window.theoremReachSurveyWall.initWithApiKeyAndUserId(
-        apiKey,
-        userId,
-        {
-          onReward: (rewardAmount) => {
-            handleSurveyComplete(rewardAmount);
-          },
-          onSurveyWallOpen: () => {
-            console.log('Survey wall opened');
-          },
-          onSurveyWallClose: () => {
-            console.log('Survey wall closed');
-            fetchUserStats();
-          }
-        }
-      );
-      window.theoremReachSurveyWall.showSurveyWall();
+    // Open TheoremReach survey wall in new window
+    const surveyUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${apiKey}&user_id=${userId}`;
+    const surveyWindow = window.open(
+      surveyUrl,
+      'TheoremReach Surveys',
+      'width=800,height=600,scrollbars=yes,resizable=yes'
+    );
+
+    if (!surveyWindow) {
+      toast.error('Please allow popups to complete surveys');
     } else {
-      toast.error('Survey system loading, please try again');
+      toast.success('Survey wall opened! Complete surveys to earn entries.');
+      
+      // Check for window close
+      const checkClosed = setInterval(() => {
+        if (surveyWindow.closed) {
+          clearInterval(checkClosed);
+          fetchUserStats();
+          toast.info('Survey wall closed. Check your entries!');
+        }
+      }, 1000);
     }
   };
 
