@@ -13,17 +13,23 @@ const Dashboard = () => {
   const { user } = useAuth();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (user) {
+      fetchDashboardData();
+    }
+  }, [user]);
 
   const fetchDashboardData = async () => {
     try {
+      setError(null);
       const response = await axios.get('/api/users/dashboard');
+      console.log('Dashboard data received:', response.data);
       setDashboardData(response.data);
     } catch (error) {
       console.error('Error fetching dashboard:', error);
+      setError(error.message);
       // Set empty data to prevent crashes
       setDashboardData({
         stats: {
@@ -40,10 +46,37 @@ const Dashboard = () => {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="dashboard-page">
+        <div className="container">
+          <h2>Loading user data...</h2>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="dashboard-page">
-        <div className="loading">Loading dashboard...</div>
+        <div className="container" style={{ padding: '40px', textAlign: 'center' }}>
+          <h2>Loading dashboard...</h2>
+          <p>Please wait...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-page">
+        <div className="container" style={{ padding: '40px' }}>
+          <h2>Error Loading Dashboard</h2>
+          <p>Error: {error}</p>
+          <button onClick={fetchDashboardData} style={{ padding: '10px 20px', marginTop: '20px' }}>
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
@@ -51,9 +84,12 @@ const Dashboard = () => {
   if (!dashboardData || !dashboardData.stats) {
     return (
       <div className="dashboard-page">
-        <div className="container">
+        <div className="container" style={{ padding: '40px' }}>
           <h2>Unable to load dashboard</h2>
-          <p>Please try refreshing the page.</p>
+          <p>Dashboard data is missing.</p>
+          <button onClick={fetchDashboardData} style={{ padding: '10px 20px', marginTop: '20px' }}>
+            Retry
+          </button>
         </div>
       </div>
     );
