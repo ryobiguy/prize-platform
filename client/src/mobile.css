@@ -1,0 +1,308 @@
+/* Mobile Responsive Styles for Total Raffle */
+
+/* Base Mobile Styles */
+@media (max-width: 768px) {
+  /* Container adjustments */
+  .container {
+    padding: 1rem !important;
+    max-width: 100% !important;
+  }
+
+  /* Typography */
+  h1 {
+    font-size: 2rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  h3 {
+    font-size: 1.25rem !important;
+  }
+
+  /* Navbar Mobile */
+  .navbar-top {
+    padding: 1rem !important;
+    min-height: 80px !important;
+  }
+
+  .logo-image {
+    height: 60px !important;
+  }
+
+  .navbar-bottom {
+    height: auto !important;
+    min-height: 45px !important;
+  }
+
+  .navbar-menu {
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding: 0 !important;
+  }
+
+  .nav-link {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.75rem 1rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Hero Section */
+  .hero {
+    min-height: 400px !important;
+    padding: 2rem 1rem !important;
+  }
+
+  .hero-title {
+    font-size: 2rem !important;
+    letter-spacing: 1px !important;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem !important;
+    letter-spacing: 1px !important;
+  }
+
+  .hero-cta {
+    padding: 1rem 2rem !important;
+    font-size: 1rem !important;
+    letter-spacing: 1px !important;
+  }
+
+  /* Stats Grid */
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .stat-card {
+    padding: 1.5rem !important;
+  }
+
+  /* Featured Section */
+  .featured-section {
+    padding: 2rem 1rem !important;
+  }
+
+  .section-header {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    text-align: center !important;
+  }
+
+  /* Prizes Grid */
+  .prizes-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .prize-card {
+    padding: 1rem !important;
+  }
+
+  .prize-image {
+    height: 200px !important;
+  }
+
+  /* Dashboard */
+  .dashboard-header {
+    padding: 2rem 1rem !important;
+  }
+
+  .dashboard-page h1 {
+    font-size: 1.75rem !important;
+  }
+
+  /* Quick Actions */
+  .quick-actions {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .action-card {
+    padding: 1.5rem !important;
+  }
+
+  /* Tasks Page */
+  .tasks-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .task-card {
+    padding: 1rem !important;
+  }
+
+  /* Auth Pages */
+  .auth-container {
+    padding: 2rem 1rem !important;
+    margin: 1rem !important;
+  }
+
+  .auth-form input,
+  .auth-form button {
+    font-size: 1rem !important;
+  }
+
+  /* Buttons */
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  /* Entry Cards */
+  .entries-list {
+    gap: 1rem !important;
+  }
+
+  .entry-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 1rem !important;
+  }
+
+  /* Leaderboard */
+  .leaderboard-item {
+    padding: 1rem !important;
+  }
+
+  /* Achievements */
+  .achievements-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Spin Wheel */
+  .spin-wheel-container {
+    padding: 1rem !important;
+  }
+
+  .wheel {
+    width: 280px !important;
+    height: 280px !important;
+  }
+
+  /* Footer */
+  .footer-content {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 2rem !important;
+  }
+
+  .footer-section {
+    width: 100% !important;
+  }
+
+  /* Tables */
+  table {
+    font-size: 0.875rem !important;
+  }
+
+  th, td {
+    padding: 0.5rem !important;
+  }
+
+  /* Modal */
+  .modal-content {
+    width: 95% !important;
+    margin: 1rem !important;
+    padding: 1.5rem !important;
+  }
+
+  /* Hide on mobile */
+  .hide-mobile {
+    display: none !important;
+  }
+
+  /* Show only on mobile */
+  .show-mobile {
+    display: block !important;
+  }
+
+  /* Spacing */
+  .section {
+    padding: 2rem 1rem !important;
+  }
+
+  /* Cards */
+  .card {
+    padding: 1rem !important;
+  }
+
+  /* Flexbox adjustments */
+  .flex-row-mobile {
+    flex-direction: column !important;
+  }
+
+  /* Text alignment */
+  .text-center-mobile {
+    text-align: center !important;
+  }
+}
+
+/* Small Mobile (< 480px) */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.75rem !important;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem !important;
+  }
+
+  .hero-cta {
+    padding: 0.875rem 1.5rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .stat-card {
+    padding: 1rem !important;
+  }
+
+  .prize-card {
+    padding: 0.875rem !important;
+  }
+
+  .wheel {
+    width: 240px !important;
+    height: 240px !important;
+  }
+}
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 720px !important;
+  }
+
+  .prizes-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .tasks-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  button,
+  a,
+  .clickable {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  /* Remove hover effects on touch devices */
+  .nav-link:hover,
+  .btn-primary:hover,
+  .prize-card:hover {
+    transform: none !important;
+  }
+}
