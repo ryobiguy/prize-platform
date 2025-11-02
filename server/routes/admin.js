@@ -389,6 +389,7 @@ router.post('/setup-prizes-once', adminAuth, async (req, res) => {
         totalWinners: 1,
         status: 'active',
         featured: true,
+        drawFrequency: 'daily',
         startDate: today,
         endDate: tomorrow,
         drawDate: tomorrow
@@ -404,6 +405,7 @@ router.post('/setup-prizes-once', adminAuth, async (req, res) => {
         totalWinners: 1,
         status: 'active',
         featured: true,
+        drawFrequency: 'weekly',
         startDate: today,
         endDate: nextWeek,
         drawDate: nextWeek
@@ -419,6 +421,7 @@ router.post('/setup-prizes-once', adminAuth, async (req, res) => {
         totalWinners: 1,
         status: 'active',
         featured: true,
+        drawFrequency: 'monthly',
         startDate: today,
         endDate: nextMonth,
         drawDate: nextMonth
