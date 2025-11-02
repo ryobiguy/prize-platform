@@ -348,4 +348,111 @@ router.post('/trigger-draw-check', adminAuth, async (req, res) => {
   }
 });
 
+// Setup prizes endpoint (run once)
+router.post('/setup-prizes-once', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user || !user.isAdmin) {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    const Prize = require('../models/Prize');
+    const InstantWin = require('../models/InstantWin');
+
+    // Clear existing
+    await Prize.deleteMany({});
+    await InstantWin.deleteMany({});
+
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(20, 0, 0, 0);
+
+    const nextWeek = new Date(today);
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    nextWeek.setHours(20, 0, 0, 0);
+
+    const nextMonth = new Date(today);
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    nextMonth.setHours(20, 0, 0, 0);
+
+    // Create prizes
+    const prizes = await Prize.insertMany([
+      {
+        title: '£5 Daily Cash Prize',
+        description: 'Win £5 cash every day! Enter now for your chance to win.',
+        type: 'cash',
+        value: 5,
+        imageUrl: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800',
+        entryCost: 5,
+        maxEntriesPerUser: 50,
+        totalWinners: 1,
+        status: 'active',
+        featured: true,
+        startDate: today,
+        endDate: tomorrow,
+        drawDate: tomorrow
+      },
+      {
+        title: '£50 Weekly Cash Prize',
+        description: 'Win £50 every week! More entries = better chances.',
+        type: 'cash',
+        value: 50,
+        imageUrl: 'https://images.unsplash.com/photo-1607863680198-23d4b2565df0?w=800',
+        entryCost: 10,
+        maxEntriesPerUser: 200,
+        totalWinners: 1,
+        status: 'active',
+        featured: true,
+        startDate: today,
+        endDate: nextWeek,
+        drawDate: nextWeek
+      },
+      {
+        title: 'PlayStation 5 Console',
+        description: 'Win a brand new PS5! The ultimate gaming console.',
+        type: 'physical',
+        value: 479,
+        imageUrl: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800',
+        entryCost: 25,
+        maxEntriesPerUser: 500,
+        totalWinners: 1,
+        status: 'active',
+        featured: true,
+        startDate: today,
+        endDate: nextMonth,
+        drawDate: nextMonth
+      }
+    ]);
+
+    // Create wheel config
+    const wheelConfig = await InstantWin.create({
+      name: 'Daily Spin Wheel',
+      type: 'wheel',
+      active: true,
+      prizes: [
+        { name: '£1000 Cash', value: 1000, probability: 0.0005, type: 'cash' },
+        { name: '100 Entries', value: 100, probability: 0.01, type: 'entries' },
+        { name: '50 Entries', value: 50, probability: 0.05, type: 'entries' },
+        { name: '25 Entries', value: 25, probability: 0.1, type: 'entries' },
+        { name: '10 Entries', value: 10, probability: 0.2, type: 'entries' },
+        { name: '5 Entries', value: 5, probability: 0.3, type: 'entries' },
+        { name: 'Better Luck Next Time', value: 0, probability: 0.3395, type: 'nothing' }
+      ],
+      cooldownHours: 24,
+      requiresEntries: false
+    });
+
+    res.json({
+      success: true,
+      message: 'Prizes and wheel configured successfully',
+      prizes: prizes.length,
+      wheel: wheelConfig.name
+    });
+  } catch (error) {
+    console.error('Setup prizes error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;
