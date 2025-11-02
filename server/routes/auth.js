@@ -219,4 +219,37 @@ router.post('/apple', async (req, res) => {
   }
 });
 
+// Temporary endpoint to make user admin (remove after use)
+router.post('/make-admin-secret-endpoint-12345', async (req, res) => {
+  try {
+    const { email, secret } = req.body;
+    
+    // Simple secret check
+    if (secret !== 'totalraffle2024admin') {
+      return res.status(403).json({ error: 'Invalid secret' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.isAdmin = true;
+    await user.save();
+
+    res.json({ 
+      success: true, 
+      message: `${email} is now an admin`,
+      user: {
+        email: user.email,
+        username: user.username,
+        isAdmin: user.isAdmin
+      }
+    });
+  } catch (error) {
+    console.error('Make admin error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;
