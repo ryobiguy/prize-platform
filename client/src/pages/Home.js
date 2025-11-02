@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../utils/axios';
 import { Trophy, Gift, CheckSquare, Users, ArrowRight } from 'lucide-react';
 import { mockPrizes } from '../mockData';
 import RecentWinners from '../components/RecentWinners';

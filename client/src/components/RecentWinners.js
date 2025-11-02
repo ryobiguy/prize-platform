@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../utils/axios';
 import { Trophy, Clock } from 'lucide-react';
 import './RecentWinners.css';
 

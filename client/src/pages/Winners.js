@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, Calendar, Gift } from 'lucide-react';
-import axios from 'axios';
+import axios from '../utils/axios';
 import './Winners.css';
 
 const Winners = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Gift, ExternalLink, TrendingUp, DollarSign } from 'lucide-react';
-import axios from 'axios';
+import axios from '../utils/axios';
 import toast from 'react-hot-toast';
 import './OfferWall.css';
 

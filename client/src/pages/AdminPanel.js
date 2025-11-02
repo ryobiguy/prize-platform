@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Gift, CheckSquare, Users, Trophy, DollarSign, TrendingUp, AlertCircle, Settings, Mail, Play } from 'lucide-react';
-import axios from 'axios';
+import axios from '../utils/axios';
 import toast from 'react-hot-toast';
 import './AdminPanel.css';
 

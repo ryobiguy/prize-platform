@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../utils/axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { CheckSquare, Twitter, Instagram, Youtube, Play, Award, DollarSign, FileText, Smartphone, Mail, Users, Gift } from 'lucide-react';

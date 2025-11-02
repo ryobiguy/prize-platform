@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, TrendingUp, DollarSign, Award, CheckCircle } from 'lucide-react';
-import axios from 'axios';
+import axios from '../utils/axios';
 import toast from 'react-hot-toast';
 import './TheoremReachSurveys.css';
 
