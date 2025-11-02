@@ -12,6 +12,9 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:3000',
   'https://prize-platform.vercel.app',
+  'https://www.totalraffle.co.uk',
+  'https://totalraffle.co.uk',
+  'https://totalraffle-axpmte1h-ryans-projects-2726563d.vercel.app',
   process.env.CLIENT_URL
 ].filter(Boolean);
 
