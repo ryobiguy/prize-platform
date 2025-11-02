@@ -218,6 +218,68 @@
   color: #333;
 }
 
+/* Iframe Overlay */
+.theoremreach-iframe-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.iframe-container {
+  width: 100%;
+  max-width: 1200px;
+  height: 90vh;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.iframe-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.iframe-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.close-iframe-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.close-iframe-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.iframe-container iframe {
+  flex: 1;
+  border: none;
+}
+
 @media (max-width: 768px) {
   .theoremreach-container {
     padding: 15px;
@@ -247,5 +309,14 @@
   .start-surveys-btn {
     padding: 15px 35px;
     font-size: 18px;
+  }
+
+  .iframe-container {
+    height: 95vh;
+    max-width: 100%;
+  }
+
+  .theoremreach-iframe-overlay {
+    padding: 10px;
   }
 }

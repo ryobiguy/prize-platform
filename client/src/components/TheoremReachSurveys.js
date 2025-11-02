@@ -6,6 +6,7 @@ import './TheoremReachSurveys.css';
 
 const TheoremReachSurveys = ({ userId }) => {
   const [loading, setLoading] = useState(false);
+  const [showIframe, setShowIframe] = useState(false);
   const [stats, setStats] = useState({
     completedSurveys: 0,
     totalEarned: 0
@@ -15,7 +16,6 @@ const TheoremReachSurveys = ({ userId }) => {
   
   useEffect(() => {
     fetchUserStats();
-    initializeTheoremReach();
   }, []);
 
   const fetchUserStats = async () => {
@@ -27,48 +27,20 @@ const TheoremReachSurveys = ({ userId }) => {
     }
   };
 
-  const initializeTheoremReach = () => {
-    if (!apiKey) {
-      console.log('TheoremReach API key not configured');
-      return;
-    }
-
-    // TheoremReach SDK is loaded in index.html
-    // Just wait for it to be available
-    if (!window.theoremReachSurveyWall) {
-      console.log('Waiting for TheoremReach SDK to load...');
-    }
-  };
-
   const openSurveyWall = () => {
     if (!apiKey) {
       toast.error('Survey system not configured');
       return;
     }
 
-    // Open TheoremReach survey wall in new window
-    // Using iframe embed URL format
-    const surveyUrl = `https://theoremreach.com/survey_wall/show?api_key=${apiKey}&user_id=${userId}`;
-    const surveyWindow = window.open(
-      surveyUrl,
-      'TheoremReach Surveys',
-      'width=900,height=700,scrollbars=yes,resizable=yes'
-    );
+    setShowIframe(true);
+    toast.success('Loading surveys...');
+  };
 
-    if (!surveyWindow) {
-      toast.error('Please allow popups to complete surveys');
-    } else {
-      toast.success('Survey wall opened! Complete surveys to earn entries.');
-      
-      // Check for window close
-      const checkClosed = setInterval(() => {
-        if (surveyWindow.closed) {
-          clearInterval(checkClosed);
-          fetchUserStats();
-          toast.info('Survey wall closed. Check your entries!');
-        }
-      }, 1000);
-    }
+  const closeSurveyWall = () => {
+    setShowIframe(false);
+    fetchUserStats();
+    toast.info('Survey wall closed. Checking for new entries...');
   };
 
   const handleSurveyComplete = async (rewardAmount) => {
@@ -85,6 +57,32 @@ const TheoremReachSurveys = ({ userId }) => {
       toast.error('Error recording survey completion');
     }
   };
+
+  // Iframe URL for TheoremReach
+  const iframeUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${apiKey}&user_id=${userId}`;
+
+  if (showIframe) {
+    return (
+      <div className="theoremreach-iframe-overlay">
+        <div className="iframe-container">
+          <div className="iframe-header">
+            <h3>TheoremReach Surveys</h3>
+            <button onClick={closeSurveyWall} className="close-iframe-btn">
+              ✕ Close
+            </button>
+          </div>
+          <iframe
+            src={iframeUrl}
+            title="TheoremReach Surveys"
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            allow="payment"
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="theoremreach-container">
