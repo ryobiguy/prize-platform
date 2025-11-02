@@ -33,15 +33,10 @@ const TheoremReachSurveys = ({ userId }) => {
       return;
     }
 
-    // Load TheoremReach SDK
+    // TheoremReach SDK is loaded in index.html
+    // Just wait for it to be available
     if (!window.theoremReachSurveyWall) {
-      const script = document.createElement('script');
-      script.src = 'https://theoremreach.com/static/v4/theoremreach.js';
-      script.async = true;
-      script.onload = () => {
-        console.log('TheoremReach SDK loaded');
-      };
-      document.body.appendChild(script);
+      console.log('Waiting for TheoremReach SDK to load...');
     }
   };
 
