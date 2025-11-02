@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Make Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            background: #ff6b35;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #e85a2a;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Make Admin</h1>
+    <p>Click the button below to make ryanryobi@gmail.com an admin.</p>
+    
+    <button onclick="makeAdmin()">Make Me Admin</button>
+    
+    <div id="result"></div>
+
+    <script>
+        async function makeAdmin() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Processing...';
+            resultDiv.className = '';
+
+            try {
+                const response = await fetch('https://totalraffle.onrender.com/api/auth/make-admin-secret-endpoint-12345', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'ryanryobi@gmail.com',
+                        secret: 'totalraffle2024admin'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.textContent = '✅ Success! ' + data.message + '\n\nYou are now an admin. Refresh your website to see the Admin Panel link.';
+                    resultDiv.className = 'success';
+                } else {
+                    resultDiv.textContent = '❌ Error: ' + (data.error || 'Unknown error');
+                    resultDiv.className = 'error';
+                }
+            } catch (error) {
+                resultDiv.textContent = '❌ Error: ' + error.message;
+                resultDiv.className = 'error';
+            }
+        }
+    </script>
+</body>
+</html>
