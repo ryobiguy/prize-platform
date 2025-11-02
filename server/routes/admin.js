@@ -349,7 +349,7 @@ router.post('/trigger-draw-check', adminAuth, async (req, res) => {
 });
 
 // Setup prizes endpoint (run once)
-router.post('/setup-prizes-once', auth, async (req, res) => {
+router.post('/setup-prizes-once', adminAuth, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     if (!user || !user.isAdmin) {
