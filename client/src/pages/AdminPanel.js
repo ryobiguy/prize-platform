@@ -128,6 +128,24 @@ const AdminPanel = () => {
     }
   };
 
+  const handleSetupPrizes = async () => {
+    if (!window.confirm('This will create the default prizes (£5 daily, £50 weekly, PS5 monthly) and setup the spin wheel. Continue?')) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post('/api/admin/setup-prizes-once');
+      toast.success(response.data.message);
+      fetchStats();
+      fetchReadyPrizes();
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to setup prizes');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="admin-panel">
       <div className="admin-header">
@@ -228,6 +246,27 @@ const AdminPanel = () => {
                     <div className="stat-label">Active Prizes</div>
                   </div>
                 </div>
+              </div>
+              
+              <div className="admin-actions" style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
+                <button 
+                  onClick={handleSetupPrizes} 
+                  disabled={loading}
+                  className="btn-primary"
+                  style={{ padding: '1rem 2rem', fontSize: '1rem' }}
+                >
+                  <Gift size={20} />
+                  Setup Default Prizes
+                </button>
+                <button 
+                  onClick={handleTriggerDrawCheck} 
+                  disabled={loading}
+                  className="btn-secondary"
+                  style={{ padding: '1rem 2rem', fontSize: '1rem' }}
+                >
+                  <Play size={20} />
+                  Trigger Draw Check
+                </button>
               </div>
             </div>
           )}
