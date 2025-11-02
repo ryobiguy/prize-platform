@@ -446,10 +446,60 @@ router.post('/setup-prizes-once', adminAuth, async (req, res) => {
       requiresEntries: false
     });
 
+    // Create default tasks
+    const Task = require('../models/Task');
+    await Task.deleteMany({}); // Clear existing tasks
+
+    const tasks = await Task.insertMany([
+      {
+        title: 'Watch Video Ad',
+        description: 'Watch a short video ad to earn entries instantly!',
+        type: 'watch_video_ad',
+        platform: 'admob',
+        entriesReward: 5,
+        isActive: true,
+        isRepeatable: true,
+        repeatInterval: 'none',
+        priority: 100,
+        verificationData: {
+          adProvider: 'admob',
+          adDuration: 30,
+          rewardAmount: 5
+        }
+      },
+      {
+        title: 'Complete Surveys',
+        description: 'Answer surveys and earn up to 800 entries! Powered by TheoremReach.',
+        type: 'complete_survey',
+        platform: 'survey',
+        entriesReward: 200,
+        isActive: true,
+        isRepeatable: true,
+        repeatInterval: 'none',
+        priority: 90,
+        verificationData: {
+          surveyProvider: 'theoremreach',
+          estimatedMinutes: 10
+        }
+      },
+      {
+        title: 'Daily Login Bonus',
+        description: 'Log in every day to earn bonus entries!',
+        type: 'daily_login',
+        platform: 'internal',
+        entriesReward: 10,
+        isActive: true,
+        isRepeatable: true,
+        repeatInterval: 'daily',
+        priority: 80
+      }
+    ]);
+
     res.json({
       success: true,
-      message: 'Prizes and wheel configured successfully',
+      message: 'Prizes, wheel, and tasks configured successfully',
       prizes: prizes.length,
+      tasks: tasks.length,
       wheel: wheelConfig.name
     });
   } catch (error) {
