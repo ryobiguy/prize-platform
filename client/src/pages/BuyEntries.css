@@ -1,0 +1,285 @@
+.buy-entries-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding-bottom: 60px;
+}
+
+.buy-entries-header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 60px 0;
+  text-align: center;
+  color: white;
+  margin-bottom: 60px;
+}
+
+.buy-entries-header h1 {
+  font-size: 48px;
+  margin: 0 0 15px 0;
+  font-weight: 800;
+}
+
+.buy-entries-header p {
+  font-size: 20px;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.package-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.package-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.package-card.popular {
+  border: 3px solid var(--accent-color);
+  transform: scale(1.05);
+}
+
+.package-card.popular:hover {
+  transform: scale(1.05) translateY(-10px);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.package-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-color) 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0.9;
+}
+
+.package-card h3 {
+  font-size: 24px;
+  margin: 0 0 20px 0;
+  color: #1f2937;
+}
+
+.package-price {
+  margin-bottom: 20px;
+}
+
+.package-price .currency {
+  font-size: 24px;
+  color: #6b7280;
+  vertical-align: top;
+}
+
+.package-price .amount {
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--accent-color);
+  line-height: 1;
+}
+
+.package-entries {
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.base-entries {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 5px;
+}
+
+.bonus-entries {
+  font-size: 16px;
+  font-weight: 700;
+  color: #10b981;
+  margin-bottom: 5px;
+}
+
+.total-entries {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-color);
+  padding-top: 10px;
+  border-top: 2px solid #e5e7eb;
+  margin-top: 10px;
+}
+
+.package-value {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.package-features {
+  margin-bottom: 25px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.feature svg {
+  color: #10b981;
+}
+
+.buy-button {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-color) 100%);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.buy-button:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.buy-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.buy-entries-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.info-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.info-section h3 {
+  font-size: 20px;
+  margin: 0 0 15px 0;
+  color: #1f2937;
+}
+
+.info-section p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.faq-section {
+  background: white;
+  border-radius: 20px;
+  padding: 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.faq-section h2 {
+  font-size: 32px;
+  margin: 0 0 40px 0;
+  text-align: center;
+  color: #1f2937;
+}
+
+.faq-item {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.faq-item h4 {
+  font-size: 18px;
+  margin: 0 0 10px 0;
+  color: #1f2937;
+}
+
+.faq-item p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .buy-entries-header h1 {
+    font-size: 32px;
+  }
+
+  .buy-entries-header p {
+    font-size: 16px;
+  }
+
+  .packages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .package-card.popular {
+    transform: scale(1);
+  }
+
+  .package-card.popular:hover {
+    transform: translateY(-10px);
+  }
+
+  .faq-section {
+    padding: 30px 20px;
+  }
+
+  .faq-section h2 {
+    font-size: 24px;
+  }
+}

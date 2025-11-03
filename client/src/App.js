@@ -21,6 +21,7 @@ import About from './pages/About';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import ContestRules from './pages/ContestRules';
+import BuyEntries from './pages/BuyEntries';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -61,6 +62,7 @@ function App() {
             <Route path="/tasks" element={<PrivateRoute><Tasks /></PrivateRoute>} />
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/my-entries" element={<PrivateRoute><MyEntries /></PrivateRoute>} />
+            <Route path="/buy-entries" element={<PrivateRoute><BuyEntries /></PrivateRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
