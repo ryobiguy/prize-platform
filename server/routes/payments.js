@@ -1,12 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
+
+// Initialize Stripe only if API key is available
+let stripe = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+} else {
+  console.warn('⚠️  Stripe API key not configured. Payment features will be disabled.');
+}
 
 // Create Stripe checkout session
 router.post('/create-checkout', auth, async (req, res) => {
   try {
+    if (!stripe) {
+      return res.status(503).json({ error: 'Payment system not configured' });
+    }
+
     const { packageId, entries, amount } = req.body;
     const user = await User.findById(req.userId);
 
@@ -51,6 +62,10 @@ router.post('/create-checkout', auth, async (req, res) => {
 
 // Stripe webhook handler
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({ error: 'Payment system not configured' });
+  }
+
   const sig = req.headers['stripe-signature'];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -91,6 +106,10 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 // Verify payment success
 router.get('/verify-session/:sessionId', auth, async (req, res) => {
   try {
+    if (!stripe) {
+      return res.status(503).json({ error: 'Payment system not configured' });
+    }
+
     const session = await stripe.checkout.sessions.retrieve(req.params.sessionId);
     
     if (session.payment_status === 'paid') {
