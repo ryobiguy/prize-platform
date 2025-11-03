@@ -5,6 +5,8 @@ import axios from '../utils/axios';
 import toast from 'react-hot-toast';
 import './BuyEntries.css';
 
+// Buy Entries Page - Stripe Integration
+
 const BuyEntries = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
