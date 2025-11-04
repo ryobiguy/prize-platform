@@ -33,8 +33,10 @@ const TheoremReachSurveys = ({ userId }) => {
       return;
     }
 
-    setShowIframe(true);
-    toast.success('Loading surveys...');
+    // Open TheoremReach in a new window instead of iframe
+    const surveyUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${apiKey}&user_id=${userId}`;
+    window.open(surveyUrl, '_blank', 'width=800,height=600');
+    toast.success('Survey window opened! Complete surveys and return here.');
   };
 
   const closeSurveyWall = () => {
@@ -57,32 +59,6 @@ const TheoremReachSurveys = ({ userId }) => {
       toast.error('Error recording survey completion');
     }
   };
-
-  // Iframe URL for TheoremReach
-  const iframeUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${apiKey}&user_id=${userId}`;
-
-  if (showIframe) {
-    return (
-      <div className="theoremreach-iframe-overlay">
-        <div className="iframe-container">
-          <div className="iframe-header">
-            <h3>TheoremReach Surveys</h3>
-            <button onClick={closeSurveyWall} className="close-iframe-btn">
-              ✕ Close
-            </button>
-          </div>
-          <iframe
-            src={iframeUrl}
-            title="TheoremReach Surveys"
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            allow="payment"
-          />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="theoremreach-container">
