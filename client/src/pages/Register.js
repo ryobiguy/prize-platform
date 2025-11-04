@@ -14,6 +14,14 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
+  const [captchaQuestion] = useState(() => {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    return { num1, num2, answer: num1 + num2 };
+  });
 
   const handleChange = (e) => {
     setFormData({
@@ -25,8 +33,26 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      alert('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number.');
+      return;
+    }
+    
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match!');
+      return;
+    }
+    
+    if (!agreedToTerms || !agreedToPrivacy) {
+      alert('Please agree to the Terms of Service and Privacy Policy to continue.');
+      return;
+    }
+    
+    if (parseInt(captchaAnswer) !== captchaQuestion.answer) {
+      alert('Incorrect CAPTCHA answer. Please try again.');
+      setCaptchaAnswer('');
       return;
     }
     
@@ -88,9 +114,12 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              minLength="6"
-              placeholder="Enter your password (min 6 characters)"
+              minLength="8"
+              placeholder="Min 8 characters, 1 uppercase, 1 lowercase, 1 number"
             />
+            <small style={{ color: '#666', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+              Must include uppercase, lowercase, and number
+            </small>
           </div>
 
           <div className="form-group">
@@ -104,6 +133,46 @@ const Register = () => {
               required
               placeholder="Confirm your password"
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="captcha">Security Check: What is {captchaQuestion.num1} + {captchaQuestion.num2}?</label>
+            <input
+              type="number"
+              id="captcha"
+              value={captchaAnswer}
+              onChange={(e) => setCaptchaAnswer(e.target.value)}
+              required
+              placeholder="Enter the answer"
+            />
+          </div>
+
+          <div className="consent-section">
+            <div className="consent-checkbox">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                required
+              />
+              <label htmlFor="terms">
+                I agree to the <Link to="/terms-of-service" target="_blank">Terms of Service</Link>
+              </label>
+            </div>
+
+            <div className="consent-checkbox">
+              <input
+                type="checkbox"
+                id="privacy"
+                checked={agreedToPrivacy}
+                onChange={(e) => setAgreedToPrivacy(e.target.checked)}
+                required
+              />
+              <label htmlFor="privacy">
+                I agree to the <Link to="/privacy-policy" target="_blank">Privacy Policy</Link> and consent to the collection and use of my personal data as described
+              </label>
+            </div>
           </div>
 
           <button type="submit" className="auth-submit-btn" disabled={loading}>

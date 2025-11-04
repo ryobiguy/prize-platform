@@ -22,6 +22,8 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import ContestRules from './pages/ContestRules';
 import BuyEntries from './pages/BuyEntries';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -69,6 +71,8 @@ function App() {
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/contest-rules" element={<ContestRules />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           </Routes>
           <Footer />
         </div>

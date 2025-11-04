@@ -26,6 +26,21 @@
   opacity: 0.9;
 }
 
+.legal-container {
+  max-width: 900px;
+  margin: 3rem auto;
+  background: white;
+  padding: 3rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.legal-container .last-updated {
+  color: #666;
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+}
+
 .legal-content {
   max-width: 900px;
   margin: 3rem auto;

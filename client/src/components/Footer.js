@@ -37,8 +37,8 @@ const Footer = () => {
           <div className="footer-section">
             <h4>Legal</h4>
             <ul>
-              <li><Link to="/terms">Terms & Conditions</Link></li>
-              <li><Link to="/privacy">Privacy Policy</Link></li>
+              <li><Link to="/terms-of-service">Terms of Service</Link></li>
+              <li><Link to="/privacy-policy">Privacy Policy</Link></li>
               <li><Link to="/contest-rules">Contest Rules</Link></li>
             </ul>
           </div>
