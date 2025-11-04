@@ -33,10 +33,9 @@ const TheoremReachSurveys = ({ userId }) => {
       return;
     }
 
-    // Open TheoremReach in a new window instead of iframe
+    // Redirect to TheoremReach (full page)
     const surveyUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${apiKey}&user_id=${userId}`;
-    window.open(surveyUrl, '_blank', 'width=800,height=600');
-    toast.success('Survey window opened! Complete surveys and return here.');
+    window.location.href = surveyUrl;
   };
 
   const closeSurveyWall = () => {
