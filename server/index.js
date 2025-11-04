@@ -14,7 +14,8 @@ const allowedOrigins = [
   'https://prize-platform.vercel.app',
   'https://www.totalraffle.co.uk',
   'https://totalraffle.co.uk',
-  'https://totalraffle-axpmte1h-ryans-projects-2726563d.vercel.app',
+  'http://www.totalraffle.co.uk',
+  'http://totalraffle.co.uk',
   process.env.CLIENT_URL
 ].filter(Boolean);
 
@@ -26,6 +27,8 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.some(allowed => origin.startsWith(allowed))) {
       callback(null, true);
     } else {
+      console.log('❌ CORS blocked origin:', origin);
+      console.log('Allowed origins:', allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },
