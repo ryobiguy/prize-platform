@@ -33,8 +33,15 @@ const TheoremReachSurveys = ({ userId }) => {
       return;
     }
 
+    if (!userId) {
+      toast.error('Please log in to access surveys');
+      return;
+    }
+
     // Redirect to TheoremReach (full page)
     const surveyUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${apiKey}&user_id=${userId}`;
+    console.log('Opening TheoremReach with URL:', surveyUrl);
+    console.log('User ID:', userId);
     window.location.href = surveyUrl;
   };
 
@@ -147,6 +154,11 @@ const TheoremReachSurveys = ({ userId }) => {
           <strong>Note:</strong> Entries are credited immediately after survey completion. 
           Survey availability depends on your demographics and location.
         </p>
+        {process.env.NODE_ENV === 'development' && (
+          <p style={{ fontSize: '12px', color: '#999', marginTop: '10px' }}>
+            Debug: User ID = {userId || 'Not logged in'}
+          </p>
+        )}
       </div>
     </div>
   );
