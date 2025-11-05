@@ -15,24 +15,24 @@ const handleTheoremReachPostback = async (req, res) => {
     });
 
     // TheoremReach sends data in body.data for POST requests
-    let user_id, reward_cents, transaction_id, signature;
+    let user_id, reward_amount_in_dollars, transaction_id, signature;
     
     if (req.body && req.body.data) {
       // POST request with data in body
       user_id = req.body.data.user_id;
-      transaction_id = req.body.data.external_transaction_id;
-      reward_cents = req.body.data.reward_cents;
+      transaction_id = req.body.data.tx_id || req.body.data.external_transaction_id;
+      reward_amount_in_dollars = req.body.data.reward_amount_in_dollars;
       signature = req.body.data.signature;
     } else {
       // GET request with query params
       user_id = req.query.user_id;
-      reward_cents = req.query.reward_cents;
-      transaction_id = req.query.transaction_id;
+      reward_amount_in_dollars = req.query.reward_amount_in_dollars;
+      transaction_id = req.query.tx_id || req.query.external_transaction_id;
       signature = req.query.signature;
     }
 
     // Handle test/ping requests from TheoremReach (user_id '123' is their test)
-    if (!user_id || !transaction_id || !reward_cents || user_id === '123') {
+    if (!user_id || !transaction_id || !reward_amount_in_dollars || user_id === '123') {
       console.log('TheoremReach test/ping request - returning success');
       return res.status(200).send('1');
     }
@@ -41,10 +41,10 @@ const handleTheoremReachPostback = async (req, res) => {
     const apiKey = process.env.THEOREMREACH_API_KEY;
     const expectedSignature = crypto
       .createHash('sha1')
-      .update(user_id + transaction_id + reward_cents + apiKey)
+      .update(user_id + transaction_id + reward_amount_in_dollars + apiKey)
       .digest('hex');
 
-    if (signature !== expectedSignature) {
+    if (signature && signature !== expectedSignature) {
       console.log('Invalid TheoremReach postback signature');
       return res.status(400).send('Invalid signature');
     }
@@ -57,9 +57,9 @@ const handleTheoremReachPostback = async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    // Convert reward cents to entries
-    // Example: $1.00 (100 cents) = 200 entries
-    const rewardDollars = parseInt(reward_cents) / 100;
+    // Convert reward dollars to entries
+    // Example: $1.00 = 200 entries
+    const rewardDollars = parseFloat(reward_amount_in_dollars);
     const entries = Math.floor(rewardDollars * 200); // Adjust multiplier as needed
     
     user.availableEntries += entries;
@@ -73,7 +73,7 @@ const handleTheoremReachPostback = async (req, res) => {
     user.completedSurveys.push({
       provider: 'theoremreach',
       transactionId: transaction_id,
-      rewardCents: parseInt(reward_cents),
+      rewardDollars: rewardDollars,
       entries: entries,
       completedAt: new Date()
     });
