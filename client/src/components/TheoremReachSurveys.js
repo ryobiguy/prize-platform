@@ -43,11 +43,14 @@ const TheoremReachSurveys = ({ userId }) => {
       return;
     }
 
-    // Redirect to TheoremReach (full page)
+    // Open TheoremReach in new tab with correct URL format
     const surveyUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${apiKey}&user_id=${userId}`;
     console.log('Opening TheoremReach with URL:', surveyUrl);
     console.log('User ID:', userId);
-    window.location.href = surveyUrl;
+    console.log('API Key:', apiKey);
+    
+    // Open in new window
+    window.open(surveyUrl, '_blank');
   };
 
   const closeSurveyWall = () => {
