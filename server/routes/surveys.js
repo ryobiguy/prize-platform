@@ -8,11 +8,11 @@ const crypto = require('crypto');
 // Accept both GET and POST requests
 const handleTheoremReachPostback = async (req, res) => {
   try {
-    console.log('TheoremReach postback received:', {
-      query: req.query,
-      body: req.body,
-      method: req.method
-    });
+    console.log('=== TheoremReach postback received ===');
+    console.log('Method:', req.method);
+    console.log('Query params:', JSON.stringify(req.query, null, 2));
+    console.log('Body:', JSON.stringify(req.body, null, 2));
+    console.log('Headers:', JSON.stringify(req.headers, null, 2));
 
     // TheoremReach sends data in body.data for POST requests
     let user_id, reward_amount_in_dollars, transaction_id, signature;
@@ -85,7 +85,11 @@ const handleTheoremReachPostback = async (req, res) => {
     // TheoremReach expects a 1 response for success
     res.send('1');
   } catch (error) {
-    console.error('TheoremReach postback error:', error);
+    console.error('=== TheoremReach postback error ===');
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    console.error('Request query:', req.query);
+    console.error('Request body:', req.body);
     res.status(500).send('Error');
   }
 };
