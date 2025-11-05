@@ -139,6 +139,15 @@ router.get('/stats', auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     
+    if (!user) {
+      return res.json({ 
+        stats: {
+          completedSurveys: 0,
+          totalEarned: 0
+        }
+      });
+    }
+    
     const stats = {
       completedSurveys: user.completedSurveys ? user.completedSurveys.length : 0,
       totalEarned: user.totalEntries || 0

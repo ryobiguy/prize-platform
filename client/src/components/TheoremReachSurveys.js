@@ -24,6 +24,11 @@ const TheoremReachSurveys = ({ userId }) => {
       setStats(response.data.stats);
     } catch (error) {
       console.error('Error fetching survey stats:', error);
+      // Set default stats if fetch fails
+      setStats({
+        completedSurveys: 0,
+        totalEarned: 0
+      });
     }
   };
 
