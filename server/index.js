@@ -29,6 +29,11 @@ app.use(cors({
       return callback(null, true);
     }
     
+    // Allow TheoremReach and AdGate
+    if (origin && (origin.includes('theoremreach.com') || origin.includes('adgatemedia.com'))) {
+      return callback(null, true);
+    }
+    
     if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.some(allowed => origin.startsWith(allowed))) {
       callback(null, true);
     } else {
