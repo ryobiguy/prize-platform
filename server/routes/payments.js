@@ -41,7 +41,8 @@ router.post('/create-checkout', auth, async (req, res) => {
           currency: 'GBP',
         },
         location_id: process.env.SQUARE_LOCATION_ID,
-        redirect_url: `${process.env.CLIENT_URL}/payment/success`,
+        // After successful payment, send the user back to their dashboard
+        redirect_url: `${process.env.CLIENT_URL}/dashboard`,
         note: `Package ${packageId} for user ${user._id.toString()}`,
       },
     };
