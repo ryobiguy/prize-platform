@@ -46,6 +46,11 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <p>&copy; 2025 Total Raffle. All rights reserved.</p>
+          <p className="footer-responsible">
+            18+ only. Please play responsibly. Total Raffle is for entertainment purposes only and is not a way to make
+            money. If you need support, visit{' '}
+            <a href="https://www.gamcare.org.uk/" target="_blank" rel="noreferrer">GamCare</a>.
+          </p>
         </div>
       </div>
     </footer>

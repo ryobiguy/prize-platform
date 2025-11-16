@@ -216,6 +216,14 @@ const BuyEntries = () => {
             <p>We accept all major credit/debit cards, Apple Pay, and Google Pay via Stripe.</p>
           </div>
         </div>
+
+        <div className="responsible-play">
+          <p>
+            <strong>18+ only.</strong> Please play responsibly. Total Raffle is for entertainment purposes and is not a
+            way to make money. If you feel your gambling is becoming a problem, seek help from organisations such as
+            <a href="https://www.gamcare.org.uk/" target="_blank" rel="noreferrer"> GamCare</a>.
+          </p>
+        </div>
       </div>
     </div>
   );
