@@ -52,43 +52,62 @@ const Terms = () => {
 
           <section>
             <h2>4. How the Platform Works</h2>
-            <h3>4.1 Earning Entries</h3>
-            <p>Users earn entries by:</p>
+            <h3>4.1 Purchasing Entries</h3>
+            <p>Users purchase entries through our secure payment system. Available entry packages:</p>
             <ul>
-              <li>Completing tasks (social media follows, surveys, etc.)</li>
-              <li>Watching video advertisements</li>
-              <li>Completing offers from third-party providers</li>
-              <li>Receiving promotional bonuses</li>
+              <li>Starter Pack: 100 entries for £0.99</li>
+              <li>Popular Pack: 525 entries (500 + 25 bonus) for £3.99</li>
+              <li>Mega Pack: 1,100 entries (1,000 + 100 bonus) for £6.99</li>
+              <li>Ultimate Pack: 1,500 entries (1,200 + 300 bonus) for £14.99</li>
             </ul>
 
-            <h3>4.2 Using Entries</h3>
+            <h3>4.2 Payment Processing</h3>
+            <p>All payments are processed securely through Checkout.com. We do not store payment card details.</p>
+
+            <h3>4.3 Using Entries</h3>
             <p>Entries can be used to enter prize draws. Once entries are used for a draw, they cannot be refunded or transferred.</p>
 
-            <h3>4.3 Entry Validity</h3>
-            <p>Entries do not expire but can only be used for active prize draws.</p>
+            <h3>4.4 Entry Validity</h3>
+            <p>Purchased entries do not expire and can be used for any active prize draws.</p>
+
+            <h3>4.5 No Refunds</h3>
+            <p>Due to the digital nature of entries, all sales are final. Entries cannot be refunded once purchased.</p>
           </section>
 
           <section>
-            <h2>5. Prize Draws</h2>
-            <h3>5.1 Draw Schedule</h3>
-            <p>Prize draws are conducted weekly, typically on Fridays at 8:00 PM GMT, unless otherwise stated.</p>
-
-            <h3>5.2 Minimum Entry Requirements</h3>
+            <h2>5. Prize Competitions & Draws</h2>
+            <h3>5.1 Legal Basis</h3>
             <p>
-              Each prize draw has a minimum entry requirement. If the minimum is not met by the draw date, 
-              the draw may be postponed or cancelled, and entries will be refunded to participants.
+              Total Raffle operates as a prize competition platform under UK law. This is a commercial venture 
+              where participants pay to enter prize draws with predetermined odds.
             </p>
 
-            <h3>5.3 Winner Selection</h3>
+            <h3>5.2 Draw Schedule</h3>
+            <p>Prize draws are conducted as advertised on each prize page, typically weekly unless otherwise stated.</p>
+
+            <h3>5.3 Minimum Entry Requirements</h3>
             <p>
-              Winners are selected randomly using a provably fair algorithm. More entries increase your chances 
-              of winning but do not guarantee a win.
+              Each prize draw has a minimum entry requirement to proceed. If the minimum is not met by the draw date, 
+              the draw will be cancelled and all entries will be refunded to participants' accounts.
             </p>
 
-            <h3>5.4 Winner Notification</h3>
+            <h3>5.4 Winner Selection</h3>
             <p>
-              Winners will be notified via email within 48 hours of the draw. Winners must respond within 7 days 
-              to claim their prize, or the prize may be forfeited.
+              Winners are selected randomly using a cryptographically secure random number generator. 
+              More entries increase your chances of winning but do not guarantee a win. 
+              The odds of winning depend on the total number of entries in each draw.
+            </p>
+
+            <h3>5.5 Winner Notification</h3>
+            <p>
+              Winners will be notified via email and displayed on our Winners page within 48 hours of the draw. 
+              Winners must respond within 14 days to claim their prize, or the prize may be re-drawn.
+            </p>
+
+            <h3>5.6 Responsible Gaming</h3>
+            <p>
+              We promote responsible participation. Please only spend what you can afford. 
+              If you feel you have a gambling problem, please seek help from organizations like GamCare.
             </p>
           </section>
 
@@ -100,79 +119,68 @@ const Terms = () => {
             <h3>6.2 Prize Substitution</h3>
             <p>We reserve the right to substitute prizes of equal or greater value if the advertised prize becomes unavailable.</p>
 
-            <h3>6.3 Taxes</h3>
-            <p>Winners are responsible for any taxes associated with prize winnings as required by law.</p>
+            <h3>6.3 Tax Obligations</h3>
+            <p>Winners are responsible for any tax obligations on prizes valued over £500. We will provide necessary documentation.</p>
           </section>
 
           <section>
-            <h2>7. Prohibited Activities</h2>
-            <p>You agree NOT to:</p>
+            <h2>7. Age Verification & Restrictions</h2>
+            <h3>7.1 Age Requirements</h3>
+            <p>You must be 18 years or older to purchase entries or participate in prize draws. We may request age verification documents.</p>
+
+            <h3>7.2 Geographic Restrictions</h3>
+            <p>This service is available to UK residents only. Prizes can only be shipped to UK addresses.</p>
+
+            <h3>7.3 Excluded Persons</h3>
+            <p>Employees of Total Raffle and their immediate family members are not eligible to participate.</p>
+          </section>
+
+          <section>
+            <h2>8. Payment Terms</h2>
+            <h3>8.1 Accepted Payment Methods</h3>
+            <p>We accept major credit/debit cards, Apple Pay, and Google Pay through our secure payment processor.</p>
+
+            <h3>8.2 Payment Security</h3>
+            <p>All payment data is processed securely and we do not store your payment card details.</p>
+
+            <h3>8.3 Failed Payments</h3>
+            <p>If a payment fails, entries will not be credited to your account until payment is successfully processed.</p>
+          </section>
+
+          <section>
+            <h2>9. Data Protection & Privacy</h2>
+            <p>
+              We process your personal data in accordance with UK GDPR and our Privacy Policy. 
+              By using our service, you consent to such processing and warrant that all data provided is accurate.
+            </p>
+          </section>
+
+          <section>
+            <h2>10. Prohibited Activities</h2>
+            <p>You agree not to:</p>
             <ul>
-              <li>Create multiple accounts or use fake identities</li>
-              <li>Use bots, scripts, or automated tools to earn entries</li>
-              <li>Manipulate or attempt to manipulate the draw system</li>
+              <li>Create multiple accounts</li>
+              <li>Use automated systems or bots</li>
+              <li>Attempt to manipulate or interfere with the platform</li>
               <li>Engage in fraudulent activity</li>
               <li>Violate any applicable laws or regulations</li>
-              <li>Harass, abuse, or harm other users</li>
-              <li>Reverse engineer or attempt to access our systems</li>
-              <li>Share or sell your account</li>
             </ul>
-          </section>
-
-          <section>
-            <h2>8. Account Termination</h2>
-            <p>We reserve the right to suspend or terminate your account at any time for:</p>
-            <ul>
-              <li>Violation of these Terms & Conditions</li>
-              <li>Fraudulent or suspicious activity</li>
-              <li>Providing false information</li>
-              <li>Any other reason at our sole discretion</li>
-            </ul>
-            <p>Upon termination, you forfeit all entries and any unclaimed prizes.</p>
-          </section>
-
-          <section>
-            <h2>9. Intellectual Property</h2>
-            <p>
-              All content on the Platform, including text, graphics, logos, images, and software, is the property of 
-              Total Raffle or its licensors and is protected by copyright and trademark laws.
-            </p>
-            <p>You may not reproduce, distribute, or create derivative works without our express written permission.</p>
-          </section>
-
-          <section>
-            <h2>10. Third-Party Services</h2>
-            <p>
-              The Platform integrates with third-party services (advertising networks, offer walls, payment processors). 
-              We are not responsible for the actions, content, or privacy practices of these third parties.
-            </p>
           </section>
 
           <section>
             <h2>11. Limitation of Liability</h2>
             <p>
-              To the fullest extent permitted by law, Total Raffle shall not be liable for any indirect, incidental, 
-              special, consequential, or punitive damages, or any loss of profits or revenues.
+              Total Raffle's liability is limited to the amount you have paid for entries. 
+              We are not liable for any indirect, incidental, or consequential damages.
             </p>
-            <p>Our total liability shall not exceed the value of entries in your account or £100, whichever is less.</p>
           </section>
 
           <section>
-            <h2>12. Disclaimers</h2>
-            <p>The Platform is provided "as is" without warranties of any kind. We do not guarantee:</p>
-            <ul>
-              <li>Uninterrupted or error-free operation</li>
-              <li>That defects will be corrected</li>
-              <li>That the Platform is free from viruses or harmful components</li>
-              <li>The accuracy or reliability of any information</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2>13. Indemnification</h2>
+            <h2>13. Contact Information</h2>
+            <p>For questions about these Terms & Conditions, please contact us at:</p>
             <p>
-              You agree to indemnify and hold harmless Total Raffle from any claims, damages, losses, liabilities, 
-              and expenses arising from your use of the Platform or violation of these Terms.
+              <strong>Email:</strong> legal@totalraffle.com<br />
+              <strong>Address:</strong> [Your Business Address]
             </p>
           </section>
 
@@ -185,33 +193,10 @@ const Terms = () => {
           </section>
 
           <section>
-            <h2>15. Governing Law</h2>
+            <h2>15. Entire Agreement</h2>
             <p>
-              These Terms are governed by the laws of England and Wales. Any disputes shall be subject to the 
-              exclusive jurisdiction of the courts of England and Wales.
-            </p>
-          </section>
-
-          <section>
-            <h2>16. Contact Information</h2>
-            <p>For questions about these Terms & Conditions, please contact us at:</p>
-            <p>
-              <strong>Email:</strong> legal@totalraffle.com<br />
-              <strong>Address:</strong> [Your Business Address]
-            </p>
-          </section>
-
-          <section>
-            <h2>17. Severability</h2>
-            <p>
-              If any provision of these Terms is found to be unenforceable, the remaining provisions will remain in full force and effect.
-            </p>
-          </section>
-
-          <section>
-            <h2>18. Entire Agreement</h2>
-            <p>
-              These Terms constitute the entire agreement between you and Total Raffle regarding the use of the Platform.
+              These Terms constitute the entire agreement between you and Total Raffle regarding the use of the Platform 
+              and supersede all prior agreements and understandings.
             </p>
           </section>
         </div>
