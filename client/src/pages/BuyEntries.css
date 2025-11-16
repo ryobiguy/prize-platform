@@ -1,12 +1,11 @@
 .buy-entries-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #ffffff;
   padding-bottom: 60px;
 }
 
 .buy-entries-header {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
   padding: 60px 0;
   text-align: center;
   color: white;
