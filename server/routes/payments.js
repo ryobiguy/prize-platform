@@ -97,24 +97,43 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
   // Handle payment completed event
   if (event.type === 'payment.updated' && event.data.object.payment.status === 'COMPLETED') {
     const payment = event.data.object.payment;
-    
+
     try {
-      // Get metadata from the order
-      const { ordersApi } = squareClient;
-      const orderResponse = await ordersApi.retrieveOrder(payment.orderId);
-      const order = orderResponse.result.order;
-      
-      if (order.metadata) {
-        const userId = order.metadata.userId;
-        const entries = parseInt(order.metadata.entries);
+      // We stored context in the quick_pay note: "Package <packageId> for user <userId>"
+      const note = payment.note || '';
 
-        const user = await User.findById(userId);
-        if (user) {
-          user.availableEntries += entries;
-          user.totalEntries += entries;
-          await user.save();
+      const packageMatch = note.match(/Package\s+(\w+)/i);
+      const userMatch = note.match(/user\s+([0-9a-fA-F]{24})/i);
 
-          console.log(`✅ Added ${entries} entries to user ${user.email}`);
+      if (!packageMatch || !userMatch) {
+        console.error('Square webhook: could not parse note for user/package', note);
+      } else {
+        const packageId = packageMatch[1];
+        const userId = userMatch[1];
+
+        // Map packageId to entries (must match frontend pricing)
+        const PACKAGE_ENTRIES = {
+          starter: 100,
+          popular: 525,
+          mega: 1100,
+          ultimate: 1500,
+        };
+
+        const entries = PACKAGE_ENTRIES[packageId];
+
+        if (!entries) {
+          console.error('Square webhook: unknown packageId in note', packageId);
+        } else {
+          const user = await User.findById(userId);
+          if (user) {
+            user.availableEntries += entries;
+            user.totalEntries += entries;
+            await user.save();
+
+            console.log(`✅ Added ${entries} entries to user ${user.email} (package: ${packageId})`);
+          } else {
+            console.error('Square webhook: user not found for id', userId);
+          }
         }
       }
     } catch (error) {
