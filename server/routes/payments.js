@@ -34,6 +34,8 @@ router.post('/create-checkout', auth, async (req, res) => {
 
     const requestBody = {
       idempotency_key: idempotencyKey,
+      // After successful payment, send the user back to their dashboard
+      redirect_url: `${process.env.CLIENT_URL}/dashboard`,
       quick_pay: {
         name: `${entries} Raffle Entries`,
         price_money: {
@@ -41,9 +43,8 @@ router.post('/create-checkout', auth, async (req, res) => {
           currency: 'GBP',
         },
         location_id: process.env.SQUARE_LOCATION_ID,
-        // After successful payment, send the user back to their dashboard
-        redirect_url: `${process.env.CLIENT_URL}/dashboard`,
-        note: `Package ${packageId} for user ${user._id.toString()}`,
+        // Include some context in the payment for debugging/reference
+        reference_id: `pkg:${packageId}`,
       },
     };
 
@@ -105,43 +106,46 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     const payment = event.data.object.payment;
 
     try {
-      // We stored context in the quick_pay note: "Package <packageId> for user <userId>"
-      const note = payment.note || '';
+      const amount = payment.amount_money && payment.amount_money.amount;
+      const currency = payment.amount_money && payment.amount_money.currency;
+      const email = payment.buyer_email_address || payment.receipt_email;
 
-      const packageMatch = note.match(/Package\s+(\w+)/i);
-      const userMatch = note.match(/user\s+([0-9a-fA-F]{24})/i);
-
-      if (!packageMatch || !userMatch) {
-        console.error('Square webhook: could not parse note for user/package', note);
-      } else {
-        const packageId = packageMatch[1];
-        const userId = userMatch[1];
-
-        // Map packageId to entries (must match frontend pricing)
-        const PACKAGE_ENTRIES = {
-          starter: 100,
-          popular: 525,
-          mega: 1100,
-          ultimate: 1500,
-        };
-
-        const entries = PACKAGE_ENTRIES[packageId];
-
-        if (!entries) {
-          console.error('Square webhook: unknown packageId in note', packageId);
-        } else {
-          const user = await User.findById(userId);
-          if (user) {
-            user.availableEntries += entries;
-            user.totalEntries += entries;
-            await user.save();
-
-            console.log(`✅ Added ${entries} entries to user ${user.email} (package: ${packageId})`);
-          } else {
-            console.error('Square webhook: user not found for id', userId);
-          }
-        }
+      if (!amount || currency !== 'GBP') {
+        console.error('Square webhook: unsupported amount/currency', amount, currency);
+        return res.json({ received: true });
       }
+
+      if (!email) {
+        console.error('Square webhook: missing buyer email on payment');
+        return res.json({ received: true });
+      }
+
+      // Map paid amount (in pence) to entries – must match your pricing
+      const AMOUNT_TO_ENTRIES = {
+        99: 100,    // £0.99 Starter
+        399: 525,   // £3.99 Popular
+        699: 1100,  // £6.99 Mega
+        1499: 1500, // £14.99 Ultimate
+      };
+
+      const entries = AMOUNT_TO_ENTRIES[amount];
+
+      if (!entries) {
+        console.error('Square webhook: no entry mapping for amount', amount);
+        return res.json({ received: true });
+      }
+
+      const user = await User.findOne({ email });
+      if (!user) {
+        console.error('Square webhook: user not found for email', email);
+        return res.json({ received: true });
+      }
+
+      user.availableEntries += entries;
+      user.totalEntries += entries;
+      await user.save();
+
+      console.log(`✅ Added ${entries} entries to user ${user.email} (amount: ${amount})`);
     } catch (error) {
       console.error('Error processing Square payment:', error);
     }
