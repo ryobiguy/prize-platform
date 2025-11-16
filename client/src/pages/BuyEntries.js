@@ -73,9 +73,9 @@ const BuyEntries = () => {
         amount: pkg.price
       });
 
-      // Redirect to Stripe checkout
+      // Open Square checkout in a new tab so the app stays open
       if (response.data.url) {
-        window.location.href = response.data.url;
+        window.open(response.data.url, '_blank', 'noopener,noreferrer');
       }
     } catch (error) {
       console.error('Purchase error:', error);
