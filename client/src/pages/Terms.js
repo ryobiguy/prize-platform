@@ -62,7 +62,7 @@ const Terms = () => {
             </ul>
 
             <h3>4.2 Payment Processing</h3>
-            <p>All payments are processed securely through Checkout.com. We do not store payment card details.</p>
+            <p>All payments are processed securely through Square. We do not store payment card details.</p>
 
             <h3>4.3 Using Entries</h3>
             <p>Entries can be used to enter prize draws. Once entries are used for a draw, they cannot be refunded or transferred.</p>

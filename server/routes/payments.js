@@ -3,18 +3,23 @@ const router = express.Router();
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
 
-// Initialize Stripe only if API key is available
-let stripe = null;
-if (process.env.STRIPE_SECRET_KEY) {
-  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// Initialize Square only if API key is available
+let squareClient = null;
+if (process.env.SQUARE_ACCESS_TOKEN) {
+  const { Client, Environment } = require('squareup');
+  
+  squareClient = new Client({
+    accessToken: process.env.SQUARE_ACCESS_TOKEN,
+    environment: process.env.NODE_ENV === 'production' ? Environment.Production : Environment.Sandbox
+  });
 } else {
-  console.warn('⚠️  Stripe API key not configured. Payment features will be disabled.');
+  console.warn('⚠️  Square API key not configured. Payment features will be disabled.');
 }
 
-// Create Stripe checkout session
+// Create Square payment link
 router.post('/create-checkout', auth, async (req, res) => {
   try {
-    if (!stripe) {
+    if (!squareClient) {
       return res.status(503).json({ error: 'Payment system not configured' });
     }
 
@@ -25,78 +30,101 @@ router.post('/create-checkout', auth, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'gbp',
-            product_data: {
-              name: `${entries} Raffle Entries`,
-              description: `Purchase ${entries} entries for Total Raffle`,
-              images: ['https://www.totalraffle.co.uk/logo.png'],
-            },
-            unit_amount: Math.round(amount * 100), // Convert to pence
-          },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: `${process.env.CLIENT_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.CLIENT_URL}/buy-entries`,
-      client_reference_id: user._id.toString(),
+    const { checkoutApi } = squareClient;
+    const crypto = require('crypto');
+    const idempotencyKey = crypto.randomUUID();
+
+    // Create Square checkout
+    const requestBody = {
+      idempotencyKey: idempotencyKey,
+      order: {
+        locationId: process.env.SQUARE_LOCATION_ID,
+        lineItems: [
+          {
+            name: `${entries} Raffle Entries`,
+            quantity: '1',
+            basePriceMoney: {
+              amount: Math.round(amount * 100), // Convert to pence
+              currency: 'GBP'
+            }
+          }
+        ]
+      },
+      checkoutOptions: {
+        redirectUrl: `${process.env.CLIENT_URL}/payment/success`,
+        askForShippingAddress: false
+      },
+      prePopulatedData: {
+        buyerEmail: user.email
+      },
       metadata: {
         userId: user._id.toString(),
         entries: entries.toString(),
         packageId: packageId
       }
-    });
+    };
 
-    res.json({ url: session.url });
+    const response = await checkoutApi.createPaymentLink(requestBody);
+    
+    if (response.result.paymentLink) {
+      res.json({ url: response.result.paymentLink.url });
+    } else {
+      throw new Error('Failed to create payment link');
+    }
   } catch (error) {
     console.error('Create checkout error:', error);
     res.status(500).json({ error: 'Failed to create checkout session' });
   }
 });
 
-// Stripe webhook handler
+// Square webhook handler
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-  if (!stripe) {
+  if (!squareClient) {
     return res.status(503).json({ error: 'Payment system not configured' });
   }
 
-  const sig = req.headers['stripe-signature'];
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const signature = req.headers['x-square-signature'];
+  const webhookSecret = process.env.SQUARE_WEBHOOK_SECRET;
+  const body = req.body;
 
-  let event;
+  // Verify Square webhook signature
+  const crypto = require('crypto');
+  const hmac = crypto.createHmac('sha1', webhookSecret);
+  hmac.update(body);
+  const expectedSignature = hmac.digest('base64');
 
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+  if (signature !== expectedSignature) {
+    console.error('Square webhook signature verification failed');
+    return res.status(400).send('Invalid signature');
   }
 
-  // Handle the event
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
+  const event = JSON.parse(body.toString());
 
+  // Handle payment completed event
+  if (event.type === 'payment.updated' && event.data.object.payment.status === 'COMPLETED') {
+    const payment = event.data.object.payment;
+    
     try {
-      // Get user and add entries
-      const userId = session.metadata.userId;
-      const entries = parseInt(session.metadata.entries);
+      // Get metadata from the order
+      const { ordersApi } = squareClient;
+      const orderResponse = await ordersApi.retrieveOrder(payment.orderId);
+      const order = orderResponse.result.order;
+      
+      if (order.metadata) {
+        const userId = order.metadata.userId;
+        const entries = parseInt(order.metadata.entries);
 
-      const user = await User.findById(userId);
-      if (user) {
-        user.availableEntries += entries;
-        user.totalEntries += entries;
-        await user.save();
+        const user = await User.findById(userId);
+        if (user) {
+          user.availableEntries += entries;
+          user.totalEntries += entries;
+          await user.save();
 
-        console.log(`✅ Added ${entries} entries to user ${user.email}`);
+          console.log(`✅ Added ${entries} entries to user ${user.email}`);
+        }
       }
     } catch (error) {
-      console.error('Error processing payment:', error);
+      console.error('Error processing Square payment:', error);
     }
   }
 
@@ -104,25 +132,26 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 });
 
 // Verify payment success
-router.get('/verify-session/:sessionId', auth, async (req, res) => {
+router.get('/verify-payment/:paymentId', auth, async (req, res) => {
   try {
-    if (!stripe) {
+    if (!squareClient) {
       return res.status(503).json({ error: 'Payment system not configured' });
     }
 
-    const session = await stripe.checkout.sessions.retrieve(req.params.sessionId);
+    const { paymentsApi } = squareClient;
+    const response = await paymentsApi.getPayment(req.params.paymentId);
+    const payment = response.result.payment;
     
-    if (session.payment_status === 'paid') {
+    if (payment.status === 'COMPLETED') {
       res.json({
         success: true,
-        entries: parseInt(session.metadata.entries),
-        amount: session.amount_total / 100
+        amount: payment.totalMoney.amount / 100
       });
     } else {
       res.json({ success: false });
     }
   } catch (error) {
-    console.error('Verify session error:', error);
+    console.error('Verify payment error:', error);
     res.status(500).json({ error: 'Failed to verify payment' });
   }
 });
