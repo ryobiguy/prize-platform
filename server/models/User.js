@@ -166,6 +166,25 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
+  // Entry purchases (Square payments)
+  purchases: [{
+    entries: {
+      type: Number,
+      default: 0
+    },
+    amountPence: {
+      type: Number,
+      default: 0
+    },
+    provider: {
+      type: String,
+      default: 'square'
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   // Level System
   level: {
     type: Number,

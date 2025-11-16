@@ -143,6 +143,16 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
       user.availableEntries += entries;
       user.totalEntries += entries;
+
+      // Record purchase history
+      user.purchases = user.purchases || [];
+      user.purchases.push({
+        entries,
+        amountPence: amount,
+        provider: 'square',
+        createdAt: new Date()
+      });
+
       await user.save();
 
       console.log(`✅ Added ${entries} entries to user ${user.email} (amount: ${amount})`);

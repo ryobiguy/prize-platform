@@ -22,6 +22,12 @@ router.get('/dashboard', auth, async (req, res) => {
       .sort((a, b) => b.completedAt - a.completedAt)
       .slice(0, 10);
 
+    // Most recent purchases (limit 10)
+    const purchases = (user.purchases || [])
+      .slice()
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 10);
+
     res.json({
       user,
       stats: {
@@ -31,7 +37,8 @@ router.get('/dashboard', auth, async (req, res) => {
         tasksCompleted: completedTasks.length,
         totalWins: user.wins.length
       },
-      recentActivity
+      recentActivity,
+      purchases
     });
   } catch (error) {
     console.error('Dashboard error:', error);

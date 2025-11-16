@@ -94,7 +94,7 @@ const Dashboard = () => {
     );
   }
 
-  const { stats, recentActivity } = dashboardData;
+  const { stats, recentActivity, purchases = [] } = dashboardData;
 
   return (
     <div className="dashboard-page">
@@ -174,6 +174,34 @@ const Dashboard = () => {
                   <span className={`win-status ${win.claimed ? 'claimed' : 'pending'}`}>
                     {win.claimed ? 'Claimed' : 'Pending Claim'}
                   </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+
+        {/* Purchase History */}
+        {purchases && purchases.length > 0 && (
+          <div className="section">
+            <div className="section-header">
+              <h2>Purchase History</h2>
+            </div>
+            <div className="activity-list">
+              {purchases.map((purchase, index) => (
+                <div key={index} className="activity-item">
+                  <div className="activity-icon">
+                    <Trophy size={20} />
+                  </div>
+                  <div className="activity-content">
+                    <h4>
+                      £{(purchase.amountPence / 100).toFixed(2)} for {purchase.entries} entries
+                    </h4>
+                    <p>Processed via {purchase.provider || 'Square'}</p>
+                  </div>
+                  <div className="activity-time">
+                    {new Date(purchase.createdAt).toLocaleString()}
+                  </div>
                 </div>
               ))}
             </div>
