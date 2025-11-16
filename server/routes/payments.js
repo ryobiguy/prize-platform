@@ -2,10 +2,22 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
+const { SquareClient, SquareEnvironment } = require('square');
 
-// Square integration temporarily disabled - will fix SDK issues
+// Initialize Square client using official SDK
 let squareClient = null;
-console.warn('⚠️  Square integration temporarily disabled. Working on SDK compatibility.');
+if (process.env.SQUARE_ACCESS_TOKEN) {
+  squareClient = new SquareClient({
+    token: process.env.SQUARE_ACCESS_TOKEN,
+    environment:
+      process.env.NODE_ENV === 'production'
+        ? SquareEnvironment.Production
+        : SquareEnvironment.Sandbox,
+  });
+  console.log('✅ Square client initialized');
+} else {
+  console.warn('⚠️  Square API key not configured. Payment features will be disabled.');
+}
 
 // Create Square payment link
 router.post('/create-checkout', auth, async (req, res) => {
