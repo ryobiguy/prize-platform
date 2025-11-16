@@ -1,28 +1,21 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
-const { SquareClient, SquareEnvironment } = require('square');
 
-// Initialize Square client using official SDK
-let squareClient = null;
-if (process.env.SQUARE_ACCESS_TOKEN) {
-  squareClient = new SquareClient({
-    token: process.env.SQUARE_ACCESS_TOKEN,
-    environment:
-      process.env.NODE_ENV === 'production'
-        ? SquareEnvironment.Production
-        : SquareEnvironment.Sandbox,
-  });
-  console.log('✅ Square client initialized');
+// Basic Square config check
+const hasSquareConfig = !!process.env.SQUARE_ACCESS_TOKEN && !!process.env.SQUARE_LOCATION_ID;
+if (!hasSquareConfig) {
+  console.warn('⚠️  Square API config incomplete. Payment features will be disabled.');
 } else {
-  console.warn('⚠️  Square API key not configured. Payment features will be disabled.');
+  console.log('✅ Square payments configured (REST API mode)');
 }
 
 // Create Square payment link
 router.post('/create-checkout', auth, async (req, res) => {
   try {
-    if (!squareClient) {
+    if (!hasSquareConfig) {
       return res.status(503).json({ error: 'Payment system not configured' });
     }
 
@@ -33,56 +26,54 @@ router.post('/create-checkout', auth, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const { checkoutApi } = squareClient;
     const crypto = require('crypto');
     const idempotencyKey = crypto.randomUUID();
 
-    // Create Square checkout
+    // Use Square Checkout API: create-payment-link (quick pay)
+    const squareBaseUrl = process.env.SQUARE_API_BASE_URL || 'https://connect.squareupsandbox.com';
+
     const requestBody = {
-      idempotencyKey: idempotencyKey,
-      order: {
-        locationId: process.env.SQUARE_LOCATION_ID,
-        lineItems: [
-          {
-            name: `${entries} Raffle Entries`,
-            quantity: '1',
-            basePriceMoney: {
-              amount: Math.round(amount * 100), // Convert to pence
-              currency: 'GBP'
-            }
-          }
-        ]
+      idempotency_key: idempotencyKey,
+      quick_pay: {
+        name: `${entries} Raffle Entries`,
+        price_money: {
+          amount: Math.round(amount * 100), // pence
+          currency: 'GBP',
+        },
+        location_id: process.env.SQUARE_LOCATION_ID,
+        redirect_url: `${process.env.CLIENT_URL}/payment/success`,
+        note: `Package ${packageId} for user ${user._id.toString()}`,
       },
-      checkoutOptions: {
-        redirectUrl: `${process.env.CLIENT_URL}/payment/success`,
-        askForShippingAddress: false
-      },
-      prePopulatedData: {
-        buyerEmail: user.email
-      },
-      metadata: {
-        userId: user._id.toString(),
-        entries: entries.toString(),
-        packageId: packageId
-      }
     };
 
-    const response = await checkoutApi.createPaymentLink(requestBody);
-    
-    if (response.result.paymentLink) {
-      res.json({ url: response.result.paymentLink.url });
-    } else {
-      throw new Error('Failed to create payment link');
+    const response = await axios.post(
+      `${squareBaseUrl}/v2/online-checkout/payment-links`,
+      requestBody,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,
+          'Square-Version': '2024-09-18',
+        },
+      }
+    );
+
+    const link = response.data && response.data.payment_link;
+    if (link && link.url) {
+      return res.json({ url: link.url });
     }
+
+    console.error('Create checkout error: Unexpected Square response', response.data);
+    return res.status(500).json({ error: 'Failed to create checkout session' });
   } catch (error) {
-    console.error('Create checkout error:', error);
-    res.status(500).json({ error: 'Failed to create checkout session' });
+    console.error('Create checkout error:', error.response?.data || error.message || error);
+    return res.status(500).json({ error: 'Failed to create checkout session' });
   }
 });
 
 // Square webhook handler
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-  if (!squareClient) {
+  if (!hasSquareConfig) {
     return res.status(503).json({ error: 'Payment system not configured' });
   }
 
@@ -137,22 +128,13 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 // Verify payment success
 router.get('/verify-payment/:paymentId', auth, async (req, res) => {
   try {
-    if (!squareClient) {
+    if (!hasSquareConfig) {
       return res.status(503).json({ error: 'Payment system not configured' });
     }
 
-    const { paymentsApi } = squareClient;
-    const response = await paymentsApi.getPayment(req.params.paymentId);
-    const payment = response.result.payment;
-    
-    if (payment.status === 'COMPLETED') {
-      res.json({
-        success: true,
-        amount: payment.totalMoney.amount / 100
-      });
-    } else {
-      res.json({ success: false });
-    }
+    // For quick_pay links we generally rely on webhooks instead of verify API.
+    // This endpoint is kept for compatibility and currently returns success=false.
+    return res.json({ success: false });
   } catch (error) {
     console.error('Verify payment error:', error);
     res.status(500).json({ error: 'Failed to verify payment' });
