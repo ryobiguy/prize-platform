@@ -10,6 +10,24 @@ const AdminPanel = () => {
   const [readyPrizes, setReadyPrizes] = useState([]);
   const [allWinners, setAllWinners] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [creatingPrize, setCreatingPrize] = useState(false);
+  const [newPrize, setNewPrize] = useState({
+    title: '',
+    description: '',
+    type: 'cash',
+    value: '',
+    imageUrl: '',
+    totalWinners: 1,
+    entryCost: 1,
+    maxEntriesPerUser: 100,
+    minimumEntries: 50,
+    drawFrequency: 'weekly',
+    drawDay: 'Friday',
+    drawTime: '20:00',
+    startDate: '',
+    endDate: '',
+    featured: false
+  });
   const [testEmail, setTestEmail] = useState('');
   const [emailSending, setEmailSending] = useState(false);
 
@@ -179,6 +197,13 @@ const AdminPanel = () => {
             All Winners
           </button>
           <button
+            className={`tab-btn ${activeTab === 'createPrize' ? 'active' : ''}`}
+            onClick={() => setActiveTab('createPrize')}
+          >
+            <Trophy size={20} />
+            Create Prize
+          </button>
+          <button
             className={`tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}
           >
@@ -268,6 +293,220 @@ const AdminPanel = () => {
                   Trigger Draw Check
                 </button>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'createPrize' && (
+            <div className="settings-section">
+              <h2>Create New Prize</h2>
+              <form
+                className="settings-card"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (!newPrize.title || !newPrize.description || !newPrize.value || !newPrize.startDate || !newPrize.endDate) {
+                    toast.error('Please fill in all required fields');
+                    return;
+                  }
+
+                  setCreatingPrize(true);
+                  try {
+                    const payload = {
+                      ...newPrize,
+                      value: Number(newPrize.value),
+                      entryCost: Number(newPrize.entryCost),
+                      totalWinners: Number(newPrize.totalWinners),
+                      maxEntriesPerUser: Number(newPrize.maxEntriesPerUser),
+                      minimumEntries: Number(newPrize.minimumEntries),
+                      startDate: new Date(newPrize.startDate),
+                      endDate: new Date(newPrize.endDate)
+                    };
+
+                    await axios.post('/api/admin/prizes', payload);
+                    toast.success('Prize created successfully');
+                    setNewPrize({
+                      title: '',
+                      description: '',
+                      type: 'cash',
+                      value: '',
+                      imageUrl: '',
+                      totalWinners: 1,
+                      entryCost: 1,
+                      maxEntriesPerUser: 100,
+                      minimumEntries: 50,
+                      drawFrequency: 'weekly',
+                      drawDay: 'Friday',
+                      drawTime: '20:00',
+                      startDate: '',
+                      endDate: '',
+                      featured: false
+                    });
+                    fetchStats();
+                  } catch (error) {
+                    console.error('Create prize error:', error);
+                    toast.error(error.response?.data?.error || 'Failed to create prize');
+                  } finally {
+                    setCreatingPrize(false);
+                  }
+                }}
+              >
+                <div className="settings-card-body">
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label>Title*</label>
+                      <input
+                        type="text"
+                        value={newPrize.title}
+                        onChange={(e) => setNewPrize({ ...newPrize, title: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Description*</label>
+                      <textarea
+                        rows="3"
+                        value={newPrize.description}
+                        onChange={(e) => setNewPrize({ ...newPrize, description: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Type</label>
+                      <select
+                        value={newPrize.type}
+                        onChange={(e) => setNewPrize({ ...newPrize, type: e.target.value })}
+                      >
+                        <option value="cash">Cash</option>
+                        <option value="giftcard">Gift Card</option>
+                        <option value="physical">Physical</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Prize Value (£)*</label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="0.01"
+                        value={newPrize.value}
+                        onChange={(e) => setNewPrize({ ...newPrize, value: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Image URL</label>
+                      <input
+                        type="text"
+                        value={newPrize.imageUrl}
+                        onChange={(e) => setNewPrize({ ...newPrize, imageUrl: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Total Winners</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={newPrize.totalWinners}
+                        onChange={(e) => setNewPrize({ ...newPrize, totalWinners: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Entry Cost (entries to enter)</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={newPrize.entryCost}
+                        onChange={(e) => setNewPrize({ ...newPrize, entryCost: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Max Entries Per User</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={newPrize.maxEntriesPerUser}
+                        onChange={(e) => setNewPrize({ ...newPrize, maxEntriesPerUser: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Minimum Entries Required</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={newPrize.minimumEntries}
+                        onChange={(e) => setNewPrize({ ...newPrize, minimumEntries: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Draw Frequency</label>
+                      <select
+                        value={newPrize.drawFrequency}
+                        onChange={(e) => setNewPrize({ ...newPrize, drawFrequency: e.target.value })}
+                      >
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Draw Day</label>
+                      <select
+                        value={newPrize.drawDay}
+                        onChange={(e) => setNewPrize({ ...newPrize, drawDay: e.target.value })}
+                      >
+                        <option>Monday</option>
+                        <option>Tuesday</option>
+                        <option>Wednesday</option>
+                        <option>Thursday</option>
+                        <option>Friday</option>
+                        <option>Saturday</option>
+                        <option>Sunday</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Draw Time (24h)</label>
+                      <input
+                        type="time"
+                        value={newPrize.drawTime}
+                        onChange={(e) => setNewPrize({ ...newPrize, drawTime: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Start Date*</label>
+                      <input
+                        type="datetime-local"
+                        value={newPrize.startDate}
+                        onChange={(e) => setNewPrize({ ...newPrize, startDate: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>End Date*</label>
+                      <input
+                        type="datetime-local"
+                        value={newPrize.endDate}
+                        onChange={(e) => setNewPrize({ ...newPrize, endDate: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group form-group-inline">
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={newPrize.featured}
+                          onChange={(e) => setNewPrize({ ...newPrize, featured: e.target.checked })}
+                        />
+                        Featured prize
+                      </label>
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    className="trigger-btn"
+                    disabled={creatingPrize}
+                  >
+                    {creatingPrize ? 'Creating...' : 'Create Prize'}
+                  </button>
+                </div>
+              </form>
             </div>
           )}
 
