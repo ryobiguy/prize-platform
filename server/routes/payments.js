@@ -6,11 +6,11 @@ const { auth } = require('../middleware/auth');
 // Initialize Square only if API key is available
 let squareClient = null;
 if (process.env.SQUARE_ACCESS_TOKEN) {
-  const { Client, Environment } = require('square');
+  const { Client } = require('square');
   
   squareClient = new Client({
     accessToken: process.env.SQUARE_ACCESS_TOKEN,
-    environment: process.env.NODE_ENV === 'production' ? Environment.Production : Environment.Sandbox
+    environment: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox'
   });
 } else {
   console.warn('⚠️  Square API key not configured. Payment features will be disabled.');
