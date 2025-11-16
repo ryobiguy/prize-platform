@@ -62,6 +62,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/tasks" element={<PrivateRoute><Tasks /></PrivateRoute>} />
+            <Route path="/get-entries" element={<PrivateRoute><Tasks /></PrivateRoute>} />
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/my-entries" element={<PrivateRoute><MyEntries /></PrivateRoute>} />
             <Route path="/buy-entries" element={<PrivateRoute><BuyEntries /></PrivateRoute>} />

@@ -80,8 +80,8 @@ const Navbar = () => {
           </Link>
           {user && (
             <>
-              <Link to="/tasks" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
-                Tasks
+              <Link to="/buy-entries" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+                Buy Entries
               </Link>
               <Link to="/dashboard" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
                 Dashboard

@@ -1,140 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import axios from '../utils/axios';
-import toast from 'react-hot-toast';
+import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { CheckSquare, Twitter, Instagram, Youtube, Play, Award, DollarSign, FileText, Smartphone, Mail, Users, Gift } from 'lucide-react';
-import VideoAdPlayer from '../components/VideoAdPlayer';
-import OfferWall from '../components/OfferWall';
-import TheoremReachSurveys from '../components/TheoremReachSurveys';
+import { CreditCard, Zap, Star, Crown, Award, ArrowRight, Gift } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import './Tasks.css';
 
 const Tasks = () => {
-  const { user, updateUser } = useAuth();
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedAdTask, setSelectedAdTask] = useState(null);
-  const [activeTab, setActiveTab] = useState('tasks'); // 'tasks', 'offers', or 'surveys'
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  const fetchTasks = async () => {
-    try {
-      const response = await axios.get('/api/tasks');
-      setTasks(response.data.tasks);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-      toast.error('Failed to load tasks');
-    } finally {
-      setLoading(false);
+  const entryPackages = [
+    {
+      id: 'starter',
+      name: 'Starter Pack',
+      entries: 100,
+      price: 0.99,
+      icon: Zap,
+      color: '#3b82f6',
+      description: 'Perfect for trying your luck'
+    },
+    {
+      id: 'popular',
+      name: 'Popular Pack',
+      entries: 500,
+      price: 3.99,
+      bonus: 50,
+      icon: Star,
+      color: '#f59e0b',
+      popular: true,
+      description: 'Best value for regular players'
+    },
+    {
+      id: 'mega',
+      name: 'Mega Pack',
+      entries: 1000,
+      price: 6.99,
+      bonus: 200,
+      icon: Crown,
+      color: '#8b5cf6',
+      description: 'For serious prize hunters'
     }
+  ];
+
+  const handleBuyEntries = () => {
+    navigate('/buy-entries');
   };
 
-  const handleCompleteTask = async (taskId) => {
-    try {
-      const response = await axios.post(`/api/tasks/${taskId}/complete`);
-      toast.success(`Task completed! +${response.data.entriesEarned} entries`);
-      updateUser({
-        totalEntries: response.data.totalEntries,
-        availableEntries: response.data.availableEntries
-      });
-      fetchTasks();
-    } catch (error) {
-      toast.error(error.response?.data?.error || 'Failed to complete task');
-    }
-  };
-
-  const handleTaskClick = (task) => {
-    // For video ads, open the ad player modal
-    if (task.type === 'watch_video_ad' || task.type === 'watch_rewarded_ad') {
-      setSelectedAdTask(task);
-      return;
-    }
-    
-    // For other tasks, complete directly
-    handleCompleteTask(task._id);
-  };
-
-  const getTaskIcon = (type) => {
-    switch (type) {
-      case 'twitter_follow':
-      case 'twitter_retweet':
-      case 'twitter_like':
-        return <Twitter size={24} />;
-      case 'instagram_follow':
-      case 'instagram_like':
-        return <Instagram size={24} />;
-      case 'youtube_subscribe':
-      case 'youtube_like':
-        return <Youtube size={24} />;
-      case 'watch_video_ad':
-      case 'watch_rewarded_ad':
-        return <Play size={24} />;
-      case 'complete_survey':
-        return <FileText size={24} />;
-      case 'app_install':
-      case 'app_trial':
-      case 'game_trial':
-        return <Smartphone size={24} />;
-      case 'email_signup':
-        return <Mail size={24} />;
-      case 'referral':
-        return <Users size={24} />;
-      case 'affiliate_click':
-      case 'affiliate_purchase':
-        return <DollarSign size={24} />;
-      default:
-        return <CheckSquare size={24} />;
-    }
-  };
-
-  const getTaskPlatformColor = (platform) => {
-    switch (platform) {
-      case 'twitter':
-        return '#1DA1F2';
-      case 'instagram':
-        return '#E4405F';
-      case 'youtube':
-        return '#FF0000';
-      case 'admob':
-        return '#4CAF50';
-      case 'survey':
-        return '#FF9800';
-      case 'affiliate':
-        return '#9C27B0';
-      default:
-        return 'var(--primary)';
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="tasks-page">
-        <div className="loading">Loading tasks...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="tasks-page">
       <div className="tasks-header">
         <div className="container">
-          <h1>Complete Tasks & Earn Entries</h1>
-          <p>Complete simple tasks to earn entries for prize draws</p>
+          <h1>Get More Entries</h1>
+          <p>Purchase entries instantly to increase your chances of winning amazing prizes!</p>
           <div className="user-stats">
             <div className="stat-card">
               <Award size={24} />
               <div>
-                <div className="stat-value">{user.totalEntries}</div>
-                <div className="stat-label">Total Entries Earned</div>
+                <div className="stat-value">{user?.availableEntries || 0}</div>
+                <div className="stat-label">Available Entries</div>
               </div>
             </div>
             <div className="stat-card">
-              <CheckSquare size={24} />
+              <Gift size={24} />
               <div>
-                <div className="stat-value">{user.availableEntries}</div>
-                <div className="stat-label">Available Entries</div>
+                <div className="stat-value">{user?.totalEntries || 0}</div>
+                <div className="stat-label">Total Entries Purchased</div>
               </div>
             </div>
           </div>
@@ -142,122 +72,101 @@ const Tasks = () => {
       </div>
 
       <div className="container">
-        <div className="tasks-tabs">
-          <button 
-            className={`tab-btn ${activeTab === 'tasks' ? 'active' : ''}`}
-            onClick={() => setActiveTab('tasks')}
-          >
-            <CheckSquare size={20} />
-            Quick Tasks
-          </button>
-          <button 
-            className={`tab-btn ${activeTab === 'surveys' ? 'active' : ''}`}
-            onClick={() => setActiveTab('surveys')}
-          >
-            <FileText size={20} />
-            Surveys (High Rewards!)
-          </button>
-          <button 
-            className={`tab-btn ${activeTab === 'offers' ? 'active' : ''}`}
-            onClick={() => setActiveTab('offers')}
-          >
-            <Gift size={20} />
-            Offer Wall
-          </button>
-        </div>
-
-        {activeTab === 'tasks' && (
-          <>
-            {tasks.length === 0 ? (
-              <div className="no-tasks">
-                <CheckSquare size={64} />
-                <h2>No tasks available</h2>
-                <p>Check back soon for new tasks!</p>
-              </div>
-        ) : (
-          <div className="tasks-grid">
-            {tasks.map(task => (
-              <div 
-                key={task._id} 
-                className={`task-card ${task.completed ? 'completed' : ''}`}
-                style={{ '--platform-color': getTaskPlatformColor(task.platform) }}
-              >
-                <div className="task-icon">
-                  {getTaskIcon(task.type)}
-                </div>
-                
-                <div className="task-content">
-                  <div className="task-header">
-                    <h3 className="task-title">{task.title}</h3>
-                    {task.completed && (
-                      <span className="completed-badge">Completed</span>
-                    )}
-                  </div>
-                  
-                  <p className="task-description">{task.description}</p>
-                  
-                  <div className="task-reward">
-                    <Award size={18} />
-                    <span>+{task.entriesReward} entries</span>
-                  </div>
-                  
-                  {task.verificationData?.accountToFollow && (
-                    <div className="task-meta">
-                      <span>Follow: @{task.verificationData.accountToFollow}</span>
-                    </div>
-                  )}
-                  
-                  {task.verificationData?.postUrl && (
-                    <div className="task-meta">
-                      <a 
-                        href={task.verificationData.postUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="task-link"
-                      >
-                        View Post
-                      </a>
-                    </div>
-                  )}
-                  
-                  {task.isRepeatable && (
-                    <div className="task-badge">
-                      Repeatable ({task.repeatInterval})
-                    </div>
-                  )}
-                </div>
-                
-                <button
-                  className="complete-task-btn"
-                  onClick={() => handleTaskClick(task)}
-                  disabled={task.completed && !task.isRepeatable}
+        <div className="entry-packages-section">
+          <h2>Choose Your Entry Package</h2>
+          <p>All packages include instant delivery and never expire!</p>
+          
+          <div className="packages-preview">
+            {entryPackages.map((pkg) => {
+              const Icon = pkg.icon;
+              const totalEntries = pkg.entries + (pkg.bonus || 0);
+              
+              return (
+                <div 
+                  key={pkg.id} 
+                  className={`package-preview-card ${pkg.popular ? 'popular' : ''}`}
+                  style={{ '--accent-color': pkg.color }}
                 >
-                  {task.completed && !task.isRepeatable ? 'Completed' : 'Complete Task'}
-                </button>
-              </div>
-            ))}
+                  {pkg.popular && (
+                    <div className="popular-badge">
+                      <Star size={16} />
+                      Most Popular
+                    </div>
+                  )}
+                  
+                  <div className="package-icon">
+                    <Icon size={32} />
+                  </div>
+                  
+                  <h3>{pkg.name}</h3>
+                  <p className="package-description">{pkg.description}</p>
+                  
+                  <div className="package-entries">
+                    <span className="entries-count">{totalEntries.toLocaleString()}</span>
+                    <span className="entries-label">entries</span>
+                  </div>
+                  
+                  <div className="package-price">
+                    <span className="currency">£</span>
+                    <span className="amount">{pkg.price.toFixed(2)}</span>
+                  </div>
+                  
+                  {pkg.bonus && (
+                    <div className="bonus-badge">
+                      +{pkg.bonus} BONUS!
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        )}
-          </>
-        )}
-
-        {activeTab === 'surveys' && (
-          <TheoremReachSurveys userId={user._id} />
-        )}
-
-        {activeTab === 'offers' && (
-          <OfferWall userId={user._id} />
-        )}
+          
+          <div className="buy-entries-cta">
+            <button className="buy-entries-btn" onClick={handleBuyEntries}>
+              <CreditCard size={20} />
+              View All Packages
+              <ArrowRight size={20} />
+            </button>
+          </div>
+        </div>
+        
+        <div className="why-buy-entries">
+          <h2>Why Buy Entries?</h2>
+          <div className="benefits-grid">
+            <div className="benefit-card">
+              <div className="benefit-icon">
+                <Zap size={32} />
+              </div>
+              <h3>Instant Delivery</h3>
+              <p>Entries are added to your account immediately after purchase</p>
+            </div>
+            
+            <div className="benefit-card">
+              <div className="benefit-icon">
+                <Award size={32} />
+              </div>
+              <h3>Better Odds</h3>
+              <p>More entries = higher chances of winning amazing prizes</p>
+            </div>
+            
+            <div className="benefit-card">
+              <div className="benefit-icon">
+                <Gift size={32} />
+              </div>
+              <h3>Never Expire</h3>
+              <p>Your entries never expire - use them on any current or future draw</p>
+            </div>
+            
+            <div className="benefit-card">
+              <div className="benefit-icon">
+                <CreditCard size={32} />
+              </div>
+              <h3>Secure Payment</h3>
+              <p>All payments processed securely through Stripe</p>
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* Video Ad Player Modal */}
-      {selectedAdTask && (
-        <VideoAdPlayer
-          task={selectedAdTask}
-          onComplete={handleCompleteTask}
-          onClose={() => setSelectedAdTask(null)}
-        />
-      )}
     </div>
   );
 };

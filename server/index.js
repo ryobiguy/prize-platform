@@ -29,10 +29,10 @@ app.use(cors({
       return callback(null, true);
     }
     
-    // Allow TheoremReach and AdGate
-    if (origin && (origin.includes('theoremreach.com') || origin.includes('adgatemedia.com'))) {
-      return callback(null, true);
-    }
+    // Removed survey provider CORS for pay-to-enter model
+    // if (origin && (origin.includes('theoremreach.com') || origin.includes('adgatemedia.com'))) {
+    //   return callback(null, true);
+    // }
     
     if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.some(allowed => origin.startsWith(allowed))) {
       callback(null, true);
@@ -58,8 +58,9 @@ app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/entries', require('./routes/entries'));
 app.use('/api/admin', require('./routes/admin'));
-app.use('/api/offers', require('./routes/offers'));
-app.use('/api/surveys', require('./routes/surveys'));
+// Removed survey and offer routes for pay-to-enter model
+// app.use('/api/offers', require('./routes/offers'));
+// app.use('/api/surveys', require('./routes/surveys'));
 app.use('/api/gamification', require('./routes/gamification'));
 app.use('/api/instant-win', require('./routes/instantWin'));
 app.use('/api/payments', require('./routes/payments'));
