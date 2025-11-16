@@ -168,6 +168,9 @@ const userSchema = new mongoose.Schema({
   },
   // Entry purchases (Square payments)
   purchases: [{
+    paymentId: {
+      type: String
+    },
     entries: {
       type: Number,
       default: 0

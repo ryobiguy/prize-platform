@@ -101,11 +101,12 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
   const event = JSON.parse(body.toString());
 
-  // Handle payment completed event
+  // Handle payment completed event (idempotent per payment.id)
   if (event.type === 'payment.updated' && event.data.object.payment.status === 'COMPLETED') {
     const payment = event.data.object.payment;
 
     try {
+      const paymentId = payment.id;
       const amount = payment.amount_money && payment.amount_money.amount;
       const currency = payment.amount_money && payment.amount_money.currency;
       const email = payment.buyer_email_address || payment.receipt_email;
@@ -141,12 +142,22 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
         return res.json({ received: true });
       }
 
+      // Idempotency: if we've already recorded this paymentId, skip
+      if (paymentId && Array.isArray(user.purchases)) {
+        const alreadyProcessed = user.purchases.some(p => p.paymentId === paymentId);
+        if (alreadyProcessed) {
+          console.log('Square webhook: payment already processed, skipping', paymentId);
+          return res.json({ received: true });
+        }
+      }
+
       user.availableEntries += entries;
       user.totalEntries += entries;
 
       // Record purchase history
       user.purchases = user.purchases || [];
       user.purchases.push({
+        paymentId,
         entries,
         amountPence: amount,
         provider: 'square',
