@@ -23,7 +23,7 @@ const Tasks = () => {
       name: 'Popular Pack',
       entries: 500,
       price: 3.99,
-      bonus: 50,
+      bonus: 25,
       icon: Star,
       color: '#f59e0b',
       popular: true,
@@ -32,9 +32,9 @@ const Tasks = () => {
     {
       id: 'mega',
       name: 'Mega Pack',
-      entries: 1000,
-      price: 6.99,
-      bonus: 200,
+      entries: 1200,
+      price: 14.99,
+      bonus: 300,
       icon: Crown,
       color: '#8b5cf6',
       description: 'For serious prize hunters'

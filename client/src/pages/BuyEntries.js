@@ -29,7 +29,7 @@ const BuyEntries = () => {
       price: 3.99,
       priceId: 'price_popular',
       popular: true,
-      bonus: 50,
+      bonus: 25,
       icon: Star,
       color: '#f59e0b'
     },
@@ -40,18 +40,18 @@ const BuyEntries = () => {
       price: 6.99,
       priceId: 'price_mega',
       popular: false,
-      bonus: 200,
+      bonus: 100,
       icon: Crown,
       color: '#8b5cf6'
     },
     {
       id: 'ultimate',
       name: 'Ultimate Pack',
-      entries: 2500,
+      entries: 1200,
       price: 14.99,
       priceId: 'price_ultimate',
       popular: false,
-      bonus: 750,
+      bonus: 300,
       icon: Crown,
       color: '#ec4899'
     }
