@@ -36,7 +36,6 @@ const Dashboard = () => {
           totalEntries: 0,
           availableEntries: 0,
           activePrizes: 0,
-          tasksCompleted: 0,
           totalWins: 0
         },
         recentActivity: []
@@ -124,7 +123,7 @@ const Dashboard = () => {
             </div>
             <div className="stat-content">
               <div className="stat-value">{stats.totalEntries}</div>
-              <div className="stat-label">Total Entries Earned</div>
+              <div className="stat-label">Total Entries Purchased</div>
             </div>
           </div>
 
@@ -150,11 +149,11 @@ const Dashboard = () => {
 
           <div className="stat-card warning">
             <div className="stat-icon">
-              <CheckSquare size={32} />
+              <TrendingUp size={32} />
             </div>
             <div className="stat-content">
-              <div className="stat-value">{stats.tasksCompleted}</div>
-              <div className="stat-label">Tasks Completed</div>
+              <div className="stat-value">{stats.totalWins || 0}</div>
+              <div className="stat-label">Total Wins</div>
             </div>
           </div>
         </div>
@@ -212,30 +211,6 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Recent Activity */}
-        {recentActivity && recentActivity.length > 0 && (
-          <div className="section">
-            <div className="section-header">
-              <h2>Recent Activity</h2>
-            </div>
-            <div className="activity-list">
-              {recentActivity.map((activity, index) => (
-                <div key={index} className="activity-item">
-                  <div className="activity-icon">
-                    <CheckSquare size={20} />
-                  </div>
-                  <div className="activity-content">
-                    <h4>{activity.task.title}</h4>
-                    <p>Earned {activity.task.entriesAwarded} entries</p>
-                  </div>
-                  <div className="activity-time">
-                    {new Date(activity.completedAt).toLocaleDateString()}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Achievements */}
         {/* <Achievements /> */}
@@ -245,10 +220,10 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <div className="quick-actions">
-          <Link to="/tasks" className="action-card">
-            <CheckSquare size={32} />
-            <h3>Complete Tasks</h3>
-            <p>Earn more entries</p>
+          <Link to="/buy-entries" className="action-card">
+            <Trophy size={32} />
+            <h3>Buy Entries</h3>
+            <p>Purchase entry packages</p>
           </Link>
           <Link to="/prizes" className="action-card">
             <Gift size={32} />
