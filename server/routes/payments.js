@@ -6,7 +6,7 @@ const { auth } = require('../middleware/auth');
 // Initialize Square only if API key is available
 let squareClient = null;
 if (process.env.SQUARE_ACCESS_TOKEN) {
-  const { Client, Environment } = require('squareup');
+  const { Client, Environment } = require('square');
   
   squareClient = new Client({
     accessToken: process.env.SQUARE_ACCESS_TOKEN,
