@@ -96,6 +96,9 @@ const Dashboard = () => {
 
   const { stats, recentActivity, purchases = [] } = dashboardData;
 
+  const prizeEntries = user.prizeEntries || [];
+  const totalTrackedEntries = prizeEntries.reduce((sum, entry) => sum + (entry.entriesUsed || 0), 0);
+
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">
@@ -208,33 +211,45 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Active Prize Entries */}
-        {user.prizeEntries && user.prizeEntries.length > 0 && (
+        {/* Entries Tracker */}
+        {prizeEntries && prizeEntries.length > 0 && (
           <div className="section">
             <div className="section-header">
-              <h2>Your Prize Entries</h2>
-              <Link to="/entries" className="view-all">View All</Link>
+              <h2>Entries Tracker</h2>
+              <div className="entries-summary">
+                <span>{prizeEntries.length} prizes entered</span>
+                <span>•</span>
+                <span>{totalTrackedEntries} entries used</span>
+              </div>
             </div>
-            <div className="entries-list">
-              {user.prizeEntries.slice(0, 5).map((entry, index) => (
-                <Link 
-                  to={`/prizes/${entry.prize._id}`} 
-                  key={index} 
-                  className="entry-item"
+            <div className="entries-table">
+              <div className="entries-table-header">
+                <div>Prize</div>
+                <div>Entries Used</div>
+                <div>Draw Date</div>
+              </div>
+              {prizeEntries.slice(0, 6).map((entry, index) => (
+                <Link
+                  to={`/prizes/${entry.prize._id}`}
+                  key={index}
+                  className="entries-table-row"
                 >
-                  <div className="entry-info">
-                    <Gift size={24} />
-                    <div>
-                      <h4>{entry.prize.title}</h4>
-                      <p>{entry.entriesUsed} entries used</p>
-                    </div>
+                  <div className="entries-table-prize">
+                    <Gift size={20} />
+                    <span>{entry.prize.title}</span>
                   </div>
-                  <div className="entry-meta">
-                    <Clock size={16} />
+                  <div className="entries-table-entries">{entry.entriesUsed}</div>
+                  <div className="entries-table-date">
+                    <Clock size={14} />
                     <span>{new Date(entry.prize.endDate).toLocaleDateString()}</span>
                   </div>
                 </Link>
               ))}
+              {prizeEntries.length > 6 && (
+                <div className="entries-table-footer">
+                  <Link to="/entries" className="view-all">View all entries</Link>
+                </div>
+              )}
             </div>
           </div>
         )}
