@@ -94,9 +94,9 @@ const Dashboard = () => {
     );
   }
 
-  const { stats, recentActivity, purchases = [] } = dashboardData;
+  const { user: dashboardUser = {}, stats, recentActivity, purchases = [] } = dashboardData;
 
-  const prizeEntries = user.prizeEntries || [];
+  const prizeEntries = (dashboardUser.prizeEntries || []).filter(entry => entry.prize);
   const totalTrackedEntries = prizeEntries.reduce((sum, entry) => sum + (entry.entriesUsed || 0), 0);
 
   return (
