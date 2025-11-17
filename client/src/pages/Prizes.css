@@ -109,7 +109,7 @@
 .prize-image {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: 180px;
   background: var(--bg-secondary);
   display: flex;
   align-items: center;

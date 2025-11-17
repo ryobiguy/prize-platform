@@ -78,7 +78,7 @@ const Navbar = () => {
           <Link to="/winners" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
             Winners
           </Link>
-          {user && (
+          {user ? (
             <>
               <Link to="/buy-entries" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
                 Buy Entries
@@ -87,6 +87,10 @@ const Navbar = () => {
                 Dashboard
               </Link>
             </>
+          ) : (
+            <Link to="/login" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+              Sign In
+            </Link>
           )}
         </div>
       </div>
