@@ -206,7 +206,10 @@ class EmailService {
               <p><strong>Total Raffle</strong> | www.totalraffle.co.uk</p>
               <p>This email was sent to ${user.email}</p>
               <p style="margin-top: 15px; font-size: 12px;">
-                If you didn't enter this competition, please ignore this email or contact us at support@totalraffle.co.uk
+                Questions? Contact us at <strong>totalraffle@mail.com</strong>
+              </p>
+              <p style="font-size: 12px;">
+                If you didn't enter this competition, please ignore this email.
               </p>
             </div>
           </div>
