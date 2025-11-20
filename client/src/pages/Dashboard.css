@@ -20,6 +20,38 @@
   opacity: 0.95;
 }
 
+.win-notification {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ecfccb, #fef9c3);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.win-notification-icon {
+  font-size: 1.75rem;
+}
+
+.win-notification-content h2 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+}
+
+.win-notification-content p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.win-notification-content a {
+  color: var(--primary);
+  font-weight: 600;
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

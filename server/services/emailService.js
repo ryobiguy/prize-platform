@@ -1,34 +1,15 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
 // Email service for sending notifications
 class EmailService {
   constructor() {
-    this.transporter = null;
     this.fromEmail = process.env.FROM_EMAIL || 'noreply@prizeplatform.com';
-    this.setupTransporter();
-  }
 
-  setupTransporter() {
-    // Check if SendGrid API key is available
     if (process.env.SENDGRID_API_KEY) {
-      // SendGrid configuration
-      this.transporter = nodemailer.createTransport({
-        host: 'smtp.sendgrid.net',
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'apikey',
-          pass: process.env.SENDGRID_API_KEY
-        }
-      });
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      console.log('✅ SENDGRID_API_KEY detected, using SendGrid Web API');
     } else {
-      // Development mode - log emails to console
-      console.log('⚠️  No SendGrid API key found. Emails will be logged to console.');
-      this.transporter = nodemailer.createTransport({
-        streamTransport: true,
-        newline: 'unix',
-        buffer: true
-      });
+      console.log('⚠️  No SendGrid API key found. Emails will be logged to console only.');
     }
   }
 
@@ -109,25 +90,26 @@ class EmailService {
     `;
 
     try {
-      const info = await this.transporter.sendMail({
-        from: this.fromEmail,
-        to: user.email,
-        subject: subject,
-        text: text,
-        html: html
-      });
-
-      if (process.env.SENDGRID_API_KEY) {
-        console.log(`✅ Winner notification sent to ${user.email}`);
-      } else {
-        console.log('\n📧 WINNER EMAIL (Development Mode):');
+      if (!process.env.SENDGRID_API_KEY) {
+        console.log('\n📧 WINNER EMAIL (Development Mode - no SENDGRID_API_KEY):');
         console.log('To:', user.email);
         console.log('Subject:', subject);
         console.log('Message:', text);
         console.log('---\n');
+        return { success: true, messageId: 'console-log' };
       }
 
-      return { success: true, messageId: info.messageId };
+      const msg = {
+        to: user.email,
+        from: this.fromEmail,
+        subject,
+        text,
+        html
+      };
+
+      const [response] = await sgMail.send(msg);
+      console.log(`✅ Winner notification sent to ${user.email}`);
+      return { success: true, messageId: response?.headers?.['x-message-id'] || 'sendgrid' };
     } catch (error) {
       console.error('❌ Email send error:', error);
       return { success: false, error: error.message };
@@ -176,13 +158,23 @@ class EmailService {
     `;
 
     try {
-      await this.transporter.sendMail({
-        from: this.fromEmail,
-        to: adminEmail,
-        subject: subject,
-        html: html
-      });
+      if (!process.env.SENDGRID_API_KEY) {
+        console.log('\n📧 ADMIN DRAW EMAIL (Development Mode - no SENDGRID_API_KEY):');
+        console.log('To:', adminEmail);
+        console.log('Subject:', subject);
+        console.log('HTML body omitted');
+        console.log('---\n');
+        return { success: true };
+      }
 
+      const msg = {
+        to: adminEmail,
+        from: this.fromEmail,
+        subject,
+        html
+      };
+
+      await sgMail.send(msg);
       console.log(`✅ Admin notification sent for prize: ${prize.title}`);
       return { success: true };
     } catch (error) {
@@ -193,16 +185,25 @@ class EmailService {
 
   async sendTestEmail(toEmail) {
     try {
-      const info = await this.transporter.sendMail({
-        from: this.fromEmail,
+      if (!process.env.SENDGRID_API_KEY) {
+        console.log('\n📧 TEST EMAIL (Development Mode - no SENDGRID_API_KEY):');
+        console.log('To:', toEmail);
+        console.log('Subject: Test Email from Prize Platform');
+        console.log('---\n');
+        return { success: true, messageId: 'console-log' };
+      }
+
+      const msg = {
         to: toEmail,
+        from: this.fromEmail,
         subject: 'Test Email from Prize Platform',
         text: 'This is a test email. If you received this, email service is working!',
         html: '<p>This is a test email. If you received this, email service is working!</p>'
-      });
+      };
 
+      const [response] = await sgMail.send(msg);
       console.log('✅ Test email sent successfully');
-      return { success: true, messageId: info.messageId };
+      return { success: true, messageId: response?.headers?.['x-message-id'] || 'sendgrid' };
     } catch (error) {
       console.error('❌ Test email error:', error);
       return { success: false, error: error.message };

@@ -33,6 +33,9 @@ const Navbar = () => {
                 <button className="user-button">
                   <User size={20} />
                   <span>{user.username}</span>
+                  {user.wins && user.wins.some(win => !win.claimed) && (
+                    <span className="win-indicator" aria-label="You have a win" />
+                  )}
                 </button>
                 <div className="user-dropdown">
                   <Link to="/dashboard" className="dropdown-item">

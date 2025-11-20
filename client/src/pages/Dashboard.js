@@ -98,6 +98,8 @@ const Dashboard = () => {
 
   const prizeEntries = (dashboardUser.prizeEntries || []).filter(entry => entry.prize);
   const totalTrackedEntries = prizeEntries.reduce((sum, entry) => sum + (entry.entriesUsed || 0), 0);
+  const wins = dashboardUser.wins || [];
+  const unclaimedWins = wins.filter(win => !win.claimed);
 
   return (
     <div className="dashboard-page">
@@ -109,6 +111,19 @@ const Dashboard = () => {
       </div>
 
       <div className="container">
+        {unclaimedWins.length > 0 && (
+          <div className="win-notification">
+            <div className="win-notification-icon">🎉</div>
+            <div className="win-notification-content">
+              <h2>You've won a prize!</h2>
+              <p>
+                You have {unclaimedWins.length} unclaimed win{unclaimedWins.length > 1 ? 's' : ''}. Visit your{' '}
+                <Link to="/wins">Wins page</Link> to view details and claim.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Streak and Level Display */}
         {/* <StreakDisplay /> */}
 

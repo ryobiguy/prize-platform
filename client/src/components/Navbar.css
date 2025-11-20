@@ -109,6 +109,14 @@
   transition: all 0.3s;
 }
 
+.win-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #f97316;
+  box-shadow: 0 0 0 2px #ffffff;
+}
+
 .user-button:hover {
   border-color: var(--primary);
   background: var(--bg-secondary);
