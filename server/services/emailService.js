@@ -14,60 +14,200 @@ class EmailService {
   }
 
   async sendWinnerNotification(user, prize) {
-    const subject = `🎉 Congratulations! You've won ${prize.title}!`;
+    const subject = `🎉 Congratulations! You've Won ${prize.title}!`;
     
     const html = `
       <!DOCTYPE html>
       <html>
       <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-          .prize-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #667eea; }
-          .button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-          .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; }
+          body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6; 
+            color: #1f2937; 
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+          }
+          .email-wrapper { 
+            background-color: #f3f4f6; 
+            padding: 40px 20px; 
+          }
+          .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          }
+          .header { 
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%); 
+            color: white; 
+            padding: 40px 30px; 
+            text-align: center;
+          }
+          .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+          }
+          .header p {
+            margin: 10px 0 0 0;
+            font-size: 18px;
+            opacity: 0.95;
+          }
+          .content { 
+            padding: 40px 30px;
+          }
+          .greeting {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 20px;
+          }
+          .prize-box { 
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            padding: 25px; 
+            margin: 25px 0; 
+            border-radius: 12px; 
+            border-left: 5px solid #ff6b35;
+          }
+          .prize-box h2 {
+            margin: 0 0 15px 0;
+            color: #1f2937;
+            font-size: 24px;
+          }
+          .prize-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+          }
+          .prize-detail:last-child {
+            border-bottom: none;
+          }
+          .prize-detail strong {
+            color: #6b7280;
+            font-weight: 600;
+          }
+          .prize-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ff6b35;
+          }
+          .next-steps {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+          }
+          .next-steps h3 {
+            margin: 0 0 15px 0;
+            color: #1f2937;
+            font-size: 18px;
+          }
+          .next-steps ol {
+            margin: 0;
+            padding-left: 20px;
+          }
+          .next-steps li {
+            margin: 8px 0;
+            color: #4b5563;
+          }
+          .button-container {
+            text-align: center;
+            margin: 30px 0;
+          }
+          .button { 
+            display: inline-block; 
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            color: white; 
+            padding: 16px 40px; 
+            text-decoration: none; 
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(255, 107, 53, 0.3);
+          }
+          .footer { 
+            text-align: center; 
+            color: #9ca3af; 
+            font-size: 13px; 
+            padding: 30px;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+          }
+          .footer p {
+            margin: 5px 0;
+          }
+          .brand {
+            font-weight: 800;
+            color: #ff6b35;
+          }
         </style>
       </head>
       <body>
-        <div class="container">
-          <div class="header">
-            <h1>🎉 YOU'RE A WINNER! 🎉</h1>
-          </div>
-          <div class="content">
-            <p>Hi ${user.username},</p>
-            
-            <p>Fantastic news! You've won our prize draw!</p>
-            
-            <div class="prize-box">
-              <h2>${prize.title}</h2>
-              <p><strong>Value:</strong> £${prize.value}</p>
-              <p><strong>Type:</strong> ${prize.type}</p>
-              <p>${prize.description}</p>
+        <div class="email-wrapper">
+          <div class="container">
+            <div class="header">
+              <h1>🎉 CONGRATULATIONS! 🎉</h1>
+              <p>You're a Winner at Total Raffle!</p>
+            </div>
+            <div class="content">
+              <p class="greeting">Hi ${user.username},</p>
+              
+              <p style="font-size: 16px; color: #1f2937;">
+                We have some <strong>fantastic news</strong> for you! You've won our prize draw and we couldn't be more excited to share this with you!
+              </p>
+              
+              <div class="prize-box">
+                <h2>${prize.title}</h2>
+                <div class="prize-detail">
+                  <strong>Prize Value:</strong>
+                  <span class="prize-value">£${prize.value}</span>
+                </div>
+                <div class="prize-detail">
+                  <strong>Prize Type:</strong>
+                  <span style="text-transform: capitalize;">${prize.type}</span>
+                </div>
+                ${prize.description ? `<p style="margin: 15px 0 0 0; color: #4b5563;">${prize.description}</p>` : ''}
+              </div>
+              
+              <div class="next-steps">
+                <h3>📋 What Happens Next?</h3>
+                <ol>
+                  <li><strong>Check your dashboard</strong> - Your win is now visible in your account</li>
+                  <li><strong>We'll contact you</strong> - Our team will reach out within 48 hours</li>
+                  <li><strong>Provide details</strong> - We'll need your delivery/contact information</li>
+                  <li><strong>Receive your prize</strong> - Sit back and wait for your amazing prize!</li>
+                </ol>
+              </div>
+              
+              <div class="button-container">
+                <a href="${process.env.CLIENT_URL || 'https://www.totalraffle.co.uk'}/wins" class="button">
+                  View My Wins
+                </a>
+              </div>
+              
+              <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
+                Thank you for being part of <span class="brand">Total Raffle</span>. We hope you enjoy your prize!
+              </p>
+              
+              <p style="margin-top: 25px;">
+                Best regards,<br>
+                <strong>The Total Raffle Team</strong>
+              </p>
             </div>
             
-            <p><strong>What happens next?</strong></p>
-            <ol>
-              <li>Log in to your account to claim your prize</li>
-              <li>We'll contact you within 48 hours with prize details</li>
-              <li>Provide your delivery/contact information</li>
-              <li>Receive your prize!</li>
-            </ol>
-            
-            <center>
-              <a href="${process.env.CLIENT_URL || 'http://localhost:3000'}/dashboard" class="button">
-                Claim Your Prize
-              </a>
-            </center>
-            
-            <p>Congratulations again, and thank you for participating!</p>
-            
-            <p>Best regards,<br>The Prize Platform Team</p>
-            
             <div class="footer">
+              <p><strong>Total Raffle</strong> | www.totalraffle.co.uk</p>
               <p>This email was sent to ${user.email}</p>
-              <p>If you didn't enter this competition, please ignore this email.</p>
+              <p style="margin-top: 15px; font-size: 12px;">
+                If you didn't enter this competition, please ignore this email or contact us at support@totalraffle.co.uk
+              </p>
             </div>
           </div>
         </div>
