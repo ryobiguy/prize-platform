@@ -1,0 +1,231 @@
+.wins-page {
+  min-height: 100vh;
+  padding-bottom: 4rem;
+}
+
+.wins-header {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.wins-header svg {
+  margin-bottom: 1rem;
+}
+
+.wins-header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.wins-header p {
+  font-size: 1.25rem;
+  opacity: 0.95;
+}
+
+.no-wins {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.no-wins svg {
+  margin-bottom: 1rem;
+  opacity: 0.5;
+  color: var(--text-secondary);
+}
+
+.no-wins h2 {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.no-wins p {
+  margin-bottom: 2rem;
+}
+
+.browse-btn {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.browse-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.wins-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.win-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s;
+  border: 3px solid transparent;
+}
+
+.win-card.unclaimed {
+  border-color: #f59e0b;
+  background: linear-gradient(to bottom, #fffbeb, white);
+}
+
+.win-card.claimed {
+  opacity: 0.85;
+}
+
+.win-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+}
+
+.win-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.win-trophy {
+  color: #f59e0b;
+}
+
+.win-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.claimed-badge {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.unclaimed-badge {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.win-card-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.win-type {
+  text-transform: capitalize;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.win-value {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.value-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.value-amount {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.win-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.meta-item svg {
+  color: var(--primary);
+}
+
+.win-instructions {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 3px solid #f59e0b;
+}
+
+.win-instructions h4 {
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.win-instructions ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.win-instructions li {
+  margin-bottom: 0.35rem;
+}
+
+.wins-footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding: 2rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+}
+
+.wins-footer p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.wins-footer a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .wins-header h1 {
+    font-size: 2rem;
+  }
+
+  .wins-grid {
+    grid-template-columns: 1fr;
+  }
+}

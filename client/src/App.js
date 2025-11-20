@@ -25,6 +25,7 @@ import ContestRules from './pages/ContestRules';
 import BuyEntries from './pages/BuyEntries';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Wins from './pages/Wins';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -67,6 +68,7 @@ function App() {
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/my-entries" element={<PrivateRoute><MyEntries /></PrivateRoute>} />
             <Route path="/buy-entries" element={<PrivateRoute><BuyEntries /></PrivateRoute>} />
+            <Route path="/wins" element={<PrivateRoute><Wins /></PrivateRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
