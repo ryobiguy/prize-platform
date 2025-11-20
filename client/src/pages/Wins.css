@@ -201,6 +201,30 @@
   margin-bottom: 0.35rem;
 }
 
+.contact-claim-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
+}
+
+.contact-claim-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 107, 53, 0.4);
+  background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+}
+
 .wins-footer {
   text-align: center;
   margin-top: 3rem;

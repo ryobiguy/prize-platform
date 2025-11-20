@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../utils/axios';
-import { Trophy, Calendar, Gift, CheckCircle, Clock } from 'lucide-react';
+import { Trophy, Calendar, Gift, CheckCircle, Clock, Mail } from 'lucide-react';
 import './Wins.css';
 
 const Wins = () => {
@@ -86,14 +86,23 @@ const Wins = () => {
                   </div>
 
                   {!win.claimed && (
-                    <div className="win-instructions">
-                      <h4>Next Steps:</h4>
-                      <ol>
-                        <li>We'll contact you within 48 hours</li>
-                        <li>Provide your delivery/contact details</li>
-                        <li>Receive your prize!</li>
-                      </ol>
-                    </div>
+                    <>
+                      <div className="win-instructions">
+                        <h4>Next Steps:</h4>
+                        <ol>
+                          <li>Contact us to claim your prize</li>
+                          <li>Provide your delivery/contact details</li>
+                          <li>Receive your prize!</li>
+                        </ol>
+                      </div>
+                      <a 
+                        href={`mailto:totalraffle@mail.com?subject=Prize Claim - ${win.prize.title}&body=Hi Total Raffle Team,%0D%0A%0D%0AI am writing to claim my prize: ${win.prize.title}%0D%0A%0D%0AMy account details:%0D%0AUsername: [Your username]%0D%0AEmail: [Your email]%0D%0A%0D%0APlease let me know the next steps to receive my prize.%0D%0A%0D%0AThank you!`}
+                        className="contact-claim-btn"
+                      >
+                        <Mail size={18} />
+                        Contact Us to Claim Prize
+                      </a>
+                    </>
                   )}
                 </div>
               </div>
