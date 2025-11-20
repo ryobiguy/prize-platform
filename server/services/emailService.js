@@ -177,13 +177,22 @@ class EmailService {
               </div>
               
               <div class="next-steps">
-                <h3>📋 What Happens Next?</h3>
+                <h3>📋 How to Claim Your Prize</h3>
                 <ol>
-                  <li><strong>Check your dashboard</strong> - Your win is now visible in your account</li>
-                  <li><strong>We'll contact you</strong> - Our team will reach out within 48 hours</li>
-                  <li><strong>Provide details</strong> - We'll need your delivery/contact information</li>
-                  <li><strong>Receive your prize</strong> - Sit back and wait for your amazing prize!</li>
+                  <li><strong>Contact us now</strong> - Email us at <strong style="color: #ff6b35;">totalraffle@mail.com</strong> to claim your prize</li>
+                  <li><strong>Provide your details</strong> - We'll need your delivery/contact information</li>
+                  <li><strong>Verification</strong> - We'll verify your win and confirm prize details</li>
+                  <li><strong>Receive your prize</strong> - Your prize will be delivered within 14-30 days!</li>
                 </ol>
+              </div>
+              
+              <div style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); padding: 20px; border-radius: 8px; border-left: 5px solid #ff6b35; margin: 25px 0;">
+                <p style="margin: 0; font-size: 16px; font-weight: 700; color: #1f2937;">
+                  ⚠️ Important: Contact us at <span style="color: #ff6b35;">totalraffle@mail.com</span> to claim your prize!
+                </p>
+                <p style="margin: 10px 0 0 0; font-size: 14px; color: #4b5563;">
+                  You must contact us within 7 days to claim your prize, or it may be forfeited.
+                </p>
               </div>
               
               <div class="button-container">
