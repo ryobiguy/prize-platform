@@ -98,6 +98,21 @@ const AdminPanel = () => {
     }
   };
 
+  const handleMarkAsClaimed = async (userId, prizeId) => {
+    if (!window.confirm('Mark this win as claimed? This will update the user\'s win status.')) {
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/api/admin/wins/${userId}/${prizeId}/claim`);
+      toast.success(response.data.message);
+      fetchWinners();
+      fetchStats();
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to mark as claimed');
+    }
+  };
+
   const handleMarkNotified = async (prizeId, winnerId) => {
     try {
       await axios.put(`/api/admin/winners/${prizeId}/${winnerId}/notify`);
@@ -588,36 +603,36 @@ const AdminPanel = () => {
                         <th>User</th>
                         <th>Prize</th>
                         <th>Value</th>
-                        <th>Drawn Date</th>
-                        <th>Notified</th>
+                        <th>Won Date</th>
+                        <th>Status</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {allWinners.map(winner => (
-                        <tr key={winner._id}>
+                      {allWinners.map((winner, index) => (
+                        <tr key={`${winner.userId}-${winner.prizeId}-${index}`}>
                           <td>
                             <div>
-                              <strong>{winner.user.username}</strong>
+                              <strong>{winner.username}</strong>
                               <br />
-                              <small>{winner.user.email}</small>
+                              <small>{winner.email}</small>
                             </div>
                           </td>
                           <td>{winner.prize.title}</td>
                           <td>£{winner.prize.value}</td>
-                          <td>{new Date(winner.drawnAt).toLocaleDateString()}</td>
+                          <td>{new Date(winner.wonAt).toLocaleDateString()}</td>
                           <td>
-                            <span className={`status-badge ${winner.notified ? 'success' : 'pending'}`}>
-                              {winner.notified ? 'Yes' : 'No'}
+                            <span className={`status-badge ${winner.claimed ? 'success' : 'pending'}`}>
+                              {winner.claimed ? 'Claimed' : 'Pending'}
                             </span>
                           </td>
                           <td>
-                            {!winner.notified && (
+                            {!winner.claimed && (
                               <button
-                                className="notify-btn"
-                                onClick={() => handleMarkNotified(winner.prize._id, winner.user._id)}
+                                className="claim-btn"
+                                onClick={() => handleMarkAsClaimed(winner.userId, winner.prizeId)}
                               >
-                                Mark Notified
+                                Mark as Claimed
                               </button>
                             )}
                           </td>

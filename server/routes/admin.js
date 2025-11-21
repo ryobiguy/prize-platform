@@ -508,4 +508,70 @@ router.post('/setup-prizes-once', adminAuth, async (req, res) => {
   }
 });
 
+// Mark a user's win as claimed
+router.post('/wins/:userId/:prizeId/claim', adminAuth, async (req, res) => {
+  try {
+    const { userId, prizeId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Find the win in the user's wins array
+    const win = user.wins.find(w => w.prize.toString() === prizeId && !w.claimed);
+    
+    if (!win) {
+      return res.status(404).json({ error: 'Unclaimed win not found for this user and prize' });
+    }
+
+    // Mark as claimed
+    win.claimed = true;
+    await user.save();
+
+    res.json({ 
+      success: true,
+      message: 'Win marked as claimed',
+      win: {
+        prize: win.prize,
+        wonAt: win.wonAt,
+        claimed: win.claimed
+      }
+    });
+  } catch (error) {
+    console.error('Mark win as claimed error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Get all winners (for admin panel)
+router.get('/winners', adminAuth, async (req, res) => {
+  try {
+    const users = await User.find({ 'wins.0': { $exists: true } })
+      .populate('wins.prize', 'title value type')
+      .select('username email wins')
+      .sort({ 'wins.wonAt': -1 });
+
+    const winners = [];
+    users.forEach(user => {
+      user.wins.forEach(win => {
+        winners.push({
+          userId: user._id,
+          username: user.username,
+          email: user.email,
+          prize: win.prize,
+          wonAt: win.wonAt,
+          claimed: win.claimed,
+          prizeId: win.prize._id
+        });
+      });
+    });
+
+    res.json({ winners });
+  } catch (error) {
+    console.error('Get winners error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;
