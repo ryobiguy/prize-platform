@@ -108,14 +108,14 @@ const PrizeDetail = () => {
             </div>
           </div>
 
-          {/* Right Column - Tasks */}
+          {/* Right Column - Entry Controls */}
           <div className="tasks-section">
-            <h2 className="section-heading">TASKS TO DO</h2>
+            <h2 className="section-heading">ENTER PRIZE DRAW</h2>
             <div className="tasks-list">
               {userEntries > 0 && (
                 <div className="task-completed">
                   <Trophy size={20} />
-                  <span>You have {userEntries} entries</span>
+                  <span>You have {userEntries} entries in this draw</span>
                 </div>
               )}
 
@@ -165,9 +165,9 @@ const PrizeDetail = () => {
               )}
 
               <div className="task-info">
-                <p>Complete tasks to earn more entries</p>
-                <button className="view-tasks-btn" onClick={() => navigate('/tasks')}>
-                  View All Tasks
+                <p>Need more entries?</p>
+                <button className="view-tasks-btn" onClick={() => navigate('/buy-entries')}>
+                  Buy Entries
                 </button>
               </div>
             </div>
