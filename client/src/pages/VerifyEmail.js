@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import axios from '../utils/axios';
+import { useAuth } from '../context/AuthContext';
 import { CheckCircle, XCircle, Mail, Loader } from 'lucide-react';
 import './VerifyEmail.css';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { updateUser } = useAuth();
   const [status, setStatus] = useState('verifying'); // verifying, success, error
   const [message, setMessage] = useState('');
 
@@ -27,6 +29,11 @@ const VerifyEmail = () => {
       const response = await axios.get(`/api/auth/verify-email/${token}`);
       setStatus('success');
       setMessage(response.data.message || 'Email verified successfully!');
+      
+      // Update user data in auth context
+      if (response.data.user) {
+        updateUser(response.data.user);
+      }
       
       // Redirect to dashboard after 3 seconds
       setTimeout(() => {
