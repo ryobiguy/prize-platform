@@ -303,7 +303,8 @@ router.get('/verify-email/:token', async (req, res) => {
 // Resend verification email
 router.post('/resend-verification', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    // req.user is already the full user object from auth middleware
+    const user = req.user;
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
