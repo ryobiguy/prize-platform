@@ -225,6 +225,33 @@ const Dashboard = () => {
               )}
             </div>
 
+            {/* Quick Actions */}
+            <div className="section">
+              <div className="section-header">
+                <h2>Quick Actions</h2>
+              </div>
+              <div className="quick-actions-column">
+                <Link to="/buy-entries" className="action-card">
+                  <Trophy size={32} />
+                  <h3>Buy Entries</h3>
+                  <p>Purchase entry packages</p>
+                </Link>
+                <Link to="/prizes" className="action-card">
+                  <Gift size={32} />
+                  <h3>Browse Prizes</h3>
+                  <p>Enter to win amazing prizes</p>
+                </Link>
+                <Link to="/wins" className="action-card">
+                  <TrendingUp size={32} />
+                  <h3>My Wins</h3>
+                  <p>View your prizes</p>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="dashboard-column-right">
             {/* Wins Section */}
             {stats.totalWins > 0 && user.wins && user.wins.length > 0 && (
               <div className="section">
@@ -246,10 +273,7 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-          </div>
 
-          {/* Right Column */}
-          <div className="dashboard-column-right">
             {/* Purchase History */}
             {purchases && purchases.length > 0 && (
               <div className="section">
@@ -276,30 +300,6 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-
-            {/* Quick Actions */}
-            <div className="section">
-              <div className="section-header">
-                <h2>Quick Actions</h2>
-              </div>
-              <div className="quick-actions-column">
-                <Link to="/buy-entries" className="action-card">
-                  <Trophy size={32} />
-                  <h3>Buy Entries</h3>
-                  <p>Purchase entry packages</p>
-                </Link>
-                <Link to="/prizes" className="action-card">
-                  <Gift size={32} />
-                  <h3>Browse Prizes</h3>
-                  <p>Enter to win amazing prizes</p>
-                </Link>
-                <Link to="/wins" className="action-card">
-                  <TrendingUp size={32} />
-                  <h3>My Wins</h3>
-                  <p>View your prizes</p>
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </div>
