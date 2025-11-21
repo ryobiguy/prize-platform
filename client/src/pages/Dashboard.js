@@ -160,8 +160,8 @@ const Dashboard = () => {
               <Gift size={32} />
             </div>
             <div className="stat-content">
-              <div className="stat-value">{stats.activePrizes}</div>
-              <div className="stat-label">Active Prize Entries</div>
+              <div className="stat-value">{totalTrackedEntries}</div>
+              <div className="stat-label">Entries Spent</div>
             </div>
           </div>
 
@@ -176,118 +176,131 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Wins Section */}
-        {stats.totalWins > 0 && user.wins && user.wins.length > 0 && (
-          <div className="section">
-            <div className="section-header">
-              <h2>Your Wins 🎉</h2>
-              <Link to="/wins" className="view-all">View All</Link>
-            </div>
-            <div className="wins-grid">
-              {user.wins.slice(0, 3).map((win, index) => (
-                <div key={index} className="win-card">
-                  <Trophy size={48} className="win-icon" />
-                  <h3>{win.prize.title}</h3>
-                  <p className="win-value">£{win.prize.value}</p>
-                  <span className={`win-status ${win.claimed ? 'claimed' : 'pending'}`}>
-                    {win.claimed ? 'Claimed' : 'Pending Claim'}
-                  </span>
+        {/* 2-Column Layout */}
+        <div className="dashboard-two-column">
+          {/* Left Column */}
+          <div className="dashboard-column-left">
+            {/* Entries Tracker */}
+            <div className="section">
+              <div className="section-header">
+                <h2>Where You've Spent Your Entries</h2>
+                <div className="entries-summary">
+                  <span className="summary-badge">{prizeEntries.length} prizes entered</span>
+                  <span className="summary-badge primary">{totalTrackedEntries} entries spent</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-
-        {/* Purchase History */}
-        {purchases && purchases.length > 0 && (
-          <div className="section">
-            <div className="section-header">
-              <h2>Purchase History</h2>
-            </div>
-            <div className="activity-list">
-              {purchases.map((purchase, index) => (
-                <div key={index} className="activity-item">
-                  <div className="activity-icon">
-                    <Trophy size={20} />
+              </div>
+              {prizeEntries && prizeEntries.length > 0 ? (
+                <div className="entries-table">
+                  <div className="entries-table-header">
+                    <div>Prize</div>
+                    <div>Entries Used</div>
+                    <div>Draw Date</div>
                   </div>
-                  <div className="activity-content">
-                    <h4>
-                      £{(purchase.amountPence / 100).toFixed(2)} for {purchase.entries} entries
-                    </h4>
-                    <p>Processed via {purchase.provider || 'Square'}</p>
-                  </div>
-                  <div className="activity-time">
-                    {new Date(purchase.createdAt).toLocaleString()}
-                  </div>
+                  {prizeEntries.map((entry, index) => (
+                    <Link
+                      to={`/prizes/${entry.prize._id}`}
+                      key={index}
+                      className="entries-table-row"
+                    >
+                      <div className="entries-table-prize">
+                        <Gift size={20} />
+                        <span>{entry.prize.title}</span>
+                      </div>
+                      <div className="entries-table-entries">
+                        <span className="entries-badge">{entry.entriesUsed}</span>
+                      </div>
+                      <div className="entries-table-date">
+                        <Clock size={14} />
+                        <span>{new Date(entry.prize.endDate).toLocaleDateString()}</span>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Entries Tracker */}
-        {prizeEntries && prizeEntries.length > 0 && (
-          <div className="section">
-            <div className="section-header">
-              <h2>Entries Tracker</h2>
-              <div className="entries-summary">
-                <span>{prizeEntries.length} prizes entered</span>
-                <span>•</span>
-                <span>{totalTrackedEntries} entries used</span>
-              </div>
-            </div>
-            <div className="entries-table">
-              <div className="entries-table-header">
-                <div>Prize</div>
-                <div>Entries Used</div>
-                <div>Draw Date</div>
-              </div>
-              {prizeEntries.slice(0, 6).map((entry, index) => (
-                <Link
-                  to={`/prizes/${entry.prize._id}`}
-                  key={index}
-                  className="entries-table-row"
-                >
-                  <div className="entries-table-prize">
-                    <Gift size={20} />
-                    <span>{entry.prize.title}</span>
-                  </div>
-                  <div className="entries-table-entries">{entry.entriesUsed}</div>
-                  <div className="entries-table-date">
-                    <Clock size={14} />
-                    <span>{new Date(entry.prize.endDate).toLocaleDateString()}</span>
-                  </div>
-                </Link>
-              ))}
-              {prizeEntries.length > 6 && (
-                <div className="entries-table-footer">
-                  <Link to="/entries" className="view-all">View all entries</Link>
+              ) : (
+                <div className="empty-state">
+                  <Gift size={48} />
+                  <p>No entries spent yet</p>
+                  <Link to="/prizes" className="btn-primary">Browse Prizes</Link>
                 </div>
               )}
             </div>
+
+            {/* Wins Section */}
+            {stats.totalWins > 0 && user.wins && user.wins.length > 0 && (
+              <div className="section">
+                <div className="section-header">
+                  <h2>Your Wins 🎉</h2>
+                  <Link to="/wins" className="view-all">View All</Link>
+                </div>
+                <div className="wins-grid">
+                  {user.wins.slice(0, 3).map((win, index) => (
+                    <div key={index} className="win-card">
+                      <Trophy size={48} className="win-icon" />
+                      <h3>{win.prize.title}</h3>
+                      <p className="win-value">£{win.prize.value}</p>
+                      <span className={`win-status ${win.claimed ? 'claimed' : 'pending'}`}>
+                        {win.claimed ? 'Claimed' : 'Pending Claim'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
 
+          {/* Right Column */}
+          <div className="dashboard-column-right">
+            {/* Purchase History */}
+            {purchases && purchases.length > 0 && (
+              <div className="section">
+                <div className="section-header">
+                  <h2>Purchase History</h2>
+                </div>
+                <div className="activity-list">
+                  {purchases.slice(0, 5).map((purchase, index) => (
+                    <div key={index} className="activity-item">
+                      <div className="activity-icon">
+                        <Trophy size={20} />
+                      </div>
+                      <div className="activity-content">
+                        <h4>
+                          £{(purchase.amountPence / 100).toFixed(2)} for {purchase.entries} entries
+                        </h4>
+                        <p>Processed via {purchase.provider || 'Square'}</p>
+                      </div>
+                      <div className="activity-time">
+                        {new Date(purchase.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-        {/* Achievements */}
-        {/* <Achievements /> */}
-
-        {/* Leaderboard */}
-        {/* <Leaderboard /> */}
-
-        {/* Quick Actions */}
-        <div className="quick-actions">
-          <Link to="/buy-entries" className="action-card">
-            <Trophy size={32} />
-            <h3>Buy Entries</h3>
-            <p>Purchase entry packages</p>
-          </Link>
-          <Link to="/prizes" className="action-card">
-            <Gift size={32} />
-            <h3>Browse Prizes</h3>
-            <p>Enter to win</p>
-          </Link>
+            {/* Quick Actions */}
+            <div className="section">
+              <div className="section-header">
+                <h2>Quick Actions</h2>
+              </div>
+              <div className="quick-actions-column">
+                <Link to="/buy-entries" className="action-card">
+                  <Trophy size={32} />
+                  <h3>Buy Entries</h3>
+                  <p>Purchase entry packages</p>
+                </Link>
+                <Link to="/prizes" className="action-card">
+                  <Gift size={32} />
+                  <h3>Browse Prizes</h3>
+                  <p>Enter to win amazing prizes</p>
+                </Link>
+                <Link to="/wins" className="action-card">
+                  <TrendingUp size={32} />
+                  <h3>My Wins</h3>
+                  <p>View your prizes</p>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
