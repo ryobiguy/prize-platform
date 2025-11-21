@@ -575,15 +575,18 @@ router.get('/winners', adminAuth, async (req, res) => {
     const winners = [];
     users.forEach(user => {
       user.wins.forEach(win => {
-        winners.push({
-          userId: user._id,
-          username: user.username,
-          email: user.email,
-          prize: win.prize,
-          wonAt: win.wonAt,
-          claimed: win.claimed,
-          prizeId: win.prize._id
-        });
+        // Only include wins where the prize still exists
+        if (win.prize && win.prize._id) {
+          winners.push({
+            userId: user._id,
+            username: user.username,
+            email: user.email,
+            prize: win.prize,
+            wonAt: win.wonAt,
+            claimed: win.claimed,
+            prizeId: win.prize._id
+          });
+        }
       });
     });
 
