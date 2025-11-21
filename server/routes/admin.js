@@ -513,21 +513,40 @@ router.post('/wins/:userId/:prizeId/claim', adminAuth, async (req, res) => {
   try {
     const { userId, prizeId } = req.params;
 
+    console.log('Marking win as claimed:', { userId, prizeId });
+
     const user = await User.findById(userId);
     if (!user) {
+      console.log('User not found:', userId);
       return res.status(404).json({ error: 'User not found' });
     }
 
+    console.log('User wins:', user.wins);
+
     // Find the win in the user's wins array
-    const win = user.wins.find(w => w.prize.toString() === prizeId && !w.claimed);
+    const win = user.wins.find(w => {
+      const prizeIdMatch = w.prize && w.prize.toString() === prizeId;
+      const notClaimed = !w.claimed;
+      console.log('Checking win:', { 
+        winPrizeId: w.prize?.toString(), 
+        targetPrizeId: prizeId, 
+        match: prizeIdMatch,
+        claimed: w.claimed,
+        notClaimed 
+      });
+      return prizeIdMatch && notClaimed;
+    });
     
     if (!win) {
+      console.log('No unclaimed win found for prize:', prizeId);
       return res.status(404).json({ error: 'Unclaimed win not found for this user and prize' });
     }
 
     // Mark as claimed
     win.claimed = true;
     await user.save();
+
+    console.log('Win marked as claimed successfully');
 
     res.json({ 
       success: true,
@@ -540,7 +559,8 @@ router.post('/wins/:userId/:prizeId/claim', adminAuth, async (req, res) => {
     });
   } catch (error) {
     console.error('Mark win as claimed error:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 
