@@ -7,6 +7,7 @@ import StreakDisplay from '../components/StreakDisplay';
 import Achievements from '../components/Achievements';
 import Leaderboard from '../components/Leaderboard';
 import SpinWheel from '../components/SpinWheel';
+import EmailVerificationBanner from '../components/EmailVerificationBanner';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -103,6 +104,8 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page">
+      <EmailVerificationBanner user={user} />
+      
       <div className="dashboard-header">
         <div className="container">
           <h1>Welcome back, {user.username}!</h1>

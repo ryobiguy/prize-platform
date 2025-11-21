@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
+const emailService = require('../services/emailService');
 
 // Register
 router.post('/register', [
@@ -29,16 +31,26 @@ router.post('/register', [
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate email verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
     // Create user with 10 welcome entries
     const user = new User({
       username,
       email,
       password: hashedPassword,
       totalEntries: 10,
-      availableEntries: 10
+      availableEntries: 10,
+      emailVerified: false,
+      emailVerificationToken: verificationToken,
+      emailVerificationExpires: verificationExpires
     });
 
     await user.save();
+
+    // Send verification email
+    await emailService.sendVerificationEmail(user, verificationToken);
 
     // Generate token
     const token = jwt.sign(
@@ -48,14 +60,15 @@ router.post('/register', [
     );
 
     res.status(201).json({
-      message: 'User created successfully',
+      message: 'User created successfully. Please check your email to verify your account.',
       token,
       user: {
         id: user._id,
         username: user.username,
         email: user.email,
         totalEntries: user.totalEntries,
-        availableEntries: user.availableEntries
+        availableEntries: user.availableEntries,
+        emailVerified: user.emailVerified
       }
     });
   } catch (error) {
@@ -248,6 +261,75 @@ router.post('/make-admin-secret-endpoint-12345', async (req, res) => {
     });
   } catch (error) {
     console.error('Make admin error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Verify email
+router.get('/verify-email/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const user = await User.findOne({
+      emailVerificationToken: token,
+      emailVerificationExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired verification token' });
+    }
+
+    user.emailVerified = true;
+    user.emailVerificationToken = null;
+    user.emailVerificationExpires = null;
+    await user.save();
+
+    res.json({ 
+      success: true, 
+      message: 'Email verified successfully!',
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        emailVerified: user.emailVerified
+      }
+    });
+  } catch (error) {
+    console.error('Email verification error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Resend verification email
+router.post('/resend-verification', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ error: 'Email already verified' });
+    }
+
+    // Generate new verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    user.emailVerificationToken = verificationToken;
+    user.emailVerificationExpires = verificationExpires;
+    await user.save();
+
+    // Send verification email
+    await emailService.sendVerificationEmail(user, verificationToken);
+
+    res.json({ 
+      success: true, 
+      message: 'Verification email sent. Please check your inbox.'
+    });
+  } catch (error) {
+    console.error('Resend verification error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });

@@ -1,0 +1,131 @@
+.verify-email-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  padding: 2rem;
+}
+
+.verify-email-container {
+  max-width: 500px;
+  width: 100%;
+}
+
+.verify-status {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.verify-status svg {
+  margin-bottom: 1.5rem;
+}
+
+.verify-status.verifying svg {
+  color: #ff6b35;
+  animation: spin 1s linear infinite;
+}
+
+.verify-status.success svg {
+  color: #10b981;
+}
+
+.verify-status.error svg {
+  color: #ef4444;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.verify-status h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.verify-status p {
+  color: #6b7280;
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+}
+
+.redirect-message {
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+  margin: 0.5rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(255, 107, 53, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 107, 53, 0.4);
+}
+
+.btn-secondary {
+  background: white;
+  color: #ff6b35;
+  border: 2px solid #ff6b35;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-secondary:hover {
+  background: #fff7ed;
+  transform: translateY(-2px);
+}
+
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .verify-email-page {
+    padding: 1rem;
+  }
+
+  .verify-status {
+    padding: 2rem 1.5rem;
+  }
+
+  .verify-status h1 {
+    font-size: 1.5rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
