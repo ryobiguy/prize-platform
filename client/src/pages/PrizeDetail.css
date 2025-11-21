@@ -266,8 +266,31 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .prize-detail-page {
+    padding: 1rem 0;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
   .prize-layout {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .prize-section,
+  .tasks-section {
+    padding: 1.5rem;
+  }
+
+  .section-heading {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .prize-display {
+    height: 250px;
   }
 
   .prize-name {
@@ -278,7 +301,41 @@
     font-size: 2rem;
   }
 
+  .entry-input-group {
+    gap: 0.75rem;
+  }
+
+  .entry-input-group input {
+    font-size: 1.25rem;
+    padding: 0.75rem;
+  }
+
+  .entry-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .enter-btn {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .information-section {
+    padding: 1.5rem;
+  }
+
   .info-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .info-item {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .info-item:last-child {
+    border-bottom: none;
   }
 }
