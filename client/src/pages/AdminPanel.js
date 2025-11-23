@@ -57,7 +57,8 @@ const AdminPanel = () => {
 
   const fetchWinners = async () => {
     try {
-      const response = await axios.get('/api/admin/winners');
+      // Add timestamp to prevent caching
+      const response = await axios.get(`/api/admin/winners?t=${Date.now()}`);
       console.log('Winners data:', response.data.winners);
       setAllWinners(response.data.winners);
     } catch (error) {
