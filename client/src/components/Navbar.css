@@ -195,7 +195,7 @@
     padding: 0.75rem 1rem;
   }
 
-  .navbar-menu {
+  .navbar-bottom {
     position: fixed;
     top: 0;
     left: 0;
@@ -203,9 +203,7 @@
     bottom: 0;
     background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
-    flex-direction: column;
-    padding: 0;
-    gap: 0;
+    height: 100vh;
     transform: translateX(100%);
     opacity: 0;
     visibility: hidden;
@@ -214,10 +212,22 @@
     overflow-y: auto;
   }
 
-  .navbar-menu.active {
+  .navbar-bottom:has(.navbar-menu.active) {
     transform: translateX(0);
     opacity: 1;
     visibility: visible;
+  }
+
+  .navbar-menu {
+    flex-direction: column;
+    padding: 5rem 0 2rem;
+    gap: 0;
+    height: auto;
+    background: transparent;
+  }
+
+  .navbar-menu.active {
+    display: flex;
   }
 
   .nav-link {
@@ -228,6 +238,11 @@
     font-weight: 600;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     text-align: left;
+    text-transform: none;
+  }
+
+  .nav-link::after {
+    display: none;
   }
 
   .nav-link:hover {
@@ -239,6 +254,7 @@
     display: block;
     padding: 0.5rem;
     z-index: 1001;
+    position: relative;
   }
 
   .navbar-actions {
