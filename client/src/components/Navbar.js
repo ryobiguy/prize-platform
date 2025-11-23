@@ -67,7 +67,7 @@ const Navbar = () => {
       </div>
 
       {/* Bottom row with navigation in orange bar */}
-      <div className={`navbar-bottom ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+      <div className="navbar-bottom">
         <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
           <Link to="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
             Home
