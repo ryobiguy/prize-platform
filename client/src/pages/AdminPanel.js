@@ -613,35 +613,41 @@ const AdminPanel = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {allWinners.map((winner, index) => (
-                        <tr key={`${winner.userId}-${winner.prizeId}-${index}`}>
-                          <td>
-                            <div>
-                              <strong>{winner.username}</strong>
-                              <br />
-                              <small>{winner.email}</small>
-                            </div>
-                          </td>
-                          <td>{winner.prize.title}</td>
-                          <td>£{winner.prize.value}</td>
-                          <td>{new Date(winner.wonAt).toLocaleDateString()}</td>
-                          <td>
-                            <span className={`status-badge ${winner.claimed ? 'success' : 'pending'}`}>
-                              {winner.claimed ? 'Claimed' : 'Pending'}
-                            </span>
-                          </td>
-                          <td>
-                            {!winner.claimed && (
-                              <button
-                                className="claim-btn"
-                                onClick={() => handleMarkAsClaimed(winner.userId, winner.prizeId)}
-                              >
-                                Mark as Claimed
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
+                      {allWinners.map((winner, index) => {
+                        console.log('Winner object:', winner);
+                        return (
+                          <tr key={`${winner.userId}-${winner.prizeId}-${index}`}>
+                            <td>
+                              <div>
+                                <strong>{winner.username}</strong>
+                                <br />
+                                <small>{winner.email}</small>
+                              </div>
+                            </td>
+                            <td>{winner.prize?.title}</td>
+                            <td>£{winner.prize?.value}</td>
+                            <td>{new Date(winner.wonAt).toLocaleDateString()}</td>
+                            <td>
+                              <span className={`status-badge ${winner.claimed ? 'success' : 'pending'}`}>
+                                {winner.claimed ? 'Claimed' : 'Pending'}
+                              </span>
+                            </td>
+                            <td>
+                              {!winner.claimed && (
+                                <button
+                                  className="claim-btn"
+                                  onClick={() => {
+                                    console.log('Clicking for winner:', winner);
+                                    handleMarkAsClaimed(winner.userId, winner.prizeId);
+                                  }}
+                                >
+                                  Mark as Claimed
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>

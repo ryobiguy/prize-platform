@@ -578,18 +578,24 @@ router.get('/winners', adminAuth, async (req, res) => {
         // Only include wins where the prize still exists
         if (win.prize && win.prize._id) {
           winners.push({
-            userId: user._id,
+            userId: user._id.toString(),
             username: user.username,
             email: user.email,
-            prize: win.prize,
+            prize: {
+              _id: win.prize._id.toString(),
+              title: win.prize.title,
+              value: win.prize.value,
+              type: win.prize.type
+            },
             wonAt: win.wonAt,
             claimed: win.claimed,
-            prizeId: win.prize._id
+            prizeId: win.prize._id.toString()
           });
         }
       });
     });
 
+    console.log('Sending winners:', JSON.stringify(winners, null, 2));
     res.json({ winners });
   } catch (error) {
     console.error('Get winners error:', error);
