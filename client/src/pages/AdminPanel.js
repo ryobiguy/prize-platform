@@ -58,6 +58,7 @@ const AdminPanel = () => {
   const fetchWinners = async () => {
     try {
       const response = await axios.get('/api/admin/winners');
+      console.log('Winners data:', response.data.winners);
       setAllWinners(response.data.winners);
     } catch (error) {
       console.error('Error fetching winners:', error);
@@ -99,6 +100,8 @@ const AdminPanel = () => {
   };
 
   const handleMarkAsClaimed = async (userId, prizeId) => {
+    console.log('handleMarkAsClaimed called with:', { userId, prizeId });
+    
     if (!window.confirm('Mark this win as claimed? This will update the user\'s win status.')) {
       return;
     }
@@ -109,6 +112,7 @@ const AdminPanel = () => {
       fetchWinners();
       fetchStats();
     } catch (error) {
+      console.error('Mark as claimed error:', error);
       toast.error(error.response?.data?.error || 'Failed to mark as claimed');
     }
   };
