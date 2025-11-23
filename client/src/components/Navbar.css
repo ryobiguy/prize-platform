@@ -9,12 +9,12 @@
 .navbar-top {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 1.25rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e5e7eb;
-  min-height: 100px;
+  min-height: 130px;
 }
 
 .navbar-logo {
@@ -27,7 +27,7 @@
 }
 
 .logo-image {
-  height: 80px;
+  height: 110px;
   width: auto;
   object-fit: contain;
   display: block;
