@@ -615,18 +615,25 @@ const AdminPanel = () => {
                     <tbody>
                       {allWinners.map((winner, index) => {
                         console.log('Winner object:', winner);
+                        // Handle both old and new data structures
+                        const userId = winner.userId || winner.user?._id;
+                        const prizeId = winner.prizeId || winner.prize?._id;
+                        const username = winner.username || winner.user?.username;
+                        const email = winner.email || winner.user?.email;
+                        const wonAt = winner.wonAt || winner.drawnAt;
+                        
                         return (
-                          <tr key={`${winner.userId}-${winner.prizeId}-${index}`}>
+                          <tr key={`${userId}-${prizeId}-${index}`}>
                             <td>
                               <div>
-                                <strong>{winner.username}</strong>
+                                <strong>{username}</strong>
                                 <br />
-                                <small>{winner.email}</small>
+                                <small>{email}</small>
                               </div>
                             </td>
                             <td>{winner.prize?.title}</td>
                             <td>£{winner.prize?.value}</td>
-                            <td>{new Date(winner.wonAt).toLocaleDateString()}</td>
+                            <td>{new Date(wonAt).toLocaleDateString()}</td>
                             <td>
                               <span className={`status-badge ${winner.claimed ? 'success' : 'pending'}`}>
                                 {winner.claimed ? 'Claimed' : 'Pending'}
@@ -637,8 +644,8 @@ const AdminPanel = () => {
                                 <button
                                   className="claim-btn"
                                   onClick={() => {
-                                    console.log('Clicking for winner:', winner);
-                                    handleMarkAsClaimed(winner.userId, winner.prizeId);
+                                    console.log('Clicking for winner with userId:', userId, 'prizeId:', prizeId);
+                                    handleMarkAsClaimed(userId, prizeId);
                                   }}
                                 >
                                   Mark as Claimed
