@@ -40,9 +40,6 @@
   height: 45px;
   display: flex;
   align-items: center;
-  border-top: 3px solid #FFB800;
-  border-bottom: 3px solid #CC5500;
-  box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3);
 }
 
 .navbar-menu {
