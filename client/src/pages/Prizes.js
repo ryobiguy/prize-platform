@@ -36,15 +36,15 @@ const Prizes = () => {
 
   const fetchUserEntries = async () => {
     try {
-      const response = await axios.get('/api/users/dashboard');
-      console.log('Dashboard response:', response.data);
-      if (response.data.prizeEntries) {
+      // Try to get user's prize entries from the me endpoint
+      const response = await axios.get('/api/auth/me');
+      console.log('User data:', response.data);
+      
+      if (response.data.user && response.data.user.prizeEntries) {
         // Create a map of prizeId -> entriesUsed
         const entriesMap = {};
-        response.data.prizeEntries.forEach(entry => {
-          if (entry.prize && entry.prize._id) {
-            entriesMap[entry.prize._id] = entry.entriesUsed;
-          }
+        response.data.user.prizeEntries.forEach(entry => {
+          entriesMap[entry.prizeId] = entry.entriesUsed;
         });
         console.log('User entries map:', entriesMap);
         setUserPrizeEntries(entriesMap);
