@@ -1,0 +1,95 @@
+.winners-ticker {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  padding: 1rem 0;
+  overflow: hidden;
+  border-top: 3px solid var(--primary);
+  border-bottom: 3px solid var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ticker-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.75rem;
+}
+
+.ticker-content {
+  position: relative;
+  overflow: hidden;
+}
+
+.ticker-scroll {
+  display: flex;
+  animation: scroll 30s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2rem;
+  color: white;
+  font-size: 0.95rem;
+}
+
+.winner-name {
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.winner-separator {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+.winner-prize {
+  font-weight: 600;
+  color: white;
+}
+
+.winner-dot {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin: 0 1rem;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-scroll:hover {
+  animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+  .winners-ticker {
+    padding: 0.75rem 0;
+  }
+
+  .ticker-header {
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .ticker-item {
+    font-size: 0.85rem;
+    padding: 0 1rem;
+  }
+
+  .winner-dot {
+    margin: 0 0.5rem;
+  }
+}

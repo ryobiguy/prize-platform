@@ -4,15 +4,39 @@ import axios from '../utils/axios';
 import { Trophy, Gift, CheckSquare, Users, ArrowRight } from 'lucide-react';
 import { mockPrizes } from '../mockData';
 import RecentWinners from '../components/RecentWinners';
+import CountdownTimer from '../components/CountdownTimer';
+import WinnersTicker from '../components/WinnersTicker';
+import WinnerAnnouncement from '../components/WinnerAnnouncement';
 import './Home.css';
 
 const Home = () => {
   const [featuredPrizes, setFeaturedPrizes] = useState([]);
   const [stats, setStats] = useState({ totalPrizes: 0, totalUsers: 0, totalWinners: 0 });
+  const [latestWinner, setLatestWinner] = useState(null);
 
   useEffect(() => {
     fetchFeaturedPrizes();
+    // Check for new winners every 30 seconds
+    const winnerInterval = setInterval(checkForNewWinners, 30000);
+    return () => clearInterval(winnerInterval);
   }, []);
+
+  const checkForNewWinners = async () => {
+    try {
+      const response = await axios.get('/api/winners/recent?limit=1');
+      if (response.data.winners && response.data.winners.length > 0) {
+        const winner = response.data.winners[0];
+        // Only show if it's a recent win (within last 5 minutes)
+        const winTime = new Date(winner.wonAt);
+        const now = new Date();
+        if ((now - winTime) < 5 * 60 * 1000) {
+          setLatestWinner(winner);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking for winners:', error);
+    }
+  };
 
   const fetchFeaturedPrizes = async () => {
     try {
@@ -27,8 +51,23 @@ const Home = () => {
     }
   };
 
+  // Set next draw date (example: 7 days from now)
+  const nextDrawDate = new Date();
+  nextDrawDate.setDate(nextDrawDate.getDate() + 7);
+
   return (
     <div className="home">
+      {/* Winner Announcement Popup */}
+      {latestWinner && (
+        <WinnerAnnouncement 
+          winner={latestWinner} 
+          onClose={() => setLatestWinner(null)} 
+        />
+      )}
+
+      {/* Winners Ticker */}
+      <WinnersTicker />
+
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
@@ -45,6 +84,11 @@ const Home = () => {
           <Trophy className="floating-icon icon-3" size={70} />
         </div>
       </section>
+
+      {/* Countdown Timer */}
+      <div className="container">
+        <CountdownTimer targetDate={nextDrawDate} title="Next Draw In" />
+      </div>
 
       {/* Recent Winners Feed */}
       <RecentWinners />

@@ -1,0 +1,144 @@
+.entry-progress {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--border);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.progress-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.progress-stat svg {
+  color: var(--primary);
+}
+
+.stat-label {
+  font-weight: 500;
+}
+
+.stat-value {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 40px;
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: 20px;
+  transition: width 1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-percentage {
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  z-index: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.progress-footer {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.progress-text {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.progress-text strong {
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .entry-progress {
+    padding: 1rem;
+  }
+
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .progress-stat {
+    font-size: 0.8rem;
+  }
+
+  .stat-value {
+    font-size: 0.9rem;
+  }
+
+  .progress-bar-container {
+    height: 32px;
+  }
+
+  .progress-percentage {
+    font-size: 0.75rem;
+  }
+
+  .progress-text {
+    font-size: 0.8rem;
+  }
+
+  .progress-text strong {
+    font-size: 0.9rem;
+  }
+}
