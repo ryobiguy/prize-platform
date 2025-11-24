@@ -223,6 +223,16 @@
   gap: 1rem;
 }
 
+.entries-table-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.entries-progress-wrapper {
+  padding: 0 1rem 1rem;
+}
+
 .entry-item {
   background: white;
   padding: 1.5rem;

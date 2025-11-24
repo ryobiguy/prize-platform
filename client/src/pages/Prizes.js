@@ -3,12 +3,16 @@ import { Link } from 'react-router-dom';
 import axios from '../utils/axios';
 import { Gift, Clock, Users, TrendingUp } from 'lucide-react';
 import { mockPrizes } from '../mockData';
+import { useAuth } from '../context/AuthContext';
+import EntryProgress from '../components/EntryProgress';
 import './Prizes.css';
 
 const Prizes = () => {
+  const { user } = useAuth();
   const [prizes, setPrizes] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [userPrizeEntries, setUserPrizeEntries] = useState({});
 
   useEffect(() => {
     fetchPrizes();
@@ -145,6 +149,14 @@ const Prizes = () => {
                       <span>{prize.entryCost} entry cost</span>
                     </div>
                   </div>
+
+                  {user && (
+                    <EntryProgress 
+                      userEntries={userPrizeEntries[prize._id] || 0}
+                      totalEntries={prize.totalEntries || 1}
+                      prizeName={prize.title}
+                    />
+                  )}
                   
                   <button className="enter-btn">View Details</button>
                 </div>

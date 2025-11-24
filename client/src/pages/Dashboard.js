@@ -8,6 +8,7 @@ import Achievements from '../components/Achievements';
 import Leaderboard from '../components/Leaderboard';
 import SpinWheel from '../components/SpinWheel';
 import EmailVerificationBanner from '../components/EmailVerificationBanner';
+import EntryProgress from '../components/EntryProgress';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -200,23 +201,31 @@ const Dashboard = () => {
                     <div>Draw Date</div>
                   </div>
                   {prizeEntries.map((entry, index) => (
-                    <Link
-                      to={`/prizes/${entry.prize._id}`}
-                      key={index}
-                      className="entries-table-row"
-                    >
-                      <div className="entries-table-prize">
-                        <Gift size={20} />
-                        <span>{entry.prize.title}</span>
+                    <div key={index} className="entries-table-item">
+                      <Link
+                        to={`/prizes/${entry.prize._id}`}
+                        className="entries-table-row"
+                      >
+                        <div className="entries-table-prize">
+                          <Gift size={20} />
+                          <span>{entry.prize.title}</span>
+                        </div>
+                        <div className="entries-table-entries">
+                          <span className="entries-badge">{entry.entriesUsed}</span>
+                        </div>
+                        <div className="entries-table-date">
+                          <Clock size={14} />
+                          <span>{new Date(entry.prize.endDate).toLocaleDateString()}</span>
+                        </div>
+                      </Link>
+                      <div className="entries-progress-wrapper">
+                        <EntryProgress 
+                          userEntries={entry.entriesUsed}
+                          totalEntries={entry.prize.totalEntries || 1}
+                          prizeName={entry.prize.title}
+                        />
                       </div>
-                      <div className="entries-table-entries">
-                        <span className="entries-badge">{entry.entriesUsed}</span>
-                      </div>
-                      <div className="entries-table-date">
-                        <Clock size={14} />
-                        <span>{new Date(entry.prize.endDate).toLocaleDateString()}</span>
-                      </div>
-                    </Link>
+                    </div>
                   ))}
                 </div>
               ) : (
