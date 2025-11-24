@@ -37,6 +37,7 @@ const Prizes = () => {
   const fetchUserEntries = async () => {
     try {
       const response = await axios.get('/api/users/dashboard');
+      console.log('Dashboard response:', response.data);
       if (response.data.prizeEntries) {
         // Create a map of prizeId -> entriesUsed
         const entriesMap = {};
@@ -45,6 +46,7 @@ const Prizes = () => {
             entriesMap[entry.prize._id] = entry.entriesUsed;
           }
         });
+        console.log('User entries map:', entriesMap);
         setUserPrizeEntries(entriesMap);
       }
     } catch (error) {
@@ -178,6 +180,7 @@ const Prizes = () => {
                       prizeName={prize.title}
                     />
                   )}
+                  {user && console.log('Prize:', prize.title, 'User entries:', userPrizeEntries[prize._id], 'Total:', prize.totalEntries)}
                   
                   <button className="enter-btn">View Details</button>
                 </div>
