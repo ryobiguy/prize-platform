@@ -16,7 +16,10 @@ const Prizes = () => {
 
   useEffect(() => {
     fetchPrizes();
-  }, []);
+    if (user) {
+      fetchUserEntries();
+    }
+  }, [user]);
 
   const fetchPrizes = async () => {
     try {
@@ -28,6 +31,24 @@ const Prizes = () => {
       setPrizes(mockPrizes);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUserEntries = async () => {
+    try {
+      const response = await axios.get('/api/users/dashboard');
+      if (response.data.prizeEntries) {
+        // Create a map of prizeId -> entriesUsed
+        const entriesMap = {};
+        response.data.prizeEntries.forEach(entry => {
+          if (entry.prize && entry.prize._id) {
+            entriesMap[entry.prize._id] = entry.entriesUsed;
+          }
+        });
+        setUserPrizeEntries(entriesMap);
+      }
+    } catch (error) {
+      console.error('Error fetching user entries:', error);
     }
   };
 
