@@ -44,7 +44,12 @@ const Prizes = () => {
         // Create a map of prizeId -> entriesUsed
         const entriesMap = {};
         response.data.user.prizeEntries.forEach(entry => {
-          entriesMap[entry.prizeId] = entry.entriesUsed;
+          console.log('Entry structure:', entry);
+          // Try different possible field names for the prize ID
+          const prizeId = entry.prize?._id || entry.prize || entry.prizeId;
+          if (prizeId) {
+            entriesMap[prizeId] = entry.entriesUsed || entry.entries || 0;
+          }
         });
         console.log('User entries map:', entriesMap);
         setUserPrizeEntries(entriesMap);
