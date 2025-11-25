@@ -209,6 +209,45 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  // Referral System
+  referralCode: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  referredBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  referrals: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    joinedAt: {
+      type: Date,
+      default: Date.now
+    },
+    entriesEarned: {
+      type: Number,
+      default: 0
+    },
+    rewardClaimed: {
+      type: Boolean,
+      default: false
+    }
+  }],
+  referralStats: {
+    totalReferrals: {
+      type: Number,
+      default: 0
+    },
+    totalEntriesEarned: {
+      type: Number,
+      default: 0
+    }
+  },
   isAdmin: {
     type: Boolean,
     default: false

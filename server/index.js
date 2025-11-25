@@ -64,6 +64,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/gamification', require('./routes/gamification'));
 app.use('/api/instant-win', require('./routes/instantWin'));
 app.use('/api/payments', require('./routes/payments'));
+app.use('/api/referral', require('./routes/referral'));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/prize-platform', {
