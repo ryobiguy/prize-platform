@@ -41,14 +41,16 @@ const Prizes = () => {
       console.log('User data:', response.data);
       
       if (response.data.user && response.data.user.prizeEntries) {
-        // Create a map of prizeId -> entriesUsed
+        // Create a map of prizeId -> total entriesUsed (sum all entries for same prize)
         const entriesMap = {};
         response.data.user.prizeEntries.forEach(entry => {
           console.log('Entry structure:', entry);
           // Try different possible field names for the prize ID
           const prizeId = entry.prize?._id || entry.prize || entry.prizeId;
           if (prizeId) {
-            entriesMap[prizeId] = entry.entriesUsed || entry.entries || 0;
+            const entryAmount = entry.entriesUsed || entry.entries || 0;
+            // Sum up entries if user entered multiple times
+            entriesMap[prizeId] = (entriesMap[prizeId] || 0) + entryAmount;
           }
         });
         console.log('User entries map:', entriesMap);
