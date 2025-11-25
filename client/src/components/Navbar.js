@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Trophy, Menu, X, User, LogOut, LayoutDashboard, Gift, CheckSquare } from 'lucide-react';
+import { Trophy, Menu, X, User, LogOut, LayoutDashboard, Gift, CheckSquare, Users } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -83,6 +83,9 @@ const Navbar = () => {
           </Link>
           {user ? (
             <>
+              <Link to="/referrals" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+                Refer Friends
+              </Link>
               <Link to="/buy-entries" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
                 Buy Entries
               </Link>

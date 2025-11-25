@@ -20,7 +20,7 @@ router.post('/register', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { username, email, password } = req.body;
+    const { username, email, password, referralCode } = req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
@@ -35,19 +35,47 @@ router.post('/register', [
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    // Create user with 10 welcome entries
+    // Base entries (10 welcome + 25 referral bonus if applicable)
+    let baseEntries = 10;
+    let referrer = null;
+
+    // Check if referral code is valid
+    if (referralCode) {
+      referrer = await User.findOne({ referralCode: referralCode.toUpperCase() });
+      if (referrer) {
+        baseEntries += 25; // Bonus for using referral code
+      }
+    }
+
+    // Create user
     const user = new User({
       username,
       email,
       password: hashedPassword,
-      totalEntries: 10,
-      availableEntries: 10,
+      totalEntries: baseEntries,
+      availableEntries: baseEntries,
       emailVerified: false,
       emailVerificationToken: verificationToken,
-      emailVerificationExpires: verificationExpires
+      emailVerificationExpires: verificationExpires,
+      referredBy: referrer ? referrer._id : null
     });
 
     await user.save();
+
+    // If referred, update referrer's stats
+    if (referrer) {
+      const REFERRER_REWARD = 50;
+      referrer.referrals.push({
+        user: user._id,
+        entriesEarned: REFERRER_REWARD,
+        rewardClaimed: true
+      });
+      referrer.referralStats.totalReferrals += 1;
+      referrer.referralStats.totalEntriesEarned += REFERRER_REWARD;
+      referrer.availableEntries += REFERRER_REWARD;
+      referrer.totalEntries += REFERRER_REWARD;
+      await referrer.save();
+    }
 
     // Send verification email
     await emailService.sendVerificationEmail(user, verificationToken);

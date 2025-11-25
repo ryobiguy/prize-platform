@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Trophy } from 'lucide-react';
 import './Auth.css';
@@ -7,13 +7,23 @@ import './Auth.css';
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    referralCode: ''
   });
+
+  useEffect(() => {
+    // Check for referral code in URL
+    const refCode = searchParams.get('ref');
+    if (refCode) {
+      setFormData(prev => ({ ...prev, referralCode: refCode }));
+    }
+  }, [searchParams]);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
   const [captchaAnswer, setCaptchaAnswer] = useState('');
@@ -133,6 +143,24 @@ const Register = () => {
               required
               placeholder="Confirm your password"
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="referralCode">Referral Code (Optional)</label>
+            <input
+              type="text"
+              id="referralCode"
+              name="referralCode"
+              value={formData.referralCode}
+              onChange={handleChange}
+              placeholder="Enter referral code for bonus entries"
+              style={{ textTransform: 'uppercase' }}
+            />
+            {formData.referralCode && (
+              <small style={{ color: '#10b981', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                🎁 Get 25 bonus entries with this code!
+              </small>
+            )}
           </div>
 
           <div className="form-group">

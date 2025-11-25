@@ -27,6 +27,7 @@ import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Wins from './pages/Wins';
 import VerifyEmail from './pages/VerifyEmail';
+import Referrals from './pages/Referrals';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -69,6 +70,7 @@ function App() {
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/my-entries" element={<PrivateRoute><MyEntries /></PrivateRoute>} />
             <Route path="/buy-entries" element={<PrivateRoute><BuyEntries /></PrivateRoute>} />
+            <Route path="/referrals" element={<PrivateRoute><Referrals /></PrivateRoute>} />
             <Route path="/wins" element={<PrivateRoute><Wins /></PrivateRoute>} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/login" element={<Login />} />
