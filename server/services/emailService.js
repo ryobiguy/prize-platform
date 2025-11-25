@@ -517,6 +517,104 @@ class EmailService {
     }
   }
 
+  async sendRefundNotification(user, prize, entriesRefunded) {
+    const subject = `Entries Refunded - ${prize.title}`;
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #FF8C00; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+          .button { display: inline-block; padding: 12px 30px; background: #FF8C00; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+          .info-box { background: white; padding: 15px; border-left: 4px solid #FF8C00; margin: 20px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🔄 Entries Refunded</h1>
+          </div>
+          <div class="content">
+            <p>Hi ${user.username},</p>
+            
+            <p>We're writing to let you know that the draw for <strong>${prize.title}</strong> did not go ahead as it didn't reach the minimum number of entries required.</p>
+            
+            <div class="info-box">
+              <p><strong>Refund Details:</strong></p>
+              <p>✅ <strong>${entriesRefunded} entries</strong> have been refunded to your account</p>
+              <p>💰 Prize Value: £${prize.value}</p>
+              <p>📊 Minimum Required: ${prize.minimumEntries} entries</p>
+              <p>📊 Total Received: ${prize.totalEntries} entries</p>
+            </div>
+            
+            <p>Your entries are now available to use on other active prizes!</p>
+            
+            <p style="text-align: center;">
+              <a href="${process.env.CLIENT_URL || 'https://www.totalraffle.co.uk'}/prizes" class="button">Browse Active Prizes</a>
+            </p>
+            
+            <p>Thank you for your understanding!</p>
+            
+            <p>Best regards,<br>Total Raffle Team</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const text = `
+Hi ${user.username},
+
+The draw for ${prize.title} did not go ahead as it didn't reach the minimum number of entries required.
+
+Refund Details:
+- ${entriesRefunded} entries have been refunded to your account
+- Prize Value: £${prize.value}
+- Minimum Required: ${prize.minimumEntries} entries
+- Total Received: ${prize.totalEntries} entries
+
+Your entries are now available to use on other active prizes!
+
+Visit: ${process.env.CLIENT_URL || 'https://www.totalraffle.co.uk'}/prizes
+
+Thank you for your understanding!
+
+Best regards,
+Total Raffle Team
+    `;
+
+    try {
+      if (!process.env.SENDGRID_API_KEY) {
+        console.log('\n📧 REFUND EMAIL (Development Mode):');
+        console.log('To:', user.email);
+        console.log('Subject:', subject);
+        console.log('Entries Refunded:', entriesRefunded);
+        console.log('---\n');
+        return { success: true, messageId: 'console-log' };
+      }
+
+      const msg = {
+        to: user.email,
+        from: this.fromEmail,
+        subject,
+        text,
+        html
+      };
+
+      const [response] = await sgMail.send(msg);
+      console.log(`✅ Refund email sent to ${user.email}`);
+      return { success: true, messageId: response?.headers?.['x-message-id'] || 'sendgrid' };
+    } catch (error) {
+      console.error('❌ Refund email error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
   async sendTestEmail(toEmail) {
     try {
       if (!process.env.SENDGRID_API_KEY) {

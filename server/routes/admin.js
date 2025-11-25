@@ -175,6 +175,72 @@ router.post('/prizes/:id/draw', adminAuth, async (req, res) => {
   }
 });
 
+// Refund entries for prize that didn't meet minimum
+router.post('/prizes/:id/refund', adminAuth, async (req, res) => {
+  try {
+    const prize = await Prize.findById(req.params.id);
+    
+    if (!prize) {
+      return res.status(404).json({ error: 'Prize not found' });
+    }
+
+    if (prize.winners.length > 0) {
+      return res.status(400).json({ error: 'Cannot refund - winners already drawn' });
+    }
+
+    // Check if minimum entries was not met
+    if (prize.totalEntries >= prize.minimumEntries) {
+      return res.status(400).json({ 
+        error: `Prize has ${prize.totalEntries} entries, which meets the minimum of ${prize.minimumEntries}. No refund needed.`
+      });
+    }
+
+    // Refund entries to all participants
+    let refundedUsers = 0;
+    let totalEntriesRefunded = 0;
+
+    for (const participant of prize.participants) {
+      const user = await User.findById(participant.user);
+      if (user) {
+        // Add entries back to user's available entries
+        user.availableEntries += participant.entries;
+        
+        // Remove this prize from user's prizeEntries
+        user.prizeEntries = user.prizeEntries.filter(
+          entry => entry.prize.toString() !== prize._id.toString()
+        );
+        
+        await user.save();
+        refundedUsers++;
+        totalEntriesRefunded += participant.entries;
+
+        // Send refund notification email
+        try {
+          await emailService.sendRefundNotification(user, prize, participant.entries);
+        } catch (error) {
+          console.error(`Failed to send refund email to ${user.username}:`, error);
+        }
+      }
+    }
+
+    // Update prize status to cancelled
+    prize.status = 'cancelled';
+    prize.participants = [];
+    prize.totalEntries = 0;
+    await prize.save();
+
+    res.json({ 
+      message: `Refunded ${totalEntriesRefunded} entries to ${refundedUsers} users`,
+      refundedUsers,
+      totalEntriesRefunded,
+      prize
+    });
+  } catch (error) {
+    console.error('Refund entries error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // Create new task
 router.post('/tasks', adminAuth, async (req, res) => {
   try {

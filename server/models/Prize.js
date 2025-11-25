@@ -69,7 +69,7 @@ const prizeSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['upcoming', 'active', 'ended', 'drawn'],
+    enum: ['upcoming', 'active', 'ended', 'drawn', 'cancelled'],
     default: 'upcoming'
   },
   totalEntries: {

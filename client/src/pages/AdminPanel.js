@@ -100,6 +100,24 @@ const AdminPanel = () => {
     }
   };
 
+  const handleRefundPrize = async (prizeId) => {
+    if (!window.confirm('Are you sure you want to refund all entries for this prize? All participants will get their entries back and the prize will be cancelled.')) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(`/api/admin/prizes/${prizeId}/refund`);
+      toast.success(response.data.message);
+      fetchReadyPrizes();
+      fetchStats();
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to refund entries');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleMarkAsClaimed = async (userId, prizeId) => {
     console.log('handleMarkAsClaimed called with:', { userId, prizeId });
     
@@ -574,15 +592,40 @@ const AdminPanel = () => {
                             Draw Day: {prize.drawDay || 'Friday'} • Ended: {new Date(prize.endDate).toLocaleDateString()}
                           </div>
                         </div>
-                        <button
-                          className="draw-btn"
-                          onClick={() => handleDrawWinner(prize._id)}
-                          disabled={loading || !meetsMinimum}
-                          title={!meetsMinimum ? 'Minimum entries not met' : 'Draw winner'}
-                        >
-                          <Trophy size={20} />
-                          {loading ? 'Drawing...' : meetsMinimum ? 'Draw Winner' : 'Not Ready'}
-                        </button>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button
+                            className="draw-btn"
+                            onClick={() => handleDrawWinner(prize._id)}
+                            disabled={loading || !meetsMinimum}
+                            title={!meetsMinimum ? 'Minimum entries not met' : 'Draw winner'}
+                          >
+                            <Trophy size={20} />
+                            {loading ? 'Drawing...' : meetsMinimum ? 'Draw Winner' : 'Not Ready'}
+                          </button>
+                          {!meetsMinimum && (
+                            <button
+                              className="refund-btn"
+                              onClick={() => handleRefundPrize(prize._id)}
+                              disabled={loading}
+                              title="Refund entries to all participants"
+                              style={{ 
+                                background: '#ef4444', 
+                                color: 'white',
+                                padding: '0.75rem 1.5rem',
+                                border: 'none',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                fontSize: '0.875rem',
+                                fontWeight: '600'
+                              }}
+                            >
+                              🔄 Refund All
+                            </button>
+                          )}
+                        </div>
                       </div>
                     );
                   })}
