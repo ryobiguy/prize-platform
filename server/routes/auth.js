@@ -47,6 +47,20 @@ router.post('/register', [
       }
     }
 
+    // Generate unique referral code for new user
+    const generateReferralCode = () => {
+      return crypto.randomBytes(4).toString('hex').toUpperCase();
+    };
+
+    let newUserReferralCode = generateReferralCode();
+    let codeExists = await User.findOne({ referralCode: newUserReferralCode });
+    
+    // Keep generating until we get a unique code
+    while (codeExists) {
+      newUserReferralCode = generateReferralCode();
+      codeExists = await User.findOne({ referralCode: newUserReferralCode });
+    }
+
     // Create user
     const user = new User({
       username,
@@ -57,7 +71,8 @@ router.post('/register', [
       emailVerified: false,
       emailVerificationToken: verificationToken,
       emailVerificationExpires: verificationExpires,
-      referredBy: referrer ? referrer._id : null
+      referredBy: referrer ? referrer._id : null,
+      referralCode: newUserReferralCode
     });
 
     await user.save();
