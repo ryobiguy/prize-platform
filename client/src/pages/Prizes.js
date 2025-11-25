@@ -177,6 +177,28 @@ const Prizes = () => {
                       <span>{prize.entryCost} entry cost</span>
                     </div>
                   </div>
+                  
+                  {prize.minimumEntries && (
+                    <div className="minimum-entries-info">
+                      <span className="minimum-label">
+                        Minimum to draw: {prize.minimumEntries} entries
+                      </span>
+                      <div className="minimum-progress">
+                        <div 
+                          className="minimum-fill" 
+                          style={{ 
+                            width: `${Math.min((prize.totalEntries / prize.minimumEntries) * 100, 100)}%`,
+                            backgroundColor: prize.totalEntries >= prize.minimumEntries ? '#10b981' : '#f59e0b'
+                          }}
+                        />
+                      </div>
+                      <span className="minimum-status">
+                        {prize.totalEntries >= prize.minimumEntries 
+                          ? '✅ Minimum reached!' 
+                          : `${prize.minimumEntries - prize.totalEntries} more needed`}
+                      </span>
+                    </div>
+                  )}
 
                   {user && (
                     <EntryProgress 
