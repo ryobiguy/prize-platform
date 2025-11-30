@@ -1,18 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy } from 'lucide-react';
+import { Trophy, Mail } from 'lucide-react';
+import axios from '../utils/axios';
+import toast from 'react-hot-toast';
 import './Footer.css';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleNewsletterSignup = async (e) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes('@')) {
+      toast.error('Please enter a valid email');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await axios.post('/api/newsletter/subscribe', { email });
+      toast.success('Thanks for subscribing! Check your email for 10 free entries! 🎉');
+      setEmail('');
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to subscribe');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <footer className="footer">
       <div className="container">
+        {/* Newsletter Section */}
+        <div className="newsletter-section">
+          <div className="newsletter-content">
+            <Mail size={32} />
+            <div className="newsletter-text">
+              <h3>Get 10 Free Entries!</h3>
+              <p>Subscribe to our newsletter for exclusive deals and new prize alerts</p>
+            </div>
+          </div>
+          <form onSubmit={handleNewsletterSignup} className="newsletter-form">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+              required
+            />
+            <button type="submit" disabled={loading}>
+              {loading ? 'Subscribing...' : 'Subscribe'}
+            </button>
+          </form>
+        </div>
+
         <div className="footer-content">
           <div className="footer-section">
             <div className="footer-logo">
               <img src="/logo.png" alt="Total Raffle" className="footer-logo-image" />
             </div>
-            <p>Win amazing prizes by completing simple tasks. Free to join, free to play!</p>
+            <p>Win amazing prizes with Total Raffle. Buy entries and enter to win!</p>
           </div>
 
           <div className="footer-section">

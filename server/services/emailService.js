@@ -615,6 +615,160 @@ Total Raffle Team
     }
   }
 
+  async sendNewsletterWelcome(user, entries) {
+    const subject = `Welcome to Total Raffle! Here's ${entries} Free Entries! 🎉`;
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #FF8C00, #FFB800); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+          .button { display: inline-block; padding: 15px 40px; background: #FF8C00; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }
+          .entries-box { background: white; padding: 20px; border-left: 4px solid #FF8C00; margin: 20px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🎉 Welcome to Total Raffle!</h1>
+          </div>
+          <div class="content">
+            <p>Hi ${user.username},</p>
+            
+            <p>Thanks for subscribing to our newsletter! As a thank you, we've added <strong>${entries} free entries</strong> to your account!</p>
+            
+            <div class="entries-box">
+              <p><strong>Your Free Entries:</strong></p>
+              <p style="font-size: 2rem; margin: 0; color: #FF8C00;">${entries} entries</p>
+            </div>
+            
+            <p>Use these entries to enter any of our amazing prize draws!</p>
+            
+            <p style="text-align: center;">
+              <a href="${process.env.CLIENT_URL || 'https://www.totalraffle.co.uk'}/prizes" class="button">Browse Prizes</a>
+            </p>
+            
+            <p><strong>What you'll get from our newsletter:</strong></p>
+            <ul>
+              <li>🎁 Exclusive deals and bonus entries</li>
+              <li>🆕 First access to new prizes</li>
+              <li>🏆 Winner announcements</li>
+              <li>💰 Special promotions</li>
+            </ul>
+            
+            <p>Good luck!</p>
+            
+            <p>Best regards,<br>Total Raffle Team</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const text = `
+Hi ${user.username},
+
+Thanks for subscribing to our newsletter! We've added ${entries} free entries to your account!
+
+Use these entries to enter any of our amazing prize draws.
+
+Visit: ${process.env.CLIENT_URL || 'https://www.totalraffle.co.uk'}/prizes
+
+Good luck!
+
+Best regards,
+Total Raffle Team
+    `;
+
+    try {
+      if (!process.env.SENDGRID_API_KEY) {
+        console.log(`\n📧 NEWSLETTER WELCOME (Development Mode): ${entries} entries to ${user.email}\n`);
+        return { success: true, messageId: 'console-log' };
+      }
+
+      const msg = {
+        to: user.email,
+        from: this.fromEmail,
+        subject,
+        text,
+        html
+      };
+
+      const [response] = await sgMail.send(msg);
+      console.log(`✅ Newsletter welcome sent to ${user.email}`);
+      return { success: true, messageId: response?.headers?.['x-message-id'] || 'sendgrid' };
+    } catch (error) {
+      console.error('❌ Newsletter welcome error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  async sendNewsletterWelcomeGuest(email) {
+    const subject = 'Welcome to Total Raffle Newsletter! 🎉';
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #FF8C00, #FFB800); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+          .button { display: inline-block; padding: 15px 40px; background: #FF8C00; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🎉 Welcome to Total Raffle!</h1>
+          </div>
+          <div class="content">
+            <p>Thanks for subscribing to our newsletter!</p>
+            
+            <p><strong>Create an account to get 10 free entries!</strong></p>
+            
+            <p style="text-align: center;">
+              <a href="${process.env.CLIENT_URL || 'https://www.totalraffle.co.uk'}/register" class="button">Create Account</a>
+            </p>
+            
+            <p>You'll receive updates about new prizes, exclusive deals, and winner announcements!</p>
+            
+            <p>Best regards,<br>Total Raffle Team</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    try {
+      if (!process.env.SENDGRID_API_KEY) {
+        console.log(`\n📧 NEWSLETTER WELCOME GUEST (Development Mode): ${email}\n`);
+        return { success: true, messageId: 'console-log' };
+      }
+
+      const msg = {
+        to: email,
+        from: this.fromEmail,
+        subject,
+        html
+      };
+
+      const [response] = await sgMail.send(msg);
+      console.log(`✅ Newsletter welcome (guest) sent to ${email}`);
+      return { success: true, messageId: response?.headers?.['x-message-id'] || 'sendgrid' };
+    } catch (error) {
+      console.error('❌ Newsletter welcome (guest) error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
   async sendTestEmail(toEmail) {
     try {
       if (!process.env.SENDGRID_API_KEY) {

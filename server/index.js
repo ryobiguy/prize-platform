@@ -66,6 +66,7 @@ app.use('/api/instant-win', require('./routes/instantWin'));
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/paypal', require('./routes/paypal'));
 app.use('/api/referral', require('./routes/referral'));
+app.use('/api/newsletter', require('./routes/newsletter'));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/prize-platform', {
