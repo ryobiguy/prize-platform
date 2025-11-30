@@ -12,9 +12,28 @@ const generateReferralCode = () => {
 // Get user's referral info
 router.get('/me', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId)
-      .populate('referrals.user', 'username createdAt')
-      .select('referralCode referrals referralStats');
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    let needsSave = false;
+
+    // Initialize referralStats if it doesn't exist
+    if (!user.referralStats) {
+      user.referralStats = {
+        totalReferrals: 0,
+        totalEntriesEarned: 0
+      };
+      needsSave = true;
+    }
+
+    // Initialize referrals array if it doesn't exist
+    if (!user.referrals) {
+      user.referrals = [];
+      needsSave = true;
+    }
 
     // Generate referral code if user doesn't have one
     if (!user.referralCode) {
@@ -28,8 +47,16 @@ router.get('/me', auth, async (req, res) => {
       }
       
       user.referralCode = code;
+      needsSave = true;
+    }
+
+    // Save if any fields were initialized
+    if (needsSave) {
       await user.save();
     }
+
+    // Populate referrals after save
+    await user.populate('referrals.user', 'username createdAt');
 
     const referralLink = `${process.env.CLIENT_URL || 'https://www.totalraffle.co.uk'}/register?ref=${user.referralCode}`;
 
@@ -41,7 +68,8 @@ router.get('/me', auth, async (req, res) => {
     });
   } catch (error) {
     console.error('Get referral info error:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 
