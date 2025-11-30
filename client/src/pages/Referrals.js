@@ -15,11 +15,14 @@ const Referrals = () => {
 
   const fetchReferralData = async () => {
     try {
+      console.log('Fetching referral data...');
       const response = await axios.get('/api/referral/me');
+      console.log('Referral data received:', response.data);
       setReferralData(response.data);
     } catch (error) {
       console.error('Error fetching referral data:', error);
-      toast.error('Failed to load referral data');
+      console.error('Error details:', error.response?.data);
+      toast.error(error.response?.data?.error || 'Failed to load referral data');
     } finally {
       setLoading(false);
     }
@@ -52,7 +55,22 @@ const Referrals = () => {
     return (
       <div className="referrals-page">
         <div className="container">
-          <div className="loading-state">Loading...</div>
+          <div className="loading-state">Loading referral data...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!referralData) {
+    return (
+      <div className="referrals-page">
+        <div className="container">
+          <div className="loading-state">
+            <p>Unable to load referral data. Please try refreshing the page.</p>
+            <button onClick={fetchReferralData} style={{ marginTop: '1rem', padding: '0.5rem 1rem', cursor: 'pointer' }}>
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     );
