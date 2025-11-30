@@ -95,6 +95,13 @@ class PrizeDrawScheduler {
         // Check minimum entries
         if (prize.totalEntries < prize.minimumEntries) {
           console.log(`⚠️  Prize "${prize.title}" doesn't meet minimum entries (${prize.totalEntries}/${prize.minimumEntries})`);
+          
+          // Check if it's been more than 24 hours since end date - auto refund
+          const hoursSinceEnd = (now - prize.endDate) / (1000 * 60 * 60);
+          if (hoursSinceEnd >= 24) {
+            console.log(`🔄 Auto-refunding prize "${prize.title}" (ended ${hoursSinceEnd.toFixed(1)}h ago)`);
+            await this.refundPrize(prize);
+          }
           continue;
         }
 
@@ -262,6 +269,60 @@ class PrizeDrawScheduler {
       return result;
     } catch (error) {
       return { success: false, error: error.message };
+    }
+  }
+
+  // Refund entries for a prize that didn't meet minimum
+  async refundPrize(prize) {
+    try {
+      console.log(`🔄 Starting refund for prize: ${prize.title}`);
+
+      // Populate participants
+      const populatedPrize = await Prize.findById(prize._id)
+        .populate('participants.user', 'username email availableEntries totalEntries');
+
+      if (!populatedPrize.participants || populatedPrize.participants.length === 0) {
+        console.log('⚠️  No participants to refund');
+        return;
+      }
+
+      let totalRefunded = 0;
+
+      // Refund entries to each participant
+      for (const participant of populatedPrize.participants) {
+        const user = await User.findById(participant.user._id);
+        if (!user) continue;
+
+        // Add entries back
+        user.availableEntries += participant.entries;
+        
+        // Remove this prize from user's prizeEntries
+        user.prizeEntries = user.prizeEntries.filter(
+          entry => entry.prize.toString() !== prize._id.toString()
+        );
+
+        await user.save();
+
+        // Send refund notification email
+        try {
+          await emailService.sendRefundNotification(user, prize, participant.entries);
+          console.log(`✅ Refunded ${participant.entries} entries to ${user.username}`);
+        } catch (emailError) {
+          console.error(`❌ Failed to send refund email to ${user.username}:`, emailError);
+        }
+
+        totalRefunded += participant.entries;
+      }
+
+      // Update prize status
+      populatedPrize.status = 'cancelled';
+      populatedPrize.participants = [];
+      populatedPrize.totalEntries = 0;
+      await populatedPrize.save();
+
+      console.log(`✅ Refunded ${totalRefunded} total entries for prize "${prize.title}"`);
+    } catch (error) {
+      console.error(`❌ Error refunding prize "${prize.title}":`, error);
     }
   }
 }
