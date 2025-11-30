@@ -12,7 +12,8 @@ const generateReferralCode = () => {
 // Get user's referral info
 router.get('/me', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    // req.user is already the user object from auth middleware
+    const user = req.user;
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
