@@ -64,6 +64,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/gamification', require('./routes/gamification'));
 app.use('/api/instant-win', require('./routes/instantWin'));
 app.use('/api/payments', require('./routes/payments'));
+app.use('/api/paypal', require('./routes/paypal'));
 app.use('/api/referral', require('./routes/referral'));
 
 // MongoDB Connection

@@ -1,15 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CreditCard, Zap, Star, Crown, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useSearchParams } from 'react-router-dom';
 import axios from '../utils/axios';
 import toast from 'react-hot-toast';
 import './BuyEntries.css';
 
-// Buy Entries Page - Stripe Integration
+// Buy Entries Page - PayPal & Square Integration
 
 const BuyEntries = () => {
-  const { user } = useAuth();
+  const { user, fetchUser } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  // Handle PayPal return
+  useEffect(() => {
+    const handlePayPalReturn = async () => {
+      const token = searchParams.get('token');
+      const paymentStatus = searchParams.get('payment');
+
+      if (paymentStatus === 'cancelled') {
+        toast.error('Payment cancelled');
+        return;
+      }
+
+      if (token) {
+        try {
+          setLoading(true);
+          const response = await axios.post('/api/paypal/capture-order', {
+            orderId: token
+          });
+
+          if (response.data.success) {
+            toast.success(response.data.message);
+            // Refresh user data to show new balance
+            if (fetchUser) await fetchUser();
+            // Clean URL
+            window.history.replaceState({}, '', '/buy-entries');
+          }
+        } catch (error) {
+          console.error('PayPal capture error:', error);
+          toast.error('Failed to complete payment');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    handlePayPalReturn();
+  }, [searchParams, fetchUser]);
 
   const packages = [
     {
@@ -57,7 +96,7 @@ const BuyEntries = () => {
     }
   ];
 
-  const handlePurchase = async (pkg) => {
+  const handlePayPalPurchase = async (pkg) => {
     if (!user) {
       toast.error('Please login to purchase entries');
       return;
@@ -65,7 +104,33 @@ const BuyEntries = () => {
 
     setLoading(true);
     try {
-      // Create Stripe checkout session
+      // Create PayPal order
+      const response = await axios.post('/api/paypal/create-order', {
+        packageId: pkg.id,
+        entries: pkg.entries + (pkg.bonus || 0),
+        amount: pkg.price
+      });
+
+      // Redirect to PayPal approval URL
+      if (response.data.approvalUrl) {
+        window.location.href = response.data.approvalUrl;
+      }
+    } catch (error) {
+      console.error('PayPal purchase error:', error);
+      toast.error(error.response?.data?.error || 'Failed to process PayPal payment');
+      setLoading(false);
+    }
+  };
+
+  const handleSquarePurchase = async (pkg) => {
+    if (!user) {
+      toast.error('Please login to purchase entries');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Create Square checkout session
       const response = await axios.post('/api/payments/create-checkout', {
         packageId: pkg.id,
         priceId: pkg.priceId,
@@ -73,13 +138,13 @@ const BuyEntries = () => {
         amount: pkg.price
       });
 
-      // Open Square checkout in a new tab so the app stays open
+      // Open Square checkout in a new tab
       if (response.data.url) {
         window.open(response.data.url, '_blank', 'noopener,noreferrer');
       }
     } catch (error) {
-      console.error('Purchase error:', error);
-      toast.error(error.response?.data?.error || 'Failed to process purchase');
+      console.error('Square purchase error:', error);
+      toast.error(error.response?.data?.error || 'Failed to process Square payment');
     } finally {
       setLoading(false);
     }
@@ -159,12 +224,32 @@ const BuyEntries = () => {
                 </div>
 
                 <button
-                  className="buy-button"
-                  onClick={() => handlePurchase(pkg)}
+                  className="buy-button paypal"
+                  onClick={() => handlePayPalPurchase(pkg)}
                   disabled={loading}
+                  style={{ 
+                    background: '#0070ba',
+                    marginBottom: '0.5rem'
+                  }}
                 >
-                  <CreditCard size={20} />
-                  Buy Now
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .76-.64h7.194c2.182 0 3.915.632 5.002 1.828 1.018 1.122 1.44 2.648 1.253 4.537-.005.048-.01.097-.016.145-.01.073-.022.147-.035.22a7.365 7.365 0 0 1-.16.755c-.043.16-.093.322-.15.483-.056.16-.119.32-.189.48a6.762 6.762 0 0 1-.673 1.265 5.729 5.729 0 0 1-.415.52c-.151.175-.315.344-.492.507a6.345 6.345 0 0 1-.597.48 7.465 7.465 0 0 1-.706.44c-.253.14-.518.264-.794.373a8.518 8.518 0 0 1-.884.297c-.306.087-.622.157-.946.21-.324.054-.657.09-1 .108l-.137.007H9.48l-.485 3.083a.65.65 0 0 1-.643.54H7.076z"/>
+                  </svg>
+                  Pay with PayPal
+                </button>
+                
+                <button
+                  className="buy-button square-alt"
+                  onClick={() => handleSquarePurchase(pkg)}
+                  disabled={loading}
+                  style={{ 
+                    background: '#f3f4f6',
+                    color: '#374151',
+                    fontSize: '0.875rem'
+                  }}
+                >
+                  <CreditCard size={18} />
+                  Or pay with Card
                 </button>
               </div>
             );
