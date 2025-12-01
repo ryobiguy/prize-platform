@@ -60,12 +60,12 @@
 }
 
 .bonus-entries {
-  font-size: 4rem !important;
+  font-size: 2.5rem !important;
   font-weight: 800 !important;
   color: white !important;
   display: inline-block;
   animation: pulse 2s ease-in-out infinite;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 
