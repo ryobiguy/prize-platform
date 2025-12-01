@@ -41,10 +41,10 @@
   margin: 0;
   font-size: 2.25rem;
   font-weight: 900;
-  color: #1a1a1a;
+  color: white;
   text-transform: uppercase;
   letter-spacing: 2px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .bonus-content {
@@ -56,14 +56,14 @@
   font-size: 1.75rem;
   margin: 1rem 0;
   font-weight: 700;
-  color: #2d2d2d;
+  color: white;
 }
 
 .bonus-entries {
   font-size: 3rem;
   font-weight: 900;
-  color: #1a1a1a;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+  color: white;
+  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
   display: inline-block;
   animation: pulse 2s ease-in-out infinite;
 }
@@ -75,7 +75,7 @@
   gap: 0.75rem;
   margin: 1.5rem 0;
   font-size: 1.2rem;
-  color: #2d2d2d;
+  color: white;
   font-weight: 600;
 }
 
