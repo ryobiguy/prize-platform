@@ -60,9 +60,9 @@
 }
 
 .bonus-entries {
-  font-size: 4rem;
-  font-weight: 800;
-  color: white;
+  font-size: 4rem !important;
+  font-weight: 800 !important;
+  color: white !important;
   display: inline-block;
   animation: pulse 2s ease-in-out infinite;
   letter-spacing: 2px;
