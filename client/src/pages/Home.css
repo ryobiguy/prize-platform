@@ -60,13 +60,15 @@
 }
 
 .bonus-entries {
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 900;
-  color: white;
+  color: #00FF00;
   display: inline-block;
   animation: pulse 2s ease-in-out infinite;
-  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
-  letter-spacing: 2px;
+  -webkit-text-stroke: 2px #00CC00;
+  text-stroke: 2px #00CC00;
+  letter-spacing: 3px;
+  filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.5));
 }
 
 .bonus-countdown {
