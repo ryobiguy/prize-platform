@@ -35,8 +35,13 @@ router.post('/register', [
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    // Base entries (10 welcome + 25 referral bonus if applicable)
-    let baseEntries = 10;
+    // SIGNUP BONUS: 500 entries until December 20th, 2025
+    const SIGNUP_BONUS_END = new Date('2025-12-20T23:59:59Z');
+    const now = new Date();
+    const signupBonus = now < SIGNUP_BONUS_END ? 500 : 10;
+    
+    // Base entries (signup bonus + 25 referral bonus if applicable)
+    let baseEntries = signupBonus;
     let referrer = null;
 
     // Check if referral code is valid
