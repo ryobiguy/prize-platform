@@ -76,48 +76,23 @@ const Home = () => {
       {/* Signup Bonus Banner */}
       {isBonusActive && (
         <div className="container" style={{ marginTop: '2rem' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #FF8C00 0%, #FFB800 100%)',
-            color: 'white',
-            padding: '2rem',
-            borderRadius: '16px',
-            textAlign: 'center',
-            boxShadow: '0 8px 20px rgba(255, 140, 0, 0.3)',
-            marginBottom: '2rem'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
-              <Gift size={36} />
-              <h2 style={{ margin: 0, fontSize: '2rem', fontWeight: '800', color: '#1a1a1a' }}>
-                LIMITED TIME OFFER!
-              </h2>
+          <div className="signup-bonus-banner">
+            <div className="bonus-header">
+              <Gift size={40} />
+              <h2>LIMITED TIME OFFER!</h2>
             </div>
-            <p style={{ fontSize: '1.5rem', margin: '0.75rem 0', fontWeight: '700', color: '#2d2d2d' }}>
-              Sign up now and get <span style={{ fontSize: '2.5rem', fontWeight: '900', color: '#1a1a1a' }}>500 FREE ENTRIES</span>
-            </p>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-              <Clock size={20} />
-              <span style={{ fontSize: '1.1rem', color: '#2d2d2d', fontWeight: '600' }}>
-                Ends December 20th • Only {daysLeft} days left!
-              </span>
+            <div className="bonus-content">
+              <p>
+                Sign up now and get <span className="bonus-entries">500 FREE ENTRIES</span>
+              </p>
+              <div className="bonus-countdown">
+                <Clock size={22} />
+                <span>Ends December 20th • Only {daysLeft} days left!</span>
+              </div>
+              <Link to="/register" className="bonus-cta">
+                Claim Your 500 Free Entries →
+              </Link>
             </div>
-            <Link 
-              to="/register" 
-              style={{
-                display: 'inline-block',
-                padding: '1rem 3rem',
-                background: '#1a1a1a',
-                color: 'white',
-                textDecoration: 'none',
-                borderRadius: '8px',
-                fontWeight: '700',
-                fontSize: '1.1rem',
-                transition: 'all 0.3s'
-              }}
-              onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
-              onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
-            >
-              Claim Your 500 Free Entries →
-            </Link>
           </div>
         </div>
       )}

@@ -3,6 +3,134 @@
   background: #f9fafb;
 }
 
+/* Signup Bonus Banner */
+.signup-bonus-banner {
+  background: linear-gradient(135deg, #FF8C00 0%, #FFB800 100%);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(255, 140, 0, 0.4);
+  margin: 2rem auto 3rem;
+  position: relative;
+  overflow: hidden;
+  animation: slideDown 0.6s ease;
+}
+
+.signup-bonus-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+.bonus-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.bonus-header h2 {
+  margin: 0;
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bonus-content {
+  position: relative;
+  z-index: 1;
+}
+
+.bonus-content p {
+  font-size: 1.75rem;
+  margin: 1rem 0;
+  font-weight: 700;
+  color: #2d2d2d;
+}
+
+.bonus-entries {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+  display: inline-block;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.bonus-countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  font-size: 1.2rem;
+  color: #2d2d2d;
+  font-weight: 600;
+}
+
+.bonus-cta {
+  display: inline-block;
+  padding: 1.25rem 3.5rem;
+  background: #1a1a1a;
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1.2rem;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.bonus-cta:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  background: #2d2d2d;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Hero Section */
 .hero {
   width: 100%;
@@ -258,5 +386,38 @@
   .prize-card {
     margin: 0 auto;
     max-width: 400px;
+  }
+
+  /* Signup Bonus Mobile */
+  .signup-bonus-banner {
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+  }
+
+  .bonus-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .bonus-content p {
+    font-size: 1.25rem;
+  }
+
+  .bonus-entries {
+    font-size: 2rem;
+    display: block;
+    margin: 0.5rem 0;
+  }
+
+  .bonus-countdown {
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .bonus-cta {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
   }
 }
