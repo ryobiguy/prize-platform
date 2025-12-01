@@ -62,10 +62,15 @@
 .bonus-entries {
   font-size: 3rem;
   font-weight: 900;
-  color: white;
-  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+  color: #FFD700;
   display: inline-block;
-  animation: pulse 2s ease-in-out infinite;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 1.5rem;
+  border-radius: 12px;
+  border: 3px solid #FFD700;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.2);
+  animation: pulse 2s ease-in-out infinite, glow 2s ease-in-out infinite;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
 }
 
 .bonus-countdown {
@@ -119,6 +124,15 @@
   }
   50% {
     transform: scale(1.05);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.8), inset 0 0 30px rgba(255, 215, 0, 0.4);
   }
 }
 
