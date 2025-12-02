@@ -53,6 +53,10 @@
   width: 350px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   animation: slideDown 0.3s ease;
+  position: absolute;
+  left: 0;
+  top: 60px;
+  z-index: 1000;
 }
 
 @keyframes slideDown {
