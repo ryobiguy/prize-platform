@@ -26,7 +26,8 @@
 .navbar-mobile-logo {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-left: 0.5rem;
 }
 
 .logo-mobile-image {

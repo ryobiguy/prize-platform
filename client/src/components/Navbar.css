@@ -25,20 +25,9 @@
 }
 
 .navbar-left {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex: 1;
-}
-
-.navbar-separator {
-  width: 2px;
-  height: 40px;
-  background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
-}
-
-.mobile-menu-btn {
-  display: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .navbar-logo {
