@@ -5,6 +5,13 @@
   z-index: 1000;
 }
 
+/* Hide desktop navbar on mobile */
+@media (max-width: 768px) {
+  .navbar {
+    display: none;
+  }
+}
+
 /* Top row with logo */
 .navbar-top {
   max-width: 1400px;
@@ -44,7 +51,7 @@
 
 /* Bottom row with navigation - orange bar */
 .navbar-bottom {
-  background-color: #ffb580;
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
   height: 45px;
   display: flex;
   align-items: center;

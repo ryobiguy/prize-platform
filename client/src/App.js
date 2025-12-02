@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import NavbarMobile from './components/NavbarMobile';
 import Footer from './components/Footer';
 import CookieBanner from './components/CookieBanner';
 import Home from './pages/Home';
@@ -55,6 +56,7 @@ function App() {
       <Router>
         <div className="App">
           <Navbar />
+          <NavbarMobile />
           <Toaster position="top-right" />
           <Routes>
             <Route path="/" element={<Home />} />
