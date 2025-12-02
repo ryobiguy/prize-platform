@@ -221,6 +221,10 @@
     height: 30px;
   }
 
+  .navbar-bottom {
+    display: none;
+  }
+
   .navbar-menu {
     position: fixed;
     top: 60px;
@@ -228,18 +232,37 @@
     right: 0;
     background: white;
     flex-direction: column;
-    padding: 2rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    transform: translateY(-100%);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s;
+    padding: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    gap: 0;
   }
 
   .navbar-menu.active {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
+    max-height: 400px;
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    color: var(--text-primary);
+    background: white;
+    border-bottom: 1px solid #f3f4f6;
+    height: auto;
+    text-transform: none;
+    font-size: 1rem;
+    justify-content: flex-start;
+  }
+
+  .nav-link:hover {
+    background: #f9fafb;
+    color: var(--primary);
+  }
+
+  .nav-link:last-child {
+    border-bottom: none;
   }
 
   .navbar-actions {
