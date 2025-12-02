@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Trophy, Menu, X, User, LogOut, LayoutDashboard, Gift, CheckSquare, Users } from 'lucide-react';
+import { Trophy, User, LogOut, LayoutDashboard } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/');
-    setMobileMenuOpen(false);
   };
 
   return (
@@ -20,10 +18,6 @@ const Navbar = () => {
       {/* Top row with logo */}
       <div className="navbar-top">
         <div className="navbar-left">
-          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-          <div className="navbar-separator"></div>
           <Link to="/" className="navbar-logo">
             <img src="/logo.png" alt="Total Raffle" className="logo-image" />
           </Link>
@@ -71,33 +65,33 @@ const Navbar = () => {
 
       {/* Bottom row with navigation in orange bar */}
       <div className="navbar-bottom">
-        <div className={`navbar-menu ${mobileMenuOpen ? 'active' : ''}`}>
-          <Link to="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+        <div className="navbar-menu">
+          <Link to="/" className="nav-link">
             Home
           </Link>
-          <Link to="/prizes" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+          <Link to="/prizes" className="nav-link">
             Prizes
           </Link>
-          <Link to="/how-it-works" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+          <Link to="/how-it-works" className="nav-link">
             How It Works
           </Link>
-          <Link to="/winners" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+          <Link to="/winners" className="nav-link">
             Winners
           </Link>
           {user ? (
             <>
-              <Link to="/referrals" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+              <Link to="/referrals" className="nav-link">
                 Refer Friends
               </Link>
-              <Link to="/buy-entries" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+              <Link to="/buy-entries" className="nav-link">
                 Buy Entries
               </Link>
-              <Link to="/dashboard" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+              <Link to="/dashboard" className="nav-link">
                 Dashboard
               </Link>
             </>
           ) : (
-            <Link to="/login" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/login" className="nav-link">
               Sign In
             </Link>
           )}
