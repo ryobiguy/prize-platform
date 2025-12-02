@@ -222,7 +222,8 @@
   }
 
   .navbar-bottom {
-    display: none;
+    background: transparent;
+    height: auto;
   }
 
   .navbar-menu {
@@ -238,10 +239,11 @@
     overflow: hidden;
     transition: max-height 0.3s ease;
     gap: 0;
+    z-index: 999;
   }
 
   .navbar-menu.active {
-    max-height: 400px;
+    max-height: 500px;
   }
 
   .nav-link {
