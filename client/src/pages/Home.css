@@ -266,6 +266,9 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .section-title {
@@ -400,20 +403,29 @@
 
   /* Signup Bonus Mobile */
   .signup-bonus-banner {
-    padding: 2rem 1.5rem;
-    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    border-radius: 12px;
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .bonus-header {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .bonus-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .bonus-content p {
     font-size: 1.25rem;
   }
 
+  .bonus-content p {
+    font-size: 1rem;
+  }
+
   .bonus-entries {
-    font-size: 2rem;
+    font-size: 1.75rem !important;
     display: block;
     margin: 0.5rem 0;
   }
@@ -421,13 +433,13 @@
   .bonus-countdown {
     flex-direction: column;
     gap: 0.5rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .bonus-cta {
-    padding: 1rem 2rem;
-    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
     width: 100%;
-    max-width: 300px;
+    max-width: 100%;
   }
 }
