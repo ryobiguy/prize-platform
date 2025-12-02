@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Trophy, Gift, Clock } from 'lucide-react';
+import axios from '../utils/axios';
 import './Auth.css';
 
 const Register = () => {
@@ -17,10 +18,22 @@ const Register = () => {
     referralCode: ''
   });
 
-  // Check if signup bonus is still active
-  const SIGNUP_BONUS_END = new Date('2025-12-20T23:59:59Z');
-  const isBonusActive = new Date() < SIGNUP_BONUS_END;
-  const daysLeft = Math.ceil((SIGNUP_BONUS_END - new Date()) / (1000 * 60 * 60 * 24));
+  // Check if signup bonus is still active (first 100 signups)
+  const [isBonusActive, setIsBonusActive] = useState(true);
+  const [spotsLeft, setSpotsLeft] = useState(100);
+
+  useEffect(() => {
+    const checkBonusStatus = async () => {
+      try {
+        const response = await axios.get('/api/auth/signup-bonus-status');
+        setIsBonusActive(response.data.active);
+        setSpotsLeft(response.data.spotsLeft);
+      } catch (error) {
+        console.error('Error checking bonus status:', error);
+      }
+    };
+    checkBonusStatus();
+  }, []);
 
   useEffect(() => {
     // Check for referral code in URL
@@ -109,13 +122,13 @@ const Register = () => {
                 LIMITED TIME OFFER!
               </h2>
             </div>
-            <p style={{ fontSize: '1.25rem', margin: '0.5rem 0', fontWeight: '600', color: '#2d2d2d' }}>
-              Get <span style={{ fontSize: '2rem', fontWeight: '800', color: '#1a1a1a' }}>500 FREE ENTRIES</span> when you sign up!
+            <p style={{ fontSize: '1.25rem', margin: '0.5rem 0', fontWeight: '600', color: 'white' }}>
+              Get <span style={{ fontSize: '2rem', fontWeight: '800', color: 'white' }}>250 FREE ENTRIES</span> when you sign up!
             </p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '0.75rem' }}>
               <Clock size={18} />
-              <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '500' }}>
-                Ends December 20th • Only {daysLeft} days left!
+              <span style={{ fontSize: '0.95rem', color: 'white', fontWeight: '500' }}>
+                First 100 signups only • {spotsLeft} spots left!
               </span>
             </div>
           </div>

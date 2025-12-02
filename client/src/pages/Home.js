@@ -14,10 +14,22 @@ const Home = () => {
   const [stats, setStats] = useState({ totalPrizes: 0, totalUsers: 0, totalWinners: 0 });
   const [latestWinner, setLatestWinner] = useState(null);
   
-  // Check if signup bonus is still active
-  const SIGNUP_BONUS_END = new Date('2025-12-20T23:59:59Z');
-  const isBonusActive = new Date() < SIGNUP_BONUS_END;
-  const daysLeft = Math.ceil((SIGNUP_BONUS_END - new Date()) / (1000 * 60 * 60 * 24));
+  // Check if signup bonus is still active (first 100 signups)
+  const [isBonusActive, setIsBonusActive] = useState(true);
+  const [spotsLeft, setSpotsLeft] = useState(100);
+
+  useEffect(() => {
+    const checkBonusStatus = async () => {
+      try {
+        const response = await axios.get('/api/auth/signup-bonus-status');
+        setIsBonusActive(response.data.active);
+        setSpotsLeft(response.data.spotsLeft);
+      } catch (error) {
+        console.error('Error checking bonus status:', error);
+      }
+    };
+    checkBonusStatus();
+  }, []);
 
   useEffect(() => {
     fetchFeaturedPrizes();
@@ -83,14 +95,14 @@ const Home = () => {
             </div>
             <div className="bonus-content">
               <p>
-                Sign up now and get <span className="bonus-entries">500 FREE ENTRIES</span>
+                Sign up now and get <span className="bonus-entries">250 FREE ENTRIES</span>
               </p>
               <div className="bonus-countdown">
                 <Clock size={22} />
-                <span>Ends December 20th • Only {daysLeft} days left!</span>
+                <span>First 100 signups only • {spotsLeft} spots left!</span>
               </div>
               <Link to="/register" className="bonus-cta">
-                Claim Your 500 Free Entries →
+                Claim Your 250 Free Entries →
               </Link>
             </div>
           </div>

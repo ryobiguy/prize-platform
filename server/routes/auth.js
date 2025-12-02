@@ -8,6 +8,20 @@ const User = require('../models/User');
 const { auth } = require('../middleware/auth');
 const emailService = require('../services/emailService');
 
+// Check signup bonus status
+router.get('/signup-bonus-status', async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const active = totalUsers < 100;
+    const spotsLeft = Math.max(0, 100 - totalUsers);
+    
+    res.json({ active, spotsLeft, totalUsers });
+  } catch (error) {
+    console.error('Error checking bonus status:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // Register
 router.post('/register', [
   body('username').trim().isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
@@ -35,10 +49,9 @@ router.post('/register', [
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    // SIGNUP BONUS: 500 entries until December 20th, 2025
-    const SIGNUP_BONUS_END = new Date('2025-12-20T23:59:59Z');
-    const now = new Date();
-    const signupBonus = now < SIGNUP_BONUS_END ? 500 : 10;
+    // SIGNUP BONUS: 250 entries for first 100 signups
+    const totalUsers = await User.countDocuments();
+    const signupBonus = totalUsers < 100 ? 250 : 10;
     
     // Base entries (signup bonus + 25 referral bonus if applicable)
     let baseEntries = signupBonus;
