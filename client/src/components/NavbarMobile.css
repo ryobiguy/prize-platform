@@ -31,19 +31,7 @@
 }
 
 .mobile-entries {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3rem;
-  background: linear-gradient(135deg, #FF8C00 0%, #FFB800 100%);
-  padding: 0.35rem 0.5rem;
-  border-radius: 18px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: white;
-  box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4);
-  white-space: nowrap;
-  flex-shrink: 0;
+  display: none;
 }
 
 .mobile-menu-btn {
