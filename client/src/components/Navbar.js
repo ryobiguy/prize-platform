@@ -19,9 +19,15 @@ const Navbar = () => {
     <nav className="navbar">
       {/* Top row with logo */}
       <div className="navbar-top">
-        <Link to="/" className="navbar-logo">
-          <img src="/logo.png" alt="Total Raffle" className="logo-image" />
-        </Link>
+        <div className="navbar-left">
+          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+          <div className="navbar-separator"></div>
+          <Link to="/" className="navbar-logo">
+            <img src="/logo.png" alt="Total Raffle" className="logo-image" />
+          </Link>
+        </div>
         <div className="navbar-actions">
           {user ? (
             <>
@@ -61,9 +67,6 @@ const Navbar = () => {
             </>
           )}
         </div>
-        <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
 
       {/* Bottom row with navigation in orange bar */}
