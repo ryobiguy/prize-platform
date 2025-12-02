@@ -232,7 +232,7 @@
     top: 60px;
     left: 0;
     right: 0;
-    background: white;
+    background: rgb(0, 255, 115);
     flex-direction: column;
     padding: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -242,7 +242,7 @@
     gap: 0;
     z-index: 999;
     margin: 0;
-    width: 100%;
+    width: 350px;
   }
 
   .navbar-menu.active {
