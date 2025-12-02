@@ -18,20 +18,18 @@ const NavbarMobile = () => {
   return (
     <nav className="navbar-mobile">
       <div className="navbar-mobile-top">
-        <div className="navbar-mobile-row">
-          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-          <Link to="/" className="navbar-mobile-logo">
-            <img src="/logo.png" alt="Total Raffle" className="logo-mobile-image" />
-          </Link>
-        </div>
+        <Link to="/" className="navbar-mobile-logo">
+          <img src="/logo.png" alt="Total Raffle" className="logo-mobile-image" />
+        </Link>
         {user && (
           <div className="mobile-entries">
-            <Trophy size={18} />
-            <span>{user.availableEntries} entries available</span>
+            <Trophy size={16} />
+            <span>{user.availableEntries}</span>
           </div>
         )}
+        <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
 
       {/* Mobile Menu Dropdown */}
