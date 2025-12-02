@@ -223,7 +223,8 @@
 
   .navbar-bottom {
     background: transparent;
-    height: auto;
+    height: 0;
+    overflow: visible;
   }
 
   .navbar-menu {
@@ -240,6 +241,8 @@
     transition: max-height 0.3s ease;
     gap: 0;
     z-index: 999;
+    margin: 0;
+    width: 100%;
   }
 
   .navbar-menu.active {
