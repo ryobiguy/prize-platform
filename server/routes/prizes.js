@@ -115,6 +115,8 @@ router.post('/:id/enter', auth, async (req, res) => {
             wonAt: new Date(),
             claimed: false
           });
+          
+          console.log(`✅ Added win to user ${req.userId}: ${randomPrize.name}`);
 
           wonPrizes.push(randomPrize.name);
         }
