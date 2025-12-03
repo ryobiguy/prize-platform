@@ -69,51 +69,67 @@ router.post('/:id/enter', auth, async (req, res) => {
         return res.status(400).json({ error: 'All prizes have been won!' });
       }
 
-      // Calculate win probability (5% chance to win)
-      const winChance = 0.05; // 5% chance (1 in 20)
-      const didWin = Math.random() < winChance;
+      // Calculate number of plays (each play costs entryCost entries)
+      const numberOfPlays = Math.floor(entries / prize.entryCost);
+      
+      if (numberOfPlays === 0) {
+        return res.status(400).json({ error: `Minimum ${prize.entryCost} entries required to play` });
+      }
 
       // Deduct entries
-      user.availableEntries -= entries;
-      prize.totalEntries += entries;
+      const totalEntriesUsed = numberOfPlays * prize.entryCost;
+      user.availableEntries -= totalEntriesUsed;
+      prize.totalEntries += totalEntriesUsed;
 
-      if (didWin) {
-        // Select random prize from available pool
-        const randomPrize = availablePrizes[Math.floor(Math.random() * availablePrizes.length)];
-        
-        // Decrease remaining count
-        const poolPrize = prize.prizePool.find(p => p.name === randomPrize.name);
-        poolPrize.remaining -= 1;
+      // Play multiple times
+      const winChance = 0.05; // 5% chance (1 in 20)
+      let wonPrizes = [];
 
-        // Add winner
-        prize.winners.push({
-          user: req.userId,
-          prizeName: randomPrize.name,
-          prizeValue: randomPrize.value,
-          prizeType: randomPrize.type,
-          drawnAt: new Date()
-        });
+      for (let i = 0; i < numberOfPlays; i++) {
+        // Check if prizes still available
+        const currentAvailable = prize.prizePool.filter(p => p.remaining > 0);
+        if (currentAvailable.length === 0) break;
 
-        await prize.save();
-        await user.save();
+        const didWin = Math.random() < winChance;
 
+        if (didWin) {
+          // Select random prize from available pool
+          const randomPrize = currentAvailable[Math.floor(Math.random() * currentAvailable.length)];
+          
+          // Decrease remaining count
+          const poolPrize = prize.prizePool.find(p => p.name === randomPrize.name);
+          poolPrize.remaining -= 1;
+
+          // Add winner
+          prize.winners.push({
+            user: req.userId,
+            prizeName: randomPrize.name,
+            prizeValue: randomPrize.value,
+            prizeType: randomPrize.type,
+            drawnAt: new Date()
+          });
+
+          wonPrizes.push(randomPrize.name);
+        }
+      }
+
+      await prize.save();
+      await user.save();
+
+      if (wonPrizes.length > 0) {
+        const prizeList = wonPrizes.join(', ');
         return res.json({
           won: true,
-          prize: {
-            name: randomPrize.name,
-            value: randomPrize.value,
-            type: randomPrize.type
-          },
-          message: `🎉 Congratulations! You won ${randomPrize.name}!`,
+          prizes: wonPrizes,
+          message: `🎉 Congratulations! You won ${wonPrizes.length} prize${wonPrizes.length > 1 ? 's' : ''}: ${prizeList}!`,
+          plays: numberOfPlays,
           remainingEntries: user.availableEntries
         });
       } else {
-        await prize.save();
-        await user.save();
-
         return res.json({
           won: false,
-          message: 'Not a winner this time. Try again!',
+          message: `No wins this time. You played ${numberOfPlays} times. Try again!`,
+          plays: numberOfPlays,
           remainingEntries: user.availableEntries
         });
       }
