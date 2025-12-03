@@ -7,6 +7,7 @@ import './Wins.css';
 const Wins = () => {
   const [wins, setWins] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchWins();
@@ -15,9 +16,12 @@ const Wins = () => {
   const fetchWins = async () => {
     try {
       const response = await axios.get('/api/users/wins');
+      console.log('Wins response:', response.data);
       setWins(response.data.wins || []);
+      setError(null);
     } catch (error) {
       console.error('Error fetching wins:', error);
+      setError(error.response?.data?.error || 'Failed to load wins');
     } finally {
       setLoading(false);
     }
@@ -28,6 +32,20 @@ const Wins = () => {
       <div className="wins-page">
         <div className="container" style={{ padding: '40px', textAlign: 'center' }}>
           <h2>Loading your wins...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="wins-page">
+        <div className="container" style={{ padding: '40px', textAlign: 'center' }}>
+          <h2>Error Loading Wins</h2>
+          <p>{error}</p>
+          <button onClick={fetchWins} style={{ marginTop: '20px', padding: '10px 20px' }}>
+            Try Again
+          </button>
         </div>
       </div>
     );
