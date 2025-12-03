@@ -132,7 +132,7 @@ const BuyEntries = () => {
                   </div>
                   {pkg.bonus && (
                     <div className="bonus-entries">
-                      + {pkg.bonus} BONUS entries!
+                      + {pkg.bonus} bonus entries
                     </div>
                   )}
                   <div className="total-entries">
