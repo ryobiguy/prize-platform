@@ -188,7 +188,7 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
       type: 'giftcard',
       value: 10,
       currency: 'GBP',
-      imageUrl: '/prizes/mystery-box.jpg',
+      imageUrl: '/prizes/mystery-prize.png',
       totalWinners: 30,
       entryCost: 100,
       maxEntriesPerUser: 10000,
