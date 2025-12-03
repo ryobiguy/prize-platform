@@ -69,8 +69,8 @@ router.post('/:id/enter', auth, async (req, res) => {
         return res.status(400).json({ error: 'All prizes have been won!' });
       }
 
-      // Calculate win probability (e.g., 10% chance to win)
-      const winChance = 0.10; // 10% chance
+      // Calculate win probability (5% chance to win)
+      const winChance = 0.05; // 5% chance (1 in 20)
       const didWin = Math.random() < winChance;
 
       // Deduct entries

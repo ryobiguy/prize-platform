@@ -21,14 +21,14 @@ const createDailyMysteryPrize = async () => {
 
     const dailyMysteryPrize = new Prize({
       title: 'Daily Mystery Prize Pool',
-      description: 'Win instant prizes! 30 winners daily! Includes Amazon, Just Eat, Starbucks, Steam, Netflix gift cards and cash prizes!',
+      description: 'Win instant prizes! 30 winners daily! Includes Amazon, Just Eat, Starbucks, Steam, Netflix gift cards and cash prizes! 5% win chance - 1 in 20 plays wins!',
       type: 'giftcard',
       value: 10, // Average value
       currency: 'GBP',
       imageUrl: '/prizes/mystery-box.jpg',
       totalWinners: 30,
-      entryCost: 10,
-      maxEntriesPerUser: 1000,
+      entryCost: 100,
+      maxEntriesPerUser: 10000,
       minimumEntries: 1,
       drawFrequency: 'instant',
       startDate: now,
@@ -92,8 +92,10 @@ const createDailyMysteryPrize = async () => {
     console.log('✅ Daily Mystery Prize Pool created successfully!');
     console.log(`Prize ID: ${dailyMysteryPrize._id}`);
     console.log('Total prizes in pool: 30');
-    console.log('Entry cost: 10 entries');
-    console.log('Win chance: 10% per entry');
+    console.log('Entry cost: 100 entries per play');
+    console.log('Win chance: 5% (1 in 20 plays)');
+    console.log('Expected plays to distribute all prizes: 600');
+    console.log('Expected revenue: £600 | Prize cost: £400 | PROFIT: £200');
     
     process.exit(0);
   } catch (error) {
