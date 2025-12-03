@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Gift, CheckSquare, Users, Trophy, DollarSign, TrendingUp, AlertCircle, Settings, Mail, Play } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Gift, CheckSquare, Users, Trophy, DollarSign, TrendingUp, AlertCircle, Settings, Mail, Play, Zap } from 'lucide-react';
 import axios from '../utils/axios';
 import toast from 'react-hot-toast';
 import './AdminPanel.css';
@@ -248,6 +249,10 @@ const AdminPanel = () => {
             <Settings size={20} />
             Settings
           </button>
+          <Link to="/admin/quick" className="tab-btn quick-link">
+            <Zap size={20} />
+            Quick Actions
+          </Link>
         </div>
 
         <div className="admin-content">
