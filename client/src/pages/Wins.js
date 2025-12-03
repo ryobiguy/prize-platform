@@ -71,7 +71,7 @@ const Wins = () => {
           </div>
         ) : (
           <div className="wins-grid">
-            {wins.map((win, index) => (
+            {wins.filter(win => win.prize).map((win, index) => (
               <div key={index} className={`win-card ${win.claimed ? 'claimed' : 'unclaimed'}`}>
                 <div className="win-card-header">
                   <Trophy size={32} className="win-trophy" />
@@ -89,11 +89,11 @@ const Wins = () => {
                 </div>
 
                 <div className="win-card-content">
-                  <h3>{win.prize.title}</h3>
-                  <p className="win-type">{win.prize.type}</p>
+                  <h3>{win.prize?.title || 'Prize'}</h3>
+                  <p className="win-type">{win.prize?.type || 'N/A'}</p>
                   <div className="win-value">
                     <span className="value-label">Prize Value</span>
-                    <span className="value-amount">£{win.prize.value}</span>
+                    <span className="value-amount">£{win.prize?.value || 0}</span>
                   </div>
 
                   <div className="win-meta">
@@ -103,7 +103,7 @@ const Wins = () => {
                     </div>
                   </div>
 
-                  {!win.claimed && (
+                  {!win.claimed && win.prize && (
                     <>
                       <div className="win-instructions">
                         <h4>Next Steps:</h4>
