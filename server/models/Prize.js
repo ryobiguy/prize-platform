@@ -47,7 +47,7 @@ const prizeSchema = new mongoose.Schema({
   },
   drawFrequency: {
     type: String,
-    enum: ['daily', 'weekly', 'monthly'],
+    enum: ['daily', 'weekly', 'monthly', 'instant'],
     default: 'weekly'
   },
   drawDay: {
@@ -59,6 +59,21 @@ const prizeSchema = new mongoose.Schema({
     type: String,
     default: '20:00' // 8 PM default
   },
+  isInstantWin: {
+    type: Boolean,
+    default: false
+  },
+  prizePool: [{
+    name: String,
+    type: {
+      type: String,
+      enum: ['physical', 'giftcard', 'cash']
+    },
+    value: Number,
+    quantity: Number,
+    remaining: Number,
+    imageUrl: String
+  }],
   startDate: {
     type: Date,
     required: true
@@ -91,11 +106,18 @@ const prizeSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     },
+    prizeName: String,
+    prizeValue: Number,
+    prizeType: String,
     drawnAt: {
       type: Date,
       default: Date.now
     },
     notified: {
+      type: Boolean,
+      default: false
+    },
+    claimed: {
       type: Boolean,
       default: false
     }

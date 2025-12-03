@@ -52,7 +52,30 @@ const PrizeDetail = () => {
 
     try {
       const response = await axios.post(`/api/prizes/${id}/enter`, { entries });
-      toast.success(`Entered with ${entries} entries!`);
+      
+      // Check if instant win
+      if (response.data.won !== undefined) {
+        if (response.data.won) {
+          toast.success(response.data.message, {
+            duration: 5000,
+            icon: '🎉',
+            style: {
+              background: '#4CAF50',
+              color: 'white',
+              fontSize: '16px',
+              fontWeight: 'bold'
+            }
+          });
+        } else {
+          toast(response.data.message, {
+            duration: 3000,
+            icon: '😔'
+          });
+        }
+      } else {
+        toast.success(`Entered with ${entries} entries!`);
+      }
+      
       updateUser({ availableEntries: response.data.remainingEntries });
       fetchPrize();
     } catch (error) {

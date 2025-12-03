@@ -60,6 +60,66 @@ router.post('/:id/enter', auth, async (req, res) => {
       return res.status(400).json({ error: 'Insufficient entries' });
     }
 
+    // INSTANT WIN LOGIC
+    if (prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0) {
+      // Check if there are prizes left
+      const availablePrizes = prize.prizePool.filter(p => p.remaining > 0);
+      
+      if (availablePrizes.length === 0) {
+        return res.status(400).json({ error: 'All prizes have been won!' });
+      }
+
+      // Calculate win probability (e.g., 10% chance to win)
+      const winChance = 0.10; // 10% chance
+      const didWin = Math.random() < winChance;
+
+      // Deduct entries
+      user.availableEntries -= entries;
+      prize.totalEntries += entries;
+
+      if (didWin) {
+        // Select random prize from available pool
+        const randomPrize = availablePrizes[Math.floor(Math.random() * availablePrizes.length)];
+        
+        // Decrease remaining count
+        const poolPrize = prize.prizePool.find(p => p.name === randomPrize.name);
+        poolPrize.remaining -= 1;
+
+        // Add winner
+        prize.winners.push({
+          user: req.userId,
+          prizeName: randomPrize.name,
+          prizeValue: randomPrize.value,
+          prizeType: randomPrize.type,
+          drawnAt: new Date()
+        });
+
+        await prize.save();
+        await user.save();
+
+        return res.json({
+          won: true,
+          prize: {
+            name: randomPrize.name,
+            value: randomPrize.value,
+            type: randomPrize.type
+          },
+          message: `🎉 Congratulations! You won ${randomPrize.name}!`,
+          remainingEntries: user.availableEntries
+        });
+      } else {
+        await prize.save();
+        await user.save();
+
+        return res.json({
+          won: false,
+          message: 'Not a winner this time. Try again!',
+          remainingEntries: user.availableEntries
+        });
+      }
+    }
+
+    // REGULAR DRAW LOGIC (existing code)
     // Check if user already entered
     const existingEntry = prize.participants.find(p => p.user.toString() === req.userId.toString());
     
