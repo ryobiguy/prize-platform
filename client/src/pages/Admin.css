@@ -68,3 +68,29 @@
   cursor: not-allowed;
   transform: none;
 }
+
+.admin-btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.admin-btn-danger:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.admin-btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

@@ -8,6 +8,7 @@ import './Admin.css';
 const Admin = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const createDailyMystery = async () => {
     setLoading(true);
@@ -21,6 +22,24 @@ const Admin = () => {
       toast.error(errorMsg);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deleteDailyMystery = async () => {
+    if (!window.confirm('Are you sure you want to delete the Daily Mystery Prize?')) {
+      return;
+    }
+    
+    setDeleting(true);
+    try {
+      const response = await axios.delete('/api/prizes/admin/delete-daily-mystery');
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error('Delete prize error:', error);
+      const errorMsg = error.response?.data?.details || error.response?.data?.error || 'Failed to delete prize';
+      toast.error(errorMsg);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -49,14 +68,23 @@ const Admin = () => {
         <div className="admin-section">
           <h2>Daily Mystery Prize Pool</h2>
           <p>Create the instant win daily mystery prize with 30 prizes</p>
-          <button 
-            onClick={createDailyMystery}
-            disabled={loading}
-            className="admin-btn"
-          >
-            <Gift size={20} />
-            {loading ? 'Creating...' : 'Create Daily Mystery Prize'}
-          </button>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <button 
+              onClick={createDailyMystery}
+              disabled={loading}
+              className="admin-btn"
+            >
+              <Gift size={20} />
+              {loading ? 'Creating...' : 'Create Daily Mystery Prize'}
+            </button>
+            <button 
+              onClick={deleteDailyMystery}
+              disabled={deleting}
+              className="admin-btn-danger"
+            >
+              {deleting ? 'Deleting...' : 'Delete Daily Mystery Prize'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

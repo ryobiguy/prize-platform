@@ -267,6 +267,35 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
   }
 });
 
+// Admin: Delete daily mystery prize
+router.delete('/admin/delete-daily-mystery', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    
+    if (!user || !user.isAdmin) {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    const result = await Prize.deleteOne({ 
+      title: 'Daily Mystery Prize Pool'
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: 'Daily Mystery Prize not found' });
+    }
+
+    res.json({
+      message: 'Daily Mystery Prize deleted successfully!'
+    });
+  } catch (error) {
+    console.error('Delete daily mystery error:', error);
+    res.status(500).json({ 
+      error: 'Server error', 
+      details: error.message 
+    });
+  }
+});
+
 // Get recent winners for live feed (public)
 router.get('/recent-winners', async (req, res) => {
   try {
