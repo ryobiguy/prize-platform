@@ -100,13 +100,20 @@ router.post('/:id/enter', auth, async (req, res) => {
           const poolPrize = prize.prizePool.find(p => p.name === randomPrize.name);
           poolPrize.remaining -= 1;
 
-          // Add winner
+          // Add winner to prize
           prize.winners.push({
             user: req.userId,
             prizeName: randomPrize.name,
             prizeValue: randomPrize.value,
             prizeType: randomPrize.type,
             drawnAt: new Date()
+          });
+
+          // Add win to user's wins array
+          user.wins.push({
+            prize: prize._id,
+            wonAt: new Date(),
+            claimed: false
           });
 
           wonPrizes.push(randomPrize.name);
