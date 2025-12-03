@@ -158,6 +158,111 @@ router.post('/:id/enter', auth, async (req, res) => {
   }
 });
 
+// Admin: Create daily mystery prize (instant win)
+router.post('/admin/create-daily-mystery', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    
+    if (!user || !user.isAdmin) {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    // Check if daily mystery prize already exists
+    const existing = await Prize.findOne({ 
+      title: 'Daily Mystery Prize Pool',
+      status: 'active'
+    });
+    
+    if (existing) {
+      return res.status(400).json({ error: 'Daily Mystery Prize already exists!' });
+    }
+
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(23, 59, 59, 999);
+
+    const dailyMysteryPrize = new Prize({
+      title: 'Daily Mystery Prize Pool',
+      description: 'Win instant prizes! 30 winners daily! Includes Amazon, Just Eat, Starbucks, Steam, Netflix gift cards and cash prizes! 5% win chance - 1 in 20 plays wins!',
+      type: 'giftcard',
+      value: 10,
+      currency: 'GBP',
+      imageUrl: '/prizes/mystery-box.jpg',
+      totalWinners: 30,
+      entryCost: 100,
+      maxEntriesPerUser: 10000,
+      minimumEntries: 1,
+      drawFrequency: 'instant',
+      startDate: now,
+      endDate: tomorrow,
+      status: 'active',
+      isInstantWin: true,
+      featured: true,
+      prizePool: [
+        {
+          name: '£10 Amazon Gift Card',
+          type: 'giftcard',
+          value: 10,
+          quantity: 10,
+          remaining: 10,
+          imageUrl: '/prizes/amazon.png'
+        },
+        {
+          name: '£15 Just Eat Voucher',
+          type: 'giftcard',
+          value: 15,
+          quantity: 5,
+          remaining: 5,
+          imageUrl: '/prizes/justeat.png'
+        },
+        {
+          name: '£10 Cash',
+          type: 'cash',
+          value: 10,
+          quantity: 3,
+          remaining: 3,
+          imageUrl: '/prizes/cash.png'
+        },
+        {
+          name: '£5 Starbucks Gift Card',
+          type: 'giftcard',
+          value: 5,
+          quantity: 5,
+          remaining: 5,
+          imageUrl: '/prizes/starbucks.png'
+        },
+        {
+          name: '£20 Steam Gift Card',
+          type: 'giftcard',
+          value: 20,
+          quantity: 2,
+          remaining: 2,
+          imageUrl: '/prizes/steam.png'
+        },
+        {
+          name: '£10 Netflix Gift Card',
+          type: 'giftcard',
+          value: 10,
+          quantity: 5,
+          remaining: 5,
+          imageUrl: '/prizes/netflix.png'
+        }
+      ]
+    });
+
+    await dailyMysteryPrize.save();
+
+    res.json({
+      message: 'Daily Mystery Prize Pool created successfully!',
+      prize: dailyMysteryPrize
+    });
+  } catch (error) {
+    console.error('Create daily mystery error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // Get recent winners for live feed (public)
 router.get('/recent-winners', async (req, res) => {
   try {

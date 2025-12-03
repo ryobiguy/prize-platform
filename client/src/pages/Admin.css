@@ -1,0 +1,70 @@
+.admin-page {
+  min-height: 100vh;
+  background: #f9fafb;
+  padding-bottom: 60px;
+}
+
+.admin-header {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  padding: 60px 0;
+  text-align: center;
+  color: white;
+  margin-bottom: 40px;
+}
+
+.admin-header h1 {
+  font-size: 48px;
+  margin: 0 0 15px 0;
+  font-weight: 800;
+}
+
+.admin-header p {
+  font-size: 20px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.admin-section {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.admin-section h2 {
+  font-size: 24px;
+  margin: 0 0 10px 0;
+  color: #1f2937;
+}
+
+.admin-section p {
+  margin: 0 0 20px 0;
+  color: #6b7280;
+}
+
+.admin-btn {
+  background: linear-gradient(135deg, #ff8c00 0%, #ffb800 100%);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.admin-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.admin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

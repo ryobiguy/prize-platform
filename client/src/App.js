@@ -28,6 +28,7 @@ import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Wins from './pages/Wins';
 import VerifyEmail from './pages/VerifyEmail';
+import Admin from './pages/Admin';
 import Referrals from './pages/Referrals';
 
 function PrivateRoute({ children }) {
@@ -78,6 +79,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
+            <Route path="/admin/quick" element={<PrivateRoute><Admin /></PrivateRoute>} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/contest-rules" element={<ContestRules />} />
