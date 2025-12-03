@@ -49,19 +49,19 @@ router.post('/register', [
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    // SIGNUP BONUS: 250 entries for first 100 signups
-    const totalUsers = await User.countDocuments();
-    const signupBonus = totalUsers < 100 ? 250 : 10;
+    // SIGNUP BONUS: Check if user is in first 100 signups for bonus
+    const userCount = await User.countDocuments();
+    const isEarlySignup = userCount < 100;
     
-    // Base entries (signup bonus + 25 referral bonus if applicable)
-    let baseEntries = signupBonus;
+    // Base entries: 5 for everyone, 25 for first 100 (10p per entry pricing)
+    let baseEntries = isEarlySignup ? 25 : 5;
     let referrer = null;
 
     // Check if referral code is valid
     if (referralCode) {
       referrer = await User.findOne({ referralCode: referralCode.toUpperCase() });
       if (referrer) {
-        baseEntries += 25; // Bonus for using referral code
+        baseEntries += 5; // Bonus for using referral code (50p value)
       }
     }
 

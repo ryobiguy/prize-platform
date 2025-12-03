@@ -123,7 +123,7 @@ const Register = () => {
               </h2>
             </div>
             <p style={{ fontSize: '1.25rem', margin: '0.5rem 0', fontWeight: '600', color: 'white' }}>
-              Get <span style={{ fontSize: '2rem', fontWeight: '800', color: 'white' }}>250 FREE ENTRIES</span> when you sign up!
+              Get <span style={{ fontSize: '2rem', fontWeight: '800', color: 'white' }}>25 FREE ENTRIES</span> (worth £2.50!) when you sign up!
             </p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '0.75rem' }}>
               <Clock size={18} />

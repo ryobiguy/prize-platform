@@ -95,14 +95,14 @@ const Home = () => {
             </div>
             <div className="bonus-content">
               <p>
-                Sign up now and get <span className="bonus-entries">250 FREE ENTRIES</span>
+                Sign up now and get <span className="bonus-entries">25 FREE ENTRIES</span> (worth £2.50!)
               </p>
               <div className="bonus-countdown">
                 <Clock size={22} />
                 <span>First 100 signups only • {spotsLeft} spots left!</span>
               </div>
               <Link to="/register" className="bonus-cta">
-                Claim Your 250 Free Entries →
+                Claim Your 25 Free Entries →
               </Link>
             </div>
           </div>

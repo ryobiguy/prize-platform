@@ -16,9 +16,9 @@ const BuyEntries = () => {
     {
       id: 'starter',
       name: 'Starter Pack',
-      entries: 100,
+      entries: 10,
       price: 0.99,
-      priceId: 'price_starter', // Will be replaced with real Stripe price ID
+      priceId: 'price_starter',
       popular: false,
       icon: Zap,
       color: '#3b82f6'
@@ -26,33 +26,33 @@ const BuyEntries = () => {
     {
       id: 'popular',
       name: 'Popular Pack',
-      entries: 500,
-      price: 3.99,
+      entries: 30,
+      price: 2.99,
       priceId: 'price_popular',
       popular: true,
-      bonus: 25,
+      bonus: 2,
       icon: Star,
       color: '#f59e0b'
     },
     {
       id: 'mega',
       name: 'Mega Pack',
-      entries: 1000,
-      price: 6.99,
+      entries: 50,
+      price: 4.99,
       priceId: 'price_mega',
       popular: false,
-      bonus: 100,
+      bonus: 5,
       icon: Crown,
       color: '#8b5cf6'
     },
     {
       id: 'ultimate',
       name: 'Ultimate Pack',
-      entries: 1200,
-      price: 14.99,
+      entries: 100,
+      price: 9.99,
       priceId: 'price_ultimate',
       popular: false,
-      bonus: 300,
+      bonus: 15,
       icon: Crown,
       color: '#ec4899'
     }
