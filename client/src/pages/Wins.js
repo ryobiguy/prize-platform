@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../utils/axios';
-import { Trophy, Calendar, Gift, CheckCircle, Clock, Mail } from 'lucide-react';
+import { Trophy, Calendar, Gift, CheckCircle, Clock, Mail, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 import './Wins.css';
 
 const Wins = () => {
   const [wins, setWins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [claimingWin, setClaimingWin] = useState(null);
+  const [claimMessage, setClaimMessage] = useState('');
 
   useEffect(() => {
     fetchWins();
@@ -24,6 +27,35 @@ const Wins = () => {
       setError(error.response?.data?.error || 'Failed to load wins');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleClaimClick = (win) => {
+    setClaimingWin(win);
+    setClaimMessage('');
+  };
+
+  const handleClaimSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!claimMessage.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
+
+    try {
+      await axios.post('/api/users/claim-prize', {
+        winId: claimingWin._id,
+        prizeTitle: claimingWin.prize.title,
+        message: claimMessage
+      });
+      
+      toast.success('Claim request sent! We\'ll contact you soon.');
+      setClaimingWin(null);
+      setClaimMessage('');
+      fetchWins();
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to send claim request');
     }
   };
 
@@ -108,18 +140,18 @@ const Wins = () => {
                       <div className="win-instructions">
                         <h4>Next Steps:</h4>
                         <ol>
-                          <li>Contact us to claim your prize</li>
+                          <li>Click below to claim your prize</li>
                           <li>Provide your delivery/contact details</li>
-                          <li>Receive your prize!</li>
+                          <li>We'll process and send your prize!</li>
                         </ol>
                       </div>
-                      <a 
-                        href={`mailto:totalraffle@mail.com?subject=Prize Claim - ${win.prize.title}&body=Hi Total Raffle Team,%0D%0A%0D%0AI am writing to claim my prize: ${win.prize.title}%0D%0A%0D%0AMy account details:%0D%0AUsername: [Your username]%0D%0AEmail: [Your email]%0D%0A%0D%0APlease let me know the next steps to receive my prize.%0D%0A%0D%0AThank you!`}
+                      <button 
+                        onClick={() => handleClaimClick(win)}
                         className="contact-claim-btn"
                       >
                         <Mail size={18} />
-                        Contact Us to Claim Prize
-                      </a>
+                        Claim Prize
+                      </button>
                     </>
                   )}
                 </div>
@@ -137,6 +169,56 @@ const Wins = () => {
           </div>
         )}
       </div>
+
+      {/* Claim Modal */}
+      {claimingWin && (
+        <div className="claim-modal-overlay" onClick={() => setClaimingWin(null)}>
+          <div className="claim-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="claim-modal-header">
+              <h2>Claim Your Prize</h2>
+              <button onClick={() => setClaimingWin(null)} className="close-btn">
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="claim-modal-content">
+              <div className="prize-info">
+                <Trophy size={32} color="#ff8c00" />
+                <div>
+                  <h3>{claimingWin.prize.title}</h3>
+                  <p>Value: £{claimingWin.prize.value}</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleClaimSubmit}>
+                <div className="form-group">
+                  <label htmlFor="claimMessage">
+                    Please provide your contact details and delivery address:
+                  </label>
+                  <textarea
+                    id="claimMessage"
+                    value={claimMessage}
+                    onChange={(e) => setClaimMessage(e.target.value)}
+                    placeholder="Full Name:&#10;Email:&#10;Phone Number:&#10;Delivery Address:&#10;&#10;Any additional notes..."
+                    rows="8"
+                    required
+                  />
+                </div>
+
+                <div className="form-actions">
+                  <button type="button" onClick={() => setClaimingWin(null)} className="cancel-btn">
+                    Cancel
+                  </button>
+                  <button type="submit" className="submit-btn">
+                    <Mail size={18} />
+                    Submit Claim
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

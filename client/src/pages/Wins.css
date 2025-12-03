@@ -228,27 +228,179 @@
 .wins-footer {
   text-align: center;
   margin-top: 3rem;
-  padding: 2rem;
   background: var(--bg-secondary);
   border-radius: 12px;
 }
 
-.wins-footer p {
-  margin: 0;
+.wins-footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding: 2rem;
   color: var(--text-secondary);
 }
 
 .wins-footer a {
   color: var(--primary);
+  text-decoration: none;
   font-weight: 600;
+}
+
+.wins-footer a:hover {
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-  .wins-header h1 {
-    font-size: 2rem;
-  }
+/* Claim Modal */
+.claim-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
 
+.claim-modal {
+  background: white;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.claim-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.claim-modal-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #1f2937;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.claim-modal-content {
+  padding: 2rem;
+}
+
+.prize-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.prize-info h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  color: #1f2937;
+}
+
+.prize-info p {
+  margin: 0;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.claim-modal .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.claim-modal label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.claim-modal textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.claim-modal textarea:focus {
+  outline: none;
+  border-color: #ff8c00;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  border: none;
+  color: #6b7280;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #ff8c00, #ff6b00);
+  border: none;
+  color: white;
+}
+
+.submit-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
   .wins-grid {
     grid-template-columns: 1fr;
   }

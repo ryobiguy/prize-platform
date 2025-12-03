@@ -76,4 +76,37 @@ router.get('/wins', auth, async (req, res) => {
   }
 });
 
+// Submit prize claim request
+router.post('/claim-prize', auth, async (req, res) => {
+  try {
+    const { winId, prizeTitle, message } = req.body;
+    
+    if (!message || !message.trim()) {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+
+    // Here you would typically send an email to admin
+    // For now, we'll just log it
+    console.log('📧 Prize Claim Request:');
+    console.log(`User ID: ${req.userId}`);
+    console.log(`Prize: ${prizeTitle}`);
+    console.log(`Message: ${message}`);
+    
+    // TODO: Send email notification to admin
+    // await sendEmail({
+    //   to: 'totalraffle@mail.com',
+    //   subject: `Prize Claim Request - ${prizeTitle}`,
+    //   text: `User ${req.userId} wants to claim: ${prizeTitle}\n\n${message}`
+    // });
+
+    res.json({ 
+      success: true,
+      message: 'Claim request received! We will contact you soon.' 
+    });
+  } catch (error) {
+    console.error('Claim prize error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;
