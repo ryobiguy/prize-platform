@@ -16,6 +16,8 @@ const allowedOrigins = [
   'https://totalraffle.co.uk',
   'http://www.totalraffle.co.uk',
   'http://totalraffle.co.uk',
+  'https://totalraffle.murmuder.com',
+  'http://totalraffle.murmuder.com',
   process.env.CLIENT_URL
 ].filter(Boolean);
 

@@ -14,8 +14,11 @@ const Admin = () => {
     try {
       const response = await axios.post('/api/prizes/admin/create-daily-mystery');
       toast.success(response.data.message);
+      console.log('Prize created:', response.data.prize);
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Failed to create prize');
+      console.error('Create prize error:', error);
+      const errorMsg = error.response?.data?.details || error.response?.data?.error || 'Failed to create prize';
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }

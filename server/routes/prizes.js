@@ -259,7 +259,11 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
     });
   } catch (error) {
     console.error('Create daily mystery error:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error details:', error.message);
+    res.status(500).json({ 
+      error: 'Server error', 
+      details: error.message 
+    });
   }
 });
 
