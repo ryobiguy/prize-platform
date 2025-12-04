@@ -381,9 +381,9 @@ router.get('/winners/all', async (req, res) => {
         
         allWinners.push({
           name: anonymizedName,
-          prize: prize.title,
-          prizeValue: prize.value,
-          prizeType: prize.type,
+          prize: winner.prizeName || prize.title,
+          prizeValue: winner.prizeValue || prize.value,
+          prizeType: winner.prizeType || prize.type,
           date: winner.drawnAt
         });
       });
