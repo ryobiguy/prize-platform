@@ -220,12 +220,12 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
 
     const dailyMysteryPrize = new Prize({
       title: 'Daily Mystery Prize Pool',
-      description: 'Win instant prizes! 30 winners daily! Includes Amazon, Just Eat, Starbucks, Steam, Netflix gift cards and cash prizes! 5% win chance - 1 in 20 plays wins!',
+      description: 'Win instant prizes! 31 winners daily! Includes Amazon, Just Eat, Uber Eats, Steam, Netflix gift cards, cash prizes, and Sony headphones! 5% win chance - 1 in 20 plays wins!',
       type: 'giftcard',
       value: 10,
       currency: 'GBP',
       imageUrl: '/prizes/mystery-prize.png',
-      totalWinners: 30,
+      totalWinners: 31,
       entryCost: 100,
       maxEntriesPerUser: 10000,
       minimumEntries: 1,
@@ -283,6 +283,14 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
           quantity: 5,
           remaining: 5,
           imageUrl: '/prizes/netflix.png'
+        },
+        {
+          name: 'Sony WH-1000XM5 Headphones',
+          type: 'physical',
+          value: 69.99,
+          quantity: 1,
+          remaining: 1,
+          imageUrl: '/prizes/sony-headphones.png'
         }
       ]
     });
