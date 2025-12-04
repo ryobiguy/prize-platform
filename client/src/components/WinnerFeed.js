@@ -36,6 +36,9 @@ const WinnerFeed = () => {
 
   if (loading || winners.length === 0) return null;
 
+  // Only duplicate for scroll animation if we have enough winners
+  const displayWinners = winners.length >= 5 ? winners.concat(winners) : winners;
+
   return (
     <div className="winner-feed">
       <div className="winner-feed-header">
@@ -43,8 +46,8 @@ const WinnerFeed = () => {
         <h3>Recent Winners</h3>
       </div>
       <div className="winner-feed-scroll">
-        <div className="winner-feed-content">
-          {winners.concat(winners).map((winner, index) => (
+        <div className={`winner-feed-content ${winners.length >= 5 ? 'scrolling' : ''}`}>
+          {displayWinners.map((winner, index) => (
             <div key={index} className="winner-item">
               <div className="winner-icon">🎉</div>
               <div className="winner-details">

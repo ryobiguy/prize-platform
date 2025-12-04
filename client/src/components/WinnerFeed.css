@@ -30,7 +30,7 @@
   -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
 }
 
-.winner-feed-content {
+.winner-feed-content.scrolling {
   animation: scroll 30s linear infinite;
 }
 
@@ -43,7 +43,7 @@
   }
 }
 
-.winner-feed:hover .winner-feed-content {
+.winner-feed:hover .winner-feed-content.scrolling {
   animation-play-state: paused;
 }
 
