@@ -23,6 +23,11 @@ const PrizeDetail = () => {
     try {
       const response = await axios.get(`/api/prizes/${id}`);
       setPrize(response.data.prize);
+      
+      // Set default entries to entryCost if it's an instant win prize
+      if (response.data.prize.isInstantWin && response.data.prize.entryCost) {
+        setEntries(response.data.prize.entryCost);
+      }
     } catch (error) {
       console.error('Error fetching prize:', error);
       // Use mock data if API fails
