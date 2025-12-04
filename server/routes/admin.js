@@ -316,12 +316,13 @@ router.get('/winners', adminAuth, async (req, res) => {
           user: winner.user,
           prize: {
             _id: prize._id,
-            title: prize.title,
-            value: prize.value,
-            type: prize.type
+            title: winner.prizeName || prize.title,
+            value: winner.prizeValue || prize.value,
+            type: winner.prizeType || prize.type
           },
           drawnAt: winner.drawnAt,
-          notified: winner.notified
+          notified: winner.notified,
+          claimed: winner.claimed || false
         });
       });
     });
@@ -357,6 +358,44 @@ router.put('/winners/:prizeId/:winnerId/notify', adminAuth, async (req, res) => 
     res.json({ message: 'Winner marked as notified', winner });
   } catch (error) {
     console.error('Notify winner error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Mark win as claimed (admin)
+router.post('/wins/:userId/:prizeId/claim', adminAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Find the win in user's wins array
+    const win = user.wins.find(w => w.prize.toString() === req.params.prizeId && !w.claimed);
+    
+    if (!win) {
+      return res.status(404).json({ error: 'Unclaimed win not found' });
+    }
+
+    // Mark as claimed
+    win.claimed = true;
+    win.claimedAt = new Date();
+    await user.save();
+
+    // Also update in Prize model
+    const prize = await Prize.findById(req.params.prizeId);
+    if (prize) {
+      const prizeWinner = prize.winners.find(w => w.user.toString() === req.params.userId);
+      if (prizeWinner) {
+        prizeWinner.claimed = true;
+        await prize.save();
+      }
+    }
+
+    res.json({ message: 'Win marked as claimed successfully' });
+  } catch (error) {
+    console.error('Mark as claimed error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
