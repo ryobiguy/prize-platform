@@ -9,6 +9,24 @@ const Admin = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [clearing, setClearing] = useState(false);
+
+  const clearWinners = async () => {
+    if (!window.confirm('⚠️ This will clear ALL test winners from the database. Are you sure?')) {
+      return;
+    }
+    
+    setClearing(true);
+    try {
+      const response = await axios.delete('/api/admin/clear-winners');
+      toast.success(`✅ ${response.data.message}\n${response.data.winnersCleared} winners cleared`);
+    } catch (error) {
+      console.error('Clear winners error:', error);
+      toast.error(error.response?.data?.error || 'Failed to clear winners');
+    } finally {
+      setClearing(false);
+    }
+  };
 
   const createDailyMystery = async () => {
     setLoading(true);
@@ -80,11 +98,25 @@ const Admin = () => {
             <button 
               onClick={deleteDailyMystery}
               disabled={deleting}
-              className="admin-btn-danger"
+              className="admin-btn danger"
             >
               {deleting ? 'Deleting...' : 'Delete Daily Mystery Prize'}
             </button>
           </div>
+        </div>
+
+        <div className="admin-section" style={{ marginTop: '2rem' }}>
+          <h2>🧹 Clear Test Data</h2>
+          <p>Remove all test winners before launch (irreversible!)</p>
+          <button 
+            onClick={clearWinners}
+            disabled={clearing}
+            className="admin-btn danger"
+            style={{ background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)' }}
+          >
+            <AlertCircle size={20} />
+            {clearing ? 'Clearing...' : 'Clear All Test Winners'}
+          </button>
         </div>
       </div>
     </div>

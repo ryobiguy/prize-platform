@@ -669,4 +669,45 @@ router.get('/winners', adminAuth, async (req, res) => {
   }
 });
 
+// Clear all test winners (admin only)
+router.delete('/clear-winners', adminAuth, async (req, res) => {
+  try {
+    const Prize = require('../models/Prize');
+    const User = require('../models/User');
+
+    // Clear winners from all prizes
+    const prizes = await Prize.find({});
+    let totalWinnersCleared = 0;
+
+    for (const prize of prizes) {
+      totalWinnersCleared += prize.winners.length;
+      prize.winners = [];
+      await prize.save();
+    }
+
+    // Clear wins from all users
+    const users = await User.find({ 'wins.0': { $exists: true } });
+    let totalUserWinsCleared = 0;
+
+    for (const user of users) {
+      totalUserWinsCleared += user.wins.length;
+      user.wins = [];
+      await user.save();
+    }
+
+    console.log(`✅ Cleared ${totalWinnersCleared} winners from prizes`);
+    console.log(`✅ Cleared ${totalUserWinsCleared} wins from users`);
+
+    res.json({
+      success: true,
+      message: 'All test winners cleared successfully',
+      winnersCleared: totalWinnersCleared,
+      userWinsCleared: totalUserWinsCleared
+    });
+  } catch (error) {
+    console.error('Clear winners error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;
