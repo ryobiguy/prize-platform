@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Trophy, Gift, Clock } from 'lucide-react';
 import axios from '../utils/axios';
+import toast from 'react-hot-toast';
 import './Auth.css';
 
 const Register = () => {
