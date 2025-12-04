@@ -134,7 +134,21 @@ const PrizeDetail = () => {
             </div>
             <div className="prize-info">
               <h1 className="prize-name">{prize.title}</h1>
-              <p className="prize-value-large">£{prize.value}</p>
+              {prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0 ? (
+                <div className="prize-pool-list">
+                  <p className="prize-pool-title">Potential Prizes:</p>
+                  <ul className="prize-pool-items">
+                    {prize.prizePool.map((item, index) => (
+                      <li key={index}>
+                        <span className="pool-item-name">{item.name}</span>
+                        <span className="pool-item-value">£{item.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p className="prize-value-large">£{prize.value}</p>
+              )}
             </div>
           </div>
 
