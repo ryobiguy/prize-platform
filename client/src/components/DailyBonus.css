@@ -1,14 +1,16 @@
 .daily-bonus-card {
   background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
   border: 2px solid #fb923c;
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 16px;
+  padding: 2rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  text-align: center;
+  gap: 1rem;
   margin-bottom: 2rem;
   transition: all 0.3s;
-  box-shadow: 0 4px 6px rgba(251, 146, 60, 0.2);
+  box-shadow: 0 8px 16px rgba(251, 146, 60, 0.2);
 }
 
 .daily-bonus-card.available {
@@ -50,11 +52,12 @@
 
 .bonus-content {
   flex: 1;
+  width: 100%;
 }
 
 .bonus-content h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #1f2937;
 }
@@ -84,16 +87,17 @@
 
 .claim-btn {
   margin-top: 1rem;
-  padding: 0.75rem 2rem;
+  padding: 0.875rem 2rem;
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+  width: 100%;
 }
 
 .claim-btn:hover:not(:disabled) {
@@ -108,11 +112,14 @@
 
 @media (max-width: 768px) {
   .daily-bonus-card {
-    flex-direction: column;
-    text-align: center;
+    padding: 1.5rem;
   }
   
-  .claim-btn {
-    width: 100%;
+  .bonus-content h3 {
+    font-size: 1rem;
+  }
+  
+  .bonus-amount {
+    font-size: 1.25rem;
   }
 }

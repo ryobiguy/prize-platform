@@ -61,6 +61,36 @@
   z-index: 10;
 }
 
+/* Stats Grid with Daily Bonus Layout */
+.stats-grid-with-bonus {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin: -3rem 0 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.stats-cards-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.daily-bonus-wrapper {
+  display: flex;
+  align-items: stretch;
+}
+
+.daily-bonus-wrapper .daily-bonus-card {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 /* 2-Column Layout */
 .dashboard-two-column {
   display: grid;
@@ -519,6 +549,15 @@
   .stats-grid {
     grid-template-columns: 1fr;
     margin-top: 2rem;
+  }
+
+  .stats-grid-with-bonus {
+    grid-template-columns: 1fr;
+    margin-top: 2rem;
+  }
+
+  .stats-cards-row {
+    grid-template-columns: 1fr;
   }
 
   .entries-table-header,

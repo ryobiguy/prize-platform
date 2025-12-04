@@ -116,8 +116,6 @@ const Dashboard = () => {
       </div>
 
       <div className="container">
-        <DailyBonus user={user} onClaim={fetchDashboardData} />
-        
         {unclaimedWins.length > 0 && (
           <div className="win-notification">
             <div className="win-notification-icon">🎉</div>
@@ -140,46 +138,53 @@ const Dashboard = () => {
           fetchDashboardData(); // Refresh dashboard data
         }} /> */}
 
-        {/* Stats Overview */}
-        <div className="stats-grid">
-          <div className="stat-card primary">
-            <div className="stat-icon">
-              <Trophy size={32} />
+        {/* Stats Overview with Daily Bonus */}
+        <div className="stats-grid-with-bonus">
+          <div className="stats-cards-row">
+            <div className="stat-card primary">
+              <div className="stat-icon">
+                <Trophy size={32} />
+              </div>
+              <div className="stat-content">
+                <div className="stat-value">{stats.totalEntries}</div>
+                <div className="stat-label">Total Entries</div>
+              </div>
             </div>
-            <div className="stat-content">
-              <div className="stat-value">{stats.totalEntries}</div>
-              <div className="stat-label">Total Entries Purchased</div>
+
+            <div className="stat-card success">
+              <div className="stat-icon">
+                <Award size={32} />
+              </div>
+              <div className="stat-content">
+                <div className="stat-value">{stats.availableEntries}</div>
+                <div className="stat-label">Available Entries</div>
+              </div>
+            </div>
+
+            <div className="stat-card secondary">
+              <div className="stat-icon">
+                <Gift size={32} />
+              </div>
+              <div className="stat-content">
+                <div className="stat-value">{totalTrackedEntries}</div>
+                <div className="stat-label">Entries Spent</div>
+              </div>
+            </div>
+
+            <div className="stat-card warning">
+              <div className="stat-icon">
+                <TrendingUp size={32} />
+              </div>
+              <div className="stat-content">
+                <div className="stat-value">{stats.totalWins || 0}</div>
+                <div className="stat-label">Total Wins</div>
+              </div>
             </div>
           </div>
 
-          <div className="stat-card success">
-            <div className="stat-icon">
-              <Award size={32} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-value">{stats.availableEntries}</div>
-              <div className="stat-label">Available Entries</div>
-            </div>
-          </div>
-
-          <div className="stat-card secondary">
-            <div className="stat-icon">
-              <Gift size={32} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-value">{totalTrackedEntries}</div>
-              <div className="stat-label">Entries Spent</div>
-            </div>
-          </div>
-
-          <div className="stat-card warning">
-            <div className="stat-icon">
-              <TrendingUp size={32} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-value">{stats.totalWins || 0}</div>
-              <div className="stat-label">Total Wins</div>
-            </div>
+          {/* Daily Bonus Card */}
+          <div className="daily-bonus-wrapper">
+            <DailyBonus user={user} onClaim={fetchDashboardData} />
           </div>
         </div>
 
