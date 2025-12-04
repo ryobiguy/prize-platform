@@ -1,0 +1,68 @@
+.prize-countdown {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e40af;
+  margin-top: 0.75rem;
+}
+
+.prize-countdown.urgent {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border-color: #ef4444;
+  color: #991b1b;
+  animation: pulse-urgent 1.5s ease-in-out infinite;
+}
+
+.prize-countdown.expired {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-color: #9ca3af;
+  color: #6b7280;
+}
+
+@keyframes pulse-urgent {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
+  }
+}
+
+.countdown-time {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.time-unit {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+}
+
+.time-unit strong {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.prize-countdown svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .prize-countdown {
+    font-size: 0.85rem;
+  }
+  
+  .time-unit strong {
+    font-size: 1rem;
+  }
+}

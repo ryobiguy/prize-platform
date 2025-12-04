@@ -64,6 +64,7 @@ app.use('/api/prizes', prizeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/daily-bonus', dailyBonusRoutes);
+app.use('/api/winners', require('./routes/winners'));
 app.use('/api/entries', require('./routes/entries'));
 app.use('/api/admin', require('./routes/admin'));
 // Removed survey and offer routes for pay-to-enter model

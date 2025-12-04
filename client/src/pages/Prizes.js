@@ -5,6 +5,7 @@ import { Gift, Clock, Users, TrendingUp } from 'lucide-react';
 import { mockPrizes } from '../mockData';
 import { useAuth } from '../context/AuthContext';
 import EntryProgress from '../components/EntryProgress';
+import PrizeCountdown from '../components/PrizeCountdown';
 import './Prizes.css';
 
 const Prizes = () => {
@@ -171,14 +172,15 @@ const Prizes = () => {
                       <span>{prize.totalEntries} entries</span>
                     </div>
                     <div className="stat">
-                      <Clock size={16} />
-                      <span>{getTimeRemaining(prize.endDate)}</span>
-                    </div>
-                    <div className="stat">
                       <TrendingUp size={16} />
                       <span>{prize.entryCost} entry cost</span>
                     </div>
                   </div>
+                  
+                  {/* Countdown Timer */}
+                  {prize.endDate && prize.status === 'active' && (
+                    <PrizeCountdown endDate={prize.endDate} />
+                  )}
                   
                   {prize.minimumEntries && (
                     <div className="minimum-entries-info">

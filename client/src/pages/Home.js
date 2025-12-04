@@ -7,6 +7,7 @@ import RecentWinners from '../components/RecentWinners';
 import CountdownTimer from '../components/CountdownTimer';
 import WinnersTicker from '../components/WinnersTicker';
 import WinnerAnnouncement from '../components/WinnerAnnouncement';
+import WinnerFeed from '../components/WinnerFeed';
 import './Home.css';
 
 const Home = () => {
@@ -84,6 +85,11 @@ const Home = () => {
 
       {/* Winners Ticker */}
       <WinnersTicker />
+      
+      {/* Live Winner Feed */}
+      <div className="container" style={{ marginTop: '2rem' }}>
+        <WinnerFeed />
+      </div>
 
       {/* Signup Bonus Banner */}
       {isBonusActive && (
