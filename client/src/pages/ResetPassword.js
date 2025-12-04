@@ -18,8 +18,13 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+    if (password.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      toast.error('Password must contain at least one capital letter');
       return;
     }
 
@@ -66,7 +71,7 @@ const ResetPassword = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter new password"
                   required
-                  minLength={6}
+                  minLength={8}
                 />
                 <button
                   type="button"
@@ -76,7 +81,7 @@ const ResetPassword = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              <small>Minimum 6 characters</small>
+              <small>Minimum 8 characters with at least one capital letter</small>
             </div>
 
             <div className="form-group">
@@ -88,7 +93,7 @@ const ResetPassword = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
                 required
-                minLength={6}
+                minLength={8}
               />
             </div>
 

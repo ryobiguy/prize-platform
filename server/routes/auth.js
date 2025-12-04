@@ -36,6 +36,15 @@ router.post('/register', [
 
     const { username, email, password, referralCode } = req.body;
 
+    // Password validation
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters' });
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      return res.status(400).json({ error: 'Password must contain at least one capital letter' });
+    }
+
     // Check if user exists
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
@@ -435,8 +444,12 @@ router.post('/reset-password', async (req, res) => {
       return res.status(400).json({ error: 'Token and password are required' });
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters' });
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      return res.status(400).json({ error: 'Password must contain at least one capital letter' });
     }
 
     const user = await User.findOne({
