@@ -46,7 +46,8 @@ const Wins = () => {
     try {
       await axios.post('/api/users/claim-prize', {
         winId: claimingWin._id,
-        prizeTitle: claimingWin.prize.title,
+        prizeTitle: claimingWin.prizeName || claimingWin.prize?.title,
+        prizeValue: claimingWin.prizeValue || claimingWin.prize?.value,
         message: claimMessage
       });
       

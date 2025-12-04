@@ -80,7 +80,7 @@ router.get('/wins', auth, async (req, res) => {
 // Submit prize claim request
 router.post('/claim-prize', auth, async (req, res) => {
   try {
-    const { winId, prizeTitle, message } = req.body;
+    const { winId, prizeTitle, prizeValue, message } = req.body;
     
     if (!message || !message.trim()) {
       return res.status(400).json({ error: 'Message is required' });
@@ -94,7 +94,7 @@ router.post('/claim-prize', auth, async (req, res) => {
     }
 
     // Send email notification to admin
-    await emailService.sendPrizeClaimNotification(user, prizeTitle, message);
+    await emailService.sendPrizeClaimNotification(user, prizeTitle, prizeValue, message);
 
     res.json({ 
       success: true,

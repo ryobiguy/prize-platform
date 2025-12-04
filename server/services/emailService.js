@@ -796,7 +796,7 @@ Total Raffle Team
     }
   }
 
-  async sendPrizeClaimNotification(user, prizeTitle, message) {
+  async sendPrizeClaimNotification(user, prizeTitle, prizeValue, message) {
     const subject = `🎁 Prize Claim Request - ${prizeTitle}`;
     const adminEmail = process.env.ADMIN_EMAIL || 'totalraffle@mail.com';
     
@@ -824,6 +824,7 @@ Total Raffle Team
             
             <div class="info-box">
               <p><strong>Prize:</strong> ${prizeTitle}</p>
+              <p><strong>Value:</strong> £${prizeValue || 'N/A'}</p>
               <p><strong>User:</strong> ${user.username}</p>
               <p><strong>Email:</strong> ${user.email}</p>
               <p><strong>User ID:</strong> ${user._id}</p>
@@ -843,6 +844,7 @@ Total Raffle Team
 Prize Claim Request
 
 Prize: ${prizeTitle}
+Value: £${prizeValue || 'N/A'}
 User: ${user.username}
 Email: ${user.email}
 User ID: ${user._id}
