@@ -277,9 +277,9 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
           imageUrl: '/prizes/steam.png'
         },
         {
-          name: '£10 Netflix Gift Card',
+          name: '£25 Netflix Gift Card',
           type: 'giftcard',
-          value: 10,
+          value: 25,
           quantity: 5,
           remaining: 5,
           imageUrl: '/prizes/netflix.png'
