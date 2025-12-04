@@ -72,6 +72,11 @@ const Register = () => {
       return;
     }
     
+    if (!/[0-9]/.test(formData.password)) {
+      toast.error('Password must contain at least one number');
+      return;
+    }
+    
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match!');
       return;

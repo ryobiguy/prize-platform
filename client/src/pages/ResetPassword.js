@@ -28,6 +28,11 @@ const ResetPassword = () => {
       return;
     }
 
+    if (!/[0-9]/.test(password)) {
+      toast.error('Password must contain at least one number');
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
       return;
@@ -81,7 +86,7 @@ const ResetPassword = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              <small>Minimum 8 characters with at least one capital letter</small>
+              <small>Minimum 8 characters with at least one capital letter and one number</small>
             </div>
 
             <div className="form-group">

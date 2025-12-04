@@ -45,6 +45,10 @@ router.post('/register', [
       return res.status(400).json({ error: 'Password must contain at least one capital letter' });
     }
 
+    if (!/[0-9]/.test(password)) {
+      return res.status(400).json({ error: 'Password must contain at least one number' });
+    }
+
     // Check if user exists
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
@@ -450,6 +454,10 @@ router.post('/reset-password', async (req, res) => {
 
     if (!/[A-Z]/.test(password)) {
       return res.status(400).json({ error: 'Password must contain at least one capital letter' });
+    }
+
+    if (!/[0-9]/.test(password)) {
+      return res.status(400).json({ error: 'Password must contain at least one number' });
     }
 
     const user = await User.findOne({
