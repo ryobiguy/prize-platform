@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
 const auth = require('../middleware/auth');
-const emailService = require('../services/emailService');
+const User = require('../models/User');
 const TaskCompletion = require('../models/TaskCompletion');
 const Prize = require('../models/Prize');
+const emailService = require('../services/emailService');
 
 // Get user dashboard data
 router.get('/dashboard', auth, async (req, res) => {
