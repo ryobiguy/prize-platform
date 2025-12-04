@@ -81,6 +81,9 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Prize'
     },
+    prizeName: String,
+    prizeValue: Number,
+    prizeType: String,
     wonAt: {
       type: Date,
       default: Date.now

@@ -109,14 +109,17 @@ router.post('/:id/enter', auth, async (req, res) => {
             drawnAt: new Date()
           });
 
-          // Add win to user's wins array
+          // Add win to user's wins array with specific prize details
           user.wins.push({
             prize: prize._id,
+            prizeName: randomPrize.name,
+            prizeValue: randomPrize.value,
+            prizeType: randomPrize.type,
             wonAt: new Date(),
             claimed: false
           });
           
-          console.log(`✅ Added win to user ${req.userId}: ${randomPrize.name}`);
+          console.log(`✅ Added win to user ${req.userId}: ${randomPrize.name} (£${randomPrize.value})`);
 
           wonPrizes.push(randomPrize.name);
         }

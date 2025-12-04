@@ -121,11 +121,11 @@ const Wins = () => {
                 </div>
 
                 <div className="win-card-content">
-                  <h3>{win.prize?.title || 'Prize'}</h3>
-                  <p className="win-type">{win.prize?.type || 'N/A'}</p>
+                  <h3>{win.prizeName || win.prize?.title || 'Prize'}</h3>
+                  <p className="win-type">{win.prizeType || win.prize?.type || 'N/A'}</p>
                   <div className="win-value">
                     <span className="value-label">Prize Value</span>
-                    <span className="value-amount">£{win.prize?.value || 0}</span>
+                    <span className="value-amount">£{win.prizeValue || win.prize?.value || 0}</span>
                   </div>
 
                   <div className="win-meta">
@@ -185,8 +185,8 @@ const Wins = () => {
               <div className="prize-info">
                 <Trophy size={32} color="#ff8c00" />
                 <div>
-                  <h3>{claimingWin.prize.title}</h3>
-                  <p>Value: £{claimingWin.prize.value}</p>
+                  <h3>{claimingWin.prizeName || claimingWin.prize?.title}</h3>
+                  <p>Value: £{claimingWin.prizeValue || claimingWin.prize?.value}</p>
                 </div>
               </div>
 
