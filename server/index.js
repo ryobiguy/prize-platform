@@ -54,10 +54,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/prizes', require('./routes/prizes'));
-app.use('/api/tasks', require('./routes/tasks'));
-app.use('/api/users', require('./routes/users'));
+const authRoutes = require('./routes/auth');
+const prizeRoutes = require('./routes/prizes');
+const userRoutes = require('./routes/users');
+const paymentRoutes = require('./routes/payments');
+const dailyBonusRoutes = require('./routes/dailyBonus');
+app.use('/api/auth', authRoutes);
+app.use('/api/prizes', prizeRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/daily-bonus', dailyBonusRoutes);
 app.use('/api/entries', require('./routes/entries'));
 app.use('/api/admin', require('./routes/admin'));
 // Removed survey and offer routes for pay-to-enter model

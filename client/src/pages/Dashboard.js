@@ -9,6 +9,7 @@ import Leaderboard from '../components/Leaderboard';
 import SpinWheel from '../components/SpinWheel';
 import EmailVerificationBanner from '../components/EmailVerificationBanner';
 import EntryProgress from '../components/EntryProgress';
+import DailyBonus from '../components/DailyBonus';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -115,6 +116,8 @@ const Dashboard = () => {
       </div>
 
       <div className="container">
+        <DailyBonus user={user} onClaim={fetchDashboardData} />
+        
         {unclaimedWins.length > 0 && (
           <div className="win-notification">
             <div className="win-notification-icon">🎉</div>

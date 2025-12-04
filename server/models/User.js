@@ -257,6 +257,10 @@ const userSchema = new mongoose.Schema({
   },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
+  lastDailyBonus: {
+    type: Date,
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now
