@@ -14,6 +14,7 @@ const PrizeDetail = () => {
   const [prize, setPrize] = useState(null);
   const [entries, setEntries] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [recentEntries, setRecentEntries] = useState(0);
 
   useEffect(() => {
     fetchPrize();
@@ -23,6 +24,7 @@ const PrizeDetail = () => {
     try {
       const response = await axios.get(`/api/prizes/${id}`);
       setPrize(response.data.prize);
+      setRecentEntries(response.data.recentEntries || 0);
       
       // Set default entries to entryCost if it's an instant win prize
       if (response.data.prize.isInstantWin && response.data.prize.entryCost) {
@@ -140,6 +142,31 @@ const PrizeDetail = () => {
           <div className="tasks-section">
             <h2 className="section-heading">ENTER PRIZE DRAW</h2>
             <div className="tasks-list">
+              {/* Social Proof & Urgency Indicators */}
+              <div className="urgency-indicators">
+                {recentEntries > 0 && (
+                  <div className="urgency-badge hot">
+                    <TrendingUp size={16} />
+                    <span>{recentEntries} {recentEntries === 1 ? 'person' : 'people'} entered in the last hour</span>
+                  </div>
+                )}
+                
+                {prize.isInstantWin && prize.prizePool && (
+                  (() => {
+                    const totalRemaining = prize.prizePool.reduce((sum, p) => sum + p.remaining, 0);
+                    if (totalRemaining > 0 && totalRemaining <= 20) {
+                      return (
+                        <div className="urgency-badge warning">
+                          <Gift size={16} />
+                          <span>Only {totalRemaining} prize{totalRemaining !== 1 ? 's' : ''} left!</span>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()
+                )}
+              </div>
+
               {userEntries > 0 && (
                 <div className="task-completed">
                   <Trophy size={20} />

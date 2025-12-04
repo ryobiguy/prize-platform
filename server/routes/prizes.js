@@ -32,8 +32,16 @@ router.get('/:id', async (req, res) => {
     }
 
     prize.updateStatus();
-    res.json({ prize });
+    
+    // Calculate entries in last hour
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const recentEntries = prize.participants.filter(p => 
+      p.enteredAt && new Date(p.enteredAt) > oneHourAgo
+    ).length;
+    
+    res.json({ prize, recentEntries });
   } catch (error) {
+    console.error('Get prize error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
