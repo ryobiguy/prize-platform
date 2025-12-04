@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const Prize = require('../models/Prize');
+const auth = require('../middleware/auth');
+const emailService = require('../services/emailService');
 const TaskCompletion = require('../models/TaskCompletion');
-const { auth } = require('../middleware/auth');
+const Prize = require('../models/Prize');
 
 // Get user dashboard data
 router.get('/dashboard', auth, async (req, res) => {
@@ -85,19 +86,15 @@ router.post('/claim-prize', auth, async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    // Here you would typically send an email to admin
-    // For now, we'll just log it
-    console.log('📧 Prize Claim Request:');
-    console.log(`User ID: ${req.userId}`);
-    console.log(`Prize: ${prizeTitle}`);
-    console.log(`Message: ${message}`);
+    // Get user details
+    const user = await User.findById(req.userId).select('username email');
     
-    // TODO: Send email notification to admin
-    // await sendEmail({
-    //   to: 'totalraffle@mail.com',
-    //   subject: `Prize Claim Request - ${prizeTitle}`,
-    //   text: `User ${req.userId} wants to claim: ${prizeTitle}\n\n${message}`
-    // });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Send email notification to admin
+    await emailService.sendPrizeClaimNotification(user, prizeTitle, message);
 
     res.json({ 
       success: true,

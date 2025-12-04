@@ -795,6 +795,92 @@ Total Raffle Team
       return { success: false, error: error.message };
     }
   }
+
+  async sendPrizeClaimNotification(user, prizeTitle, message) {
+    const subject = `🎁 Prize Claim Request - ${prizeTitle}`;
+    const adminEmail = process.env.ADMIN_EMAIL || 'totalraffle@mail.com';
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
+          .header { background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { background: white; padding: 30px; border-radius: 0 0 8px 8px; }
+          .info-box { background: #fff7ed; padding: 15px; border-left: 4px solid #ff6b35; margin: 20px 0; }
+          .user-message { background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0; white-space: pre-wrap; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🎁 New Prize Claim Request</h1>
+          </div>
+          <div class="content">
+            <h2>Prize Claim Details</h2>
+            
+            <div class="info-box">
+              <p><strong>Prize:</strong> ${prizeTitle}</p>
+              <p><strong>User:</strong> ${user.username}</p>
+              <p><strong>Email:</strong> ${user.email}</p>
+              <p><strong>User ID:</strong> ${user._id}</p>
+            </div>
+            
+            <h3>User's Message:</h3>
+            <div class="user-message">${message}</div>
+            
+            <p><strong>Action Required:</strong> Please contact the user to arrange prize delivery.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const text = `
+Prize Claim Request
+
+Prize: ${prizeTitle}
+User: ${user.username}
+Email: ${user.email}
+User ID: ${user._id}
+
+User's Message:
+${message}
+
+Action Required: Please contact the user to arrange prize delivery.
+    `;
+
+    try {
+      if (!process.env.SENDGRID_API_KEY) {
+        console.log('\n📧 PRIZE CLAIM EMAIL (Development Mode - no SENDGRID_API_KEY):');
+        console.log('To:', adminEmail);
+        console.log('Subject:', subject);
+        console.log('Prize:', prizeTitle);
+        console.log('User:', user.username, user.email);
+        console.log('Message:', message);
+        console.log('---\n');
+        return { success: true, messageId: 'console-log' };
+      }
+
+      const msg = {
+        to: adminEmail,
+        from: this.fromEmail,
+        subject,
+        text,
+        html
+      };
+
+      const [response] = await sgMail.send(msg);
+      console.log(`✅ Prize claim notification sent to ${adminEmail}`);
+      return { success: true, messageId: response?.headers?.['x-message-id'] || 'sendgrid' };
+    } catch (error) {
+      console.error('❌ Prize claim email error:', error);
+      return { success: false, error: error.message };
+    }
+  }
 }
 
 module.exports = new EmailService();
