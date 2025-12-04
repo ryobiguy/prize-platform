@@ -285,7 +285,7 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
           imageUrl: '/prizes/netflix.png'
         },
         {
-          name: 'Sony WH-1000XM5 Headphones',
+          name: 'Sony WH-CH720N Over-Ear NC Wireless Headphones',
           type: 'physical',
           value: 69.99,
           quantity: 1,
