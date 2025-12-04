@@ -261,12 +261,12 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
           imageUrl: '/prizes/cash.png'
         },
         {
-          name: '£5 Starbucks Gift Card',
+          name: '£10 Uber Eats Voucher',
           type: 'giftcard',
-          value: 5,
+          value: 10,
           quantity: 5,
           remaining: 5,
-          imageUrl: '/prizes/starbucks.png'
+          imageUrl: '/prizes/ubereats.png'
         },
         {
           name: '£20 Steam Gift Card',
