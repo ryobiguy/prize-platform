@@ -182,7 +182,8 @@ const Prizes = () => {
                     <PrizeCountdown endDate={prize.endDate} />
                   )}
                   
-                  {prize.minimumEntries && (
+                  {/* Only show minimum entries for non-instant-win prizes */}
+                  {prize.minimumEntries && !prize.isInstantWin && (
                     <div className="minimum-entries-info">
                       <span className="minimum-label">
                         Minimum to draw: {prize.minimumEntries} entries
