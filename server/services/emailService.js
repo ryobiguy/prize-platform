@@ -883,6 +883,193 @@ Action Required: Please contact the user to arrange prize delivery.
       return { success: false, error: error.message };
     }
   }
+
+  async sendPasswordResetEmail(user, token) {
+    const resetUrl = `${process.env.CLIENT_URL || 'https://www.totalraffle.co.uk'}/reset-password?token=${token}`;
+    const subject = 'Reset Your Password - Total Raffle';
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6; 
+            color: #1f2937; 
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+          }
+          .email-wrapper { 
+            background-color: #f3f4f6; 
+            padding: 40px 20px; 
+          }
+          .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          }
+          .header { 
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%); 
+            color: white; 
+            padding: 40px 30px; 
+            text-align: center;
+          }
+          .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+          }
+          .header p {
+            margin: 10px 0 0 0;
+            font-size: 18px;
+            opacity: 0.95;
+          }
+          .content { 
+            padding: 40px 30px;
+          }
+          .greeting {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 20px;
+          }
+          .button-container {
+            text-align: center;
+            margin: 30px 0;
+          }
+          .button { 
+            display: inline-block; 
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            color: white; 
+            padding: 16px 40px; 
+            text-decoration: none; 
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(255, 107, 53, 0.3);
+          }
+          .footer { 
+            text-align: center; 
+            color: #9ca3af; 
+            font-size: 13px; 
+            padding: 30px;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+          }
+          .footer p {
+            margin: 5px 0;
+          }
+          .brand {
+            font-weight: 800;
+            color: #ff6b35;
+          }
+          .info-box {
+            background: #fff7ed;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 4px solid #ff6b35;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-wrapper">
+          <div class="container">
+            <div class="header">
+              <h1>🔒 Reset Your Password</h1>
+              <p>Total Raffle</p>
+            </div>
+            <div class="content">
+              <p class="greeting">Hi ${user.username},</p>
+              
+              <p style="font-size: 16px; color: #1f2937;">
+                We received a request to reset your password for your <span class="brand">Total Raffle</span> account.
+              </p>
+              
+              <div class="button-container">
+                <a href="${resetUrl}" class="button">
+                  Reset Password
+                </a>
+              </div>
+              
+              <div class="info-box">
+                <p style="margin: 0; font-size: 14px; color: #4b5563;">
+                  <strong>⏰ This link will expire in 1 hour.</strong><br>
+                  If you didn't request a password reset, you can safely ignore this email.
+                </p>
+              </div>
+              
+              <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
+                For security reasons, this link can only be used once and will expire after 1 hour.
+              </p>
+              
+              <p style="margin-top: 25px;">
+                Best regards,<br>
+                <strong>The Total Raffle Team</strong>
+              </p>
+            </div>
+            
+            <div class="footer">
+              <p><strong>Total Raffle</strong> | www.totalraffle.co.uk</p>
+              <p>This email was sent to ${user.email}</p>
+              <p style="margin-top: 15px; font-size: 12px;">
+                Questions? Contact us at <strong>totalraffle@mail.com</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const text = `
+      Hi ${user.username},
+
+      We received a request to reset your password for your Total Raffle account.
+
+      Click the link below to reset your password:
+      ${resetUrl}
+
+      This link will expire in 1 hour.
+
+      If you didn't request a password reset, you can safely ignore this email.
+
+      Best regards,
+      The Total Raffle Team
+    `;
+
+    try {
+      if (!process.env.SENDGRID_API_KEY) {
+        console.log('\n📧 PASSWORD RESET EMAIL (Development Mode - no SENDGRID_API_KEY):');
+        console.log('To:', user.email);
+        console.log('Subject:', subject);
+        console.log('Reset URL:', resetUrl);
+        console.log('---\n');
+        return { success: true, messageId: 'console-log' };
+      }
+
+      const msg = {
+        to: user.email,
+        from: this.fromEmail,
+        subject,
+        text,
+        html
+      };
+
+      const [response] = await sgMail.send(msg);
+      console.log(`✅ Password reset email sent to ${user.email}`);
+      return { success: true, messageId: response?.headers?.['x-message-id'] || 'sendgrid' };
+    } catch (error) {
+      console.error('❌ Password reset email error:', error);
+      return { success: false, error: error.message };
+    }
+  }
 }
 
 module.exports = new EmailService();

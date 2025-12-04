@@ -30,6 +30,8 @@ import Wins from './pages/Wins';
 import VerifyEmail from './pages/VerifyEmail';
 import Admin from './pages/Admin';
 import Referrals from './pages/Referrals';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -78,6 +80,8 @@ function App() {
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
             <Route path="/admin/quick" element={<PrivateRoute><Admin /></PrivateRoute>} />
             <Route path="/terms" element={<Terms />} />
