@@ -101,8 +101,23 @@ router.post('/:id/enter', auth, async (req, res) => {
         const didWin = Math.random() < winChance;
 
         if (didWin) {
-          // Select random prize from available pool
-          const randomPrize = currentAvailable[Math.floor(Math.random() * currentAvailable.length)];
+          // Weighted prize selection - lower value prizes are more common
+          const weightedPrizes = [];
+          currentAvailable.forEach(p => {
+            // Weight inversely proportional to value
+            // £5-10 prizes get weight 10, £15-20 get weight 5, £25+ get weight 2, £60+ get weight 1
+            let weight = 10;
+            if (p.value >= 60) weight = 1;
+            else if (p.value >= 25) weight = 2;
+            else if (p.value >= 15) weight = 5;
+            
+            for (let w = 0; w < weight; w++) {
+              weightedPrizes.push(p);
+            }
+          });
+          
+          // Select random prize from weighted pool
+          const randomPrize = weightedPrizes[Math.floor(Math.random() * weightedPrizes.length)];
           
           // Decrease remaining count
           const poolPrize = prize.prizePool.find(p => p.name === randomPrize.name);
