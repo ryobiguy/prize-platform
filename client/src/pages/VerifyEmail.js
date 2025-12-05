@@ -30,9 +30,12 @@ const VerifyEmail = () => {
       setStatus('success');
       setMessage(response.data.message || 'Email verified successfully!');
       
-      // Update user data in auth context
+      // Update user data in auth context - ensure emailVerified is set
       if (response.data.user) {
-        updateUser(response.data.user);
+        updateUser({ ...response.data.user, emailVerified: true });
+      } else {
+        // Fallback if user object not returned
+        updateUser({ emailVerified: true });
       }
       
       // Redirect to dashboard after 3 seconds
