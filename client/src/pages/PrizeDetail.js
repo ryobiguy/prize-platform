@@ -52,6 +52,11 @@ const PrizeDetail = () => {
       return;
     }
 
+    if (entries < prize.entryCost) {
+      toast.error(`Minimum ${prize.entryCost} entries required`);
+      return;
+    }
+
     if (user.availableEntries < entries) {
       toast.error('Insufficient entries');
       return;
@@ -181,7 +186,7 @@ const PrizeDetail = () => {
                   <label>Enter with entries:</label>
                   <div className="entry-input-group">
                     <button 
-                      onClick={() => setEntries(Math.max(1, entries - 1))}
+                      onClick={() => setEntries(Math.max(prize.entryCost, entries - 1))}
                       className="entry-btn"
                     >
                       -
@@ -189,8 +194,8 @@ const PrizeDetail = () => {
                     <input 
                       type="number" 
                       value={entries}
-                      onChange={(e) => setEntries(Math.max(1, Math.min(prize.maxEntriesPerUser - userEntries, parseInt(e.target.value) || 1)))}
-                      min="1"
+                      onChange={(e) => setEntries(Math.max(prize.entryCost, Math.min(prize.maxEntriesPerUser - userEntries, parseInt(e.target.value) || prize.entryCost)))}
+                      min={prize.entryCost}
                       max={prize.maxEntriesPerUser - userEntries}
                     />
                     <button 
@@ -205,7 +210,7 @@ const PrizeDetail = () => {
                   <button 
                     className="enter-btn"
                     onClick={handleEnter}
-                    disabled={entries < 1 || user.availableEntries < entries}
+                    disabled={entries < prize.entryCost || user.availableEntries < entries}
                   >
                     Enter Prize Draw
                   </button>
