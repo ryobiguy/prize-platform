@@ -122,7 +122,7 @@ const PrizeDetail = () => {
         <div className="prize-layout">
           {/* Left Column - Prize Display */}
           <div className="prize-section">
-            <h2 className="section-heading">PRIZE</h2>
+            <h2 className="section-heading">{prize.isInstantWin ? 'INSTANT WIN PRIZE' : 'PRIZE'}</h2>
             <div className="prize-display">
               {prize.imageUrl ? (
                 <img src={prize.imageUrl} alt={prize.title} />
@@ -132,12 +132,12 @@ const PrizeDetail = () => {
                 </div>
               )}
             </div>
-            <div className="prize-info">
-              <h1 className="prize-name">{prize.title}</h1>
-              {!prize.isInstantWin && (
+            {!prize.isInstantWin && (
+              <div className="prize-info">
+                <h1 className="prize-name">{prize.title}</h1>
                 <p className="prize-value-large">£{prize.value}</p>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Right Column - Entry Controls */}
