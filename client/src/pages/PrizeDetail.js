@@ -205,7 +205,10 @@ const PrizeDetail = () => {
                       +
                     </button>
                   </div>
-                  <p className="available-text">Available: {user.availableEntries} entries</p>
+                  <div className="entry-info-text">
+                    <p className="available-text">Available: {user.availableEntries} entries</p>
+                    <p className="minimum-text">Minimum: {prize.entryCost} entries</p>
+                  </div>
                   
                   <button 
                     className="enter-btn"

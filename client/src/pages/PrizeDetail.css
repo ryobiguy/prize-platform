@@ -265,10 +265,25 @@
   border-color: var(--primary);
 }
 
+.entry-info-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  gap: 1rem;
+}
+
 .available-text {
   font-size: 0.875rem;
   color: var(--text-secondary);
   margin: 0;
+}
+
+.minimum-text {
+  font-size: 0.875rem;
+  color: var(--primary);
+  margin: 0;
+  font-weight: 600;
 }
 
 .enter-btn {
