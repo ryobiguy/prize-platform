@@ -26,8 +26,8 @@ const PrizeDetail = () => {
       setPrize(response.data.prize);
       setRecentEntries(response.data.recentEntries || 0);
       
-      // Set default entries to entryCost if it's an instant win prize
-      if (response.data.prize.isInstantWin && response.data.prize.entryCost) {
+      // Set default entries to entryCost (minimum required)
+      if (response.data.prize.entryCost) {
         setEntries(response.data.prize.entryCost);
       }
     } catch (error) {
