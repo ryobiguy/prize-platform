@@ -391,11 +391,41 @@
   }
 
   .prize-name {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .prize-value-large {
-    font-size: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .prize-info {
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+
+  .prize-pool-list {
+    margin-top: 0.5rem;
+  }
+
+  .prize-pool-title {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prize-pool-items {
+    gap: 0.4rem;
+  }
+
+  .prize-pool-items li {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .pool-item-name {
+    font-size: 0.8rem;
+  }
+
+  .pool-item-value {
+    font-size: 0.9rem;
   }
 
   .entry-input-group {
