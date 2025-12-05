@@ -134,19 +134,7 @@ const PrizeDetail = () => {
             </div>
             <div className="prize-info">
               <h1 className="prize-name">{prize.title}</h1>
-              {prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0 ? (
-                <div className="prize-pool-list">
-                  <p className="prize-pool-title">Potential Prizes:</p>
-                  <ul className="prize-pool-items">
-                    {prize.prizePool.map((item, index) => (
-                      <li key={index}>
-                        <span className="pool-item-name">{item.name}</span>
-                        <span className="pool-item-value">£{item.value}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : (
+              {!prize.isInstantWin && (
                 <p className="prize-value-large">£{prize.value}</p>
               )}
             </div>
@@ -239,6 +227,21 @@ const PrizeDetail = () => {
                   Buy Entries
                 </button>
               </div>
+
+              {/* Prize Pool List - Below Buy Entries */}
+              {prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0 && (
+                <div className="prize-pool-section">
+                  <h3 className="prize-pool-heading">Potential Prizes</h3>
+                  <ul className="prize-pool-items-compact">
+                    {prize.prizePool.map((item, index) => (
+                      <li key={index}>
+                        <span className="pool-item-name">{item.name}</span>
+                        <span className="pool-item-value">£{item.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
