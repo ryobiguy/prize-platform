@@ -378,7 +378,13 @@
 
   .prize-section,
   .tasks-section {
-    padding: 1.5rem;
+    padding: 1rem;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .prize-section {
+    min-height: auto;
   }
 
   .section-heading {
@@ -388,6 +394,12 @@
 
   .prize-display {
     height: 250px;
+    max-width: 100%;
+  }
+
+  .prize-display img {
+    min-height: 200px;
+    max-width: 100%;
   }
 
   .prize-name {
@@ -418,14 +430,18 @@
 
   .prize-pool-items li {
     padding: 0.6rem 0.75rem;
+    flex-wrap: wrap;
   }
 
   .pool-item-name {
     font-size: 0.8rem;
+    max-width: 65%;
+    word-wrap: break-word;
   }
 
   .pool-item-value {
     font-size: 0.9rem;
+    white-space: nowrap;
   }
 
   .entry-input-group {
