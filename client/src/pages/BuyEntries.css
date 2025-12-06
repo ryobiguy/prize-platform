@@ -317,14 +317,20 @@
 
   .base-entries {
     font-size: 16px;
+    color: #1f2937;
+    background: none;
   }
 
   .bonus-entries {
     font-size: 13px;
+    color: #10b981;
+    background: none;
   }
 
   .total-entries {
     font-size: 15px;
+    color: var(--accent-color);
+    background: none;
   }
 
   .package-features {
