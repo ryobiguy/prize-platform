@@ -109,26 +109,24 @@
 
 /* Gift Card Icons Grid */
 .prize-icons-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   padding: 1rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  justify-content: center;
 }
 
 .prize-icon-item {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid #e5e7eb;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
   transition: all 0.3s;
 }
 
 .prize-icon-item:hover {
-  border-color: var(--primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px) scale(1.05);
+  filter: brightness(1.1);
 }
 
 .prize-placeholder {
