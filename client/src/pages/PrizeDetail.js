@@ -139,13 +139,13 @@ const PrizeDetail = () => {
             </div>
             
             {/* Gift Card Icons Grid - Below Mystery Prize Image */}
-            {prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0 && (
+            {prize.isInstantWin && (
               <div className="prize-icons-grid">
-                {prize.prizePool.map((item, index) => (
-                  item.imageUrl && (
-                    <img key={index} src={item.imageUrl} alt={item.name} className="prize-icon-item" />
-                  )
-                ))}
+                <img src="/prizes/amazongf.jpg" alt="Amazon Gift Card" className="prize-icon-item" />
+                <img src="/prizes/jegf.jpg" alt="Just Eat Voucher" className="prize-icon-item" />
+                <img src="/prizes/ubereatsgf.jpg" alt="Uber Eats Voucher" className="prize-icon-item" />
+                <img src="/prizes/steamgf.jpg" alt="Steam Gift Card" className="prize-icon-item" />
+                <img src="/prizes/netflixgf.jpg" alt="Netflix Gift Card" className="prize-icon-item" />
               </div>
             )}
             
