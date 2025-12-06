@@ -15,6 +15,11 @@ const prizeSchema = new mongoose.Schema({
     enum: ['physical', 'giftcard', 'cash'],
     required: true
   },
+  category: {
+    type: String,
+    enum: ['gaming', 'tech', 'cash', 'giftcards', 'experiences', 'subscriptions', 'fashion', 'home', 'other'],
+    default: 'other'
+  },
   value: {
     type: Number,
     required: true

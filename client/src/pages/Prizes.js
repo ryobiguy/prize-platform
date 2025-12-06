@@ -12,6 +12,7 @@ const Prizes = () => {
   const { user } = useAuth();
   const [prizes, setPrizes] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [userPrizeEntries, setUserPrizeEntries] = useState({});
 
@@ -63,8 +64,9 @@ const Prizes = () => {
   };
 
   const filteredPrizes = prizes.filter(prize => {
-    if (filter === 'all') return true;
-    return prize.type === filter;
+    const typeMatch = filter === 'all' || prize.type === filter;
+    const categoryMatch = categoryFilter === 'all' || prize.category === categoryFilter;
+    return typeMatch && categoryMatch;
   });
 
   const getTimeRemaining = (endDate) => {
@@ -100,30 +102,67 @@ const Prizes = () => {
 
       <div className="container">
         <div className="prizes-filters">
-          <button 
-            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-            onClick={() => setFilter('all')}
-          >
-            All Prizes
-          </button>
-          <button 
-            className={`filter-btn ${filter === 'physical' ? 'active' : ''}`}
-            onClick={() => setFilter('physical')}
-          >
-            Physical Items
-          </button>
-          <button 
-            className={`filter-btn ${filter === 'giftcard' ? 'active' : ''}`}
-            onClick={() => setFilter('giftcard')}
-          >
-            Gift Cards
-          </button>
-          <button 
-            className={`filter-btn ${filter === 'cash' ? 'active' : ''}`}
-            onClick={() => setFilter('cash')}
-          >
-            Cash
-          </button>
+          <div className="filter-group">
+            <label>Type:</label>
+            <button 
+              className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              All
+            </button>
+            <button 
+              className={`filter-btn ${filter === 'physical' ? 'active' : ''}`}
+              onClick={() => setFilter('physical')}
+            >
+              Physical
+            </button>
+            <button 
+              className={`filter-btn ${filter === 'giftcard' ? 'active' : ''}`}
+              onClick={() => setFilter('giftcard')}
+            >
+              Gift Cards
+            </button>
+            <button 
+              className={`filter-btn ${filter === 'cash' ? 'active' : ''}`}
+              onClick={() => setFilter('cash')}
+            >
+              Cash
+            </button>
+          </div>
+
+          <div className="filter-group">
+            <label>Category:</label>
+            <button 
+              className={`filter-btn ${categoryFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('all')}
+            >
+              All
+            </button>
+            <button 
+              className={`filter-btn ${categoryFilter === 'gaming' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('gaming')}
+            >
+              🎮 Gaming
+            </button>
+            <button 
+              className={`filter-btn ${categoryFilter === 'tech' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('tech')}
+            >
+              💻 Tech
+            </button>
+            <button 
+              className={`filter-btn ${categoryFilter === 'cash' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('cash')}
+            >
+              💰 Cash
+            </button>
+            <button 
+              className={`filter-btn ${categoryFilter === 'giftcards' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('giftcards')}
+            >
+              🎁 Gift Cards
+            </button>
+          </div>
         </div>
 
         {filteredPrizes.length === 0 ? (

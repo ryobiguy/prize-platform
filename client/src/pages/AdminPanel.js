@@ -17,6 +17,7 @@ const AdminPanel = () => {
     title: '',
     description: '',
     type: 'cash',
+    category: 'other',
     value: '',
     imageUrl: '',
     totalWinners: 1,
@@ -371,6 +372,7 @@ const AdminPanel = () => {
                       title: '',
                       description: '',
                       type: 'cash',
+                      category: 'other',
                       value: '',
                       imageUrl: '',
                       totalWinners: 1,
@@ -422,6 +424,23 @@ const AdminPanel = () => {
                         <option value="cash">Cash</option>
                         <option value="giftcard">Gift Card</option>
                         <option value="physical">Physical</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Category</label>
+                      <select
+                        value={newPrize.category}
+                        onChange={(e) => setNewPrize({ ...newPrize, category: e.target.value })}
+                      >
+                        <option value="gaming">🎮 Gaming</option>
+                        <option value="tech">💻 Tech</option>
+                        <option value="cash">💰 Cash</option>
+                        <option value="giftcards">🎁 Gift Cards</option>
+                        <option value="experiences">🎟️ Experiences</option>
+                        <option value="subscriptions">📺 Subscriptions</option>
+                        <option value="fashion">👕 Fashion</option>
+                        <option value="home">🏠 Home</option>
+                        <option value="other">📦 Other</option>
                       </select>
                     </div>
                     <div className="form-group">
