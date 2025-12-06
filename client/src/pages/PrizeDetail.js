@@ -140,15 +140,32 @@ const PrizeDetail = () => {
             
             {/* Gift Card Icons Grid - Below Mystery Prize Image */}
             {prize.isInstantWin && (
-              <div className="prize-icons-grid">
-                <img src="/prizes/amazongf.jpg" alt="Amazon Gift Card" className="prize-icon-item" />
-                <img src="/prizes/jegf.jpg" alt="Just Eat Voucher" className="prize-icon-item" />
-                <img src="/prizes/ubereatsgf.jpg" alt="Uber Eats Voucher" className="prize-icon-item" />
-                <img src="/prizes/steamgf.jpg" alt="Steam Gift Card" className="prize-icon-item" />
-                <img src="/prizes/netflixgf.jpg" alt="Netflix Gift Card" className="prize-icon-item" />
-                <img src="/prizes/cashgiftcard.jpg" alt="Cash Prize" className="prize-icon-item" />
-                <img src="/prizes/headphones.jpg" alt="Sony Headphones" className="prize-icon-item" />
-              </div>
+              <>
+                <div className="prize-icons-grid">
+                  <img src="/prizes/amazongf.jpg" alt="Amazon Gift Card" className="prize-icon-item" />
+                  <img src="/prizes/jegf.jpg" alt="Just Eat Voucher" className="prize-icon-item" />
+                  <img src="/prizes/ubereatsgf.jpg" alt="Uber Eats Voucher" className="prize-icon-item" />
+                  <img src="/prizes/steamgf.jpg" alt="Steam Gift Card" className="prize-icon-item" />
+                  <img src="/prizes/netflixgf.jpg" alt="Netflix Gift Card" className="prize-icon-item" />
+                  <img src="/prizes/cashgiftcard.jpg" alt="Cash Prize" className="prize-icon-item" />
+                  <img src="/prizes/headphones.jpg" alt="Sony Headphones" className="prize-icon-item" />
+                </div>
+                
+                {/* Prize Pool List - Below Gift Cards */}
+                {prize.prizePool && prize.prizePool.length > 0 && (
+                  <div className="prize-pool-section-left">
+                    <h3 className="prize-pool-heading">Potential Prizes</h3>
+                    <ul className="prize-pool-items-compact">
+                      {prize.prizePool.map((item, index) => (
+                        <li key={index}>
+                          <span className="pool-item-name">{item.name}</span>
+                          <span className="pool-item-value">£{item.value}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
             )}
             
             {!prize.isInstantWin && (
@@ -250,20 +267,6 @@ const PrizeDetail = () => {
                 </button>
               </div>
 
-              {/* Prize Pool List - Below Buy Entries */}
-              {prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0 && (
-                <div className="prize-pool-section">
-                  <h3 className="prize-pool-heading">Potential Prizes</h3>
-                  <ul className="prize-pool-items-compact">
-                    {prize.prizePool.map((item, index) => (
-                      <li key={index}>
-                        <span className="pool-item-name">{item.name}</span>
-                        <span className="pool-item-value">£{item.value}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           </div>
         </div>
