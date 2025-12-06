@@ -270,6 +270,7 @@
   background: linear-gradient(135deg, #fff7ed, #ffedd5);
   border-radius: 8px;
   margin-bottom: 1.5rem;
+  min-height: 72px;
 }
 
 .value-label {
@@ -282,6 +283,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--primary);
+  line-height: 1.2;
 }
 
 .prize-stats {
