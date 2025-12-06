@@ -257,7 +257,7 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
           value: 10,
           quantity: 10,
           remaining: 10,
-          imageUrl: '/prizes/amazon.png'
+          imageUrl: '/prizes/amazongf.jpg'
         },
         {
           name: '£15 Just Eat Voucher',
@@ -265,7 +265,7 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
           value: 15,
           quantity: 5,
           remaining: 5,
-          imageUrl: '/prizes/justeat.png'
+          imageUrl: '/prizes/jegf.jpg'
         },
         {
           name: '£10 Cash',
@@ -281,7 +281,7 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
           value: 10,
           quantity: 5,
           remaining: 5,
-          imageUrl: '/prizes/ubereats.png'
+          imageUrl: '/prizes/ubereatsgf.jpg'
         },
         {
           name: '£20 Steam Gift Card',
@@ -289,7 +289,7 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
           value: 20,
           quantity: 2,
           remaining: 2,
-          imageUrl: '/prizes/steam.png'
+          imageUrl: '/prizes/steamgf.jpg'
         },
         {
           name: '£25 Netflix Gift Card',
@@ -297,7 +297,7 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
           value: 25,
           quantity: 5,
           remaining: 5,
-          imageUrl: '/prizes/netflix.png'
+          imageUrl: '/prizes/netflixgf.jpg'
         },
         {
           name: 'Sony WH-CH720N Over-Ear NC Wireless Headphones',

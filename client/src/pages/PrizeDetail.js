@@ -243,6 +243,9 @@ const PrizeDetail = () => {
                   <ul className="prize-pool-items-compact">
                     {prize.prizePool.map((item, index) => (
                       <li key={index}>
+                        {item.imageUrl && (
+                          <img src={item.imageUrl} alt={item.name} className="pool-item-icon" />
+                        )}
                         <span className="pool-item-name">{item.name}</span>
                         <span className="pool-item-value">£{item.value}</span>
                       </li>
