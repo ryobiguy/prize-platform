@@ -267,6 +267,34 @@ const PrizeDetail = () => {
                 </button>
               </div>
 
+              {/* How It Works Section */}
+              <div className="how-it-works">
+                <h3 className="how-it-works-heading">How It Works</h3>
+                <div className="how-it-works-steps">
+                  <div className="step">
+                    <div className="step-number">1</div>
+                    <div className="step-content">
+                      <h4>Enter the Draw</h4>
+                      <p>Use your entries to enter this prize draw</p>
+                    </div>
+                  </div>
+                  <div className="step">
+                    <div className="step-number">2</div>
+                    <div className="step-content">
+                      <h4>Wait for Draw</h4>
+                      <p>{prize.isInstantWin ? 'Instant win - find out immediately!' : 'Winners announced on draw date'}</p>
+                    </div>
+                  </div>
+                  <div className="step">
+                    <div className="step-number">3</div>
+                    <div className="step-content">
+                      <h4>Claim Your Prize</h4>
+                      <p>Winners notified via email and dashboard</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
