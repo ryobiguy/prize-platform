@@ -143,9 +143,7 @@ const PrizeDetail = () => {
               <div className="prize-icons-grid">
                 {prize.prizePool.map((item, index) => (
                   item.imageUrl && (
-                    <div key={index} className="prize-icon-item">
-                      <img src={item.imageUrl} alt={item.name} />
-                    </div>
+                    <img key={index} src={item.imageUrl} alt={item.name} className="prize-icon-item" />
                   )
                 ))}
               </div>
@@ -257,9 +255,6 @@ const PrizeDetail = () => {
                   <ul className="prize-pool-items-compact">
                     {prize.prizePool.map((item, index) => (
                       <li key={index}>
-                        {item.imageUrl && (
-                          <img src={item.imageUrl} alt={item.name} className="pool-item-icon" />
-                        )}
                         <span className="pool-item-name">{item.name}</span>
                         <span className="pool-item-value">£{item.value}</span>
                       </li>
