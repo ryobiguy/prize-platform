@@ -241,7 +241,7 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
       currency: 'GBP',
       imageUrl: '/prizes/mystery-prize.png',
       totalWinners: 31,
-      entryCost: 100,
+      entryCost: 10,
       maxEntriesPerUser: 10000,
       minimumEntries: 1,
       drawFrequency: 'instant',
