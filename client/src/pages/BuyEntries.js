@@ -128,15 +128,15 @@ const BuyEntries = () => {
 
                 <div className="package-entries">
                   <div className="base-entries">
-                    {pkg.entries.toLocaleString()}
+                    {pkg.entries.toLocaleString()} entries
                   </div>
                   {pkg.bonus && (
                     <div className="bonus-entries">
-                      + {pkg.bonus} bonus
+                      + {pkg.bonus} bonus entries
                     </div>
                   )}
                   <div className="total-entries">
-                    = {totalEntries.toLocaleString()} total
+                    = {totalEntries.toLocaleString()} total entries
                   </div>
                 </div>
 
