@@ -146,6 +146,8 @@ const PrizeDetail = () => {
                 <img src="/prizes/ubereatsgf.jpg" alt="Uber Eats Voucher" className="prize-icon-item" />
                 <img src="/prizes/steamgf.jpg" alt="Steam Gift Card" className="prize-icon-item" />
                 <img src="/prizes/netflixgf.jpg" alt="Netflix Gift Card" className="prize-icon-item" />
+                <img src="/prizes/cashgiftcard.jpg" alt="Cash Prize" className="prize-icon-item" />
+                <img src="/prizes/headphones.jpg" alt="Sony Headphones" className="prize-icon-item" />
               </div>
             )}
             
