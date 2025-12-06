@@ -137,6 +137,20 @@ const PrizeDetail = () => {
                 </div>
               )}
             </div>
+            
+            {/* Gift Card Icons Grid - Below Mystery Prize Image */}
+            {prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0 && (
+              <div className="prize-icons-grid">
+                {prize.prizePool.map((item, index) => (
+                  item.imageUrl && (
+                    <div key={index} className="prize-icon-item">
+                      <img src={item.imageUrl} alt={item.name} />
+                    </div>
+                  )
+                ))}
+              </div>
+            )}
+            
             {!prize.isInstantWin && (
               <div className="prize-info">
                 <h1 className="prize-name">{prize.title}</h1>
