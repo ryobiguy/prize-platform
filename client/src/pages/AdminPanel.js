@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Gift, CheckSquare, Users, Trophy, DollarSign, TrendingUp, AlertCircle, Settings, Mail, Play, Zap } from 'lucide-react';
+import { Gift, CheckSquare, Users, Trophy, DollarSign, TrendingUp, AlertCircle, Settings, Mail, Play, Zap, QrCode, Download } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 import axios from '../utils/axios';
 import toast from 'react-hot-toast';
 import './AdminPanel.css';
@@ -796,6 +797,38 @@ const AdminPanel = () => {
                     <span className="status-badge success">Running</span>
                   </div>
                 </div>
+              </div>
+
+              <div className="settings-card">
+                <h3><QrCode size={20} /> QR Code Generator</h3>
+                <p>Generate a QR code for your website to use in marketing materials.</p>
+                <div className="qr-code-container">
+                  <QRCodeCanvas 
+                    id="qr-code-canvas"
+                    value="http://www.totalraffle.co.uk"
+                    size={256}
+                    level="H"
+                    includeMargin={true}
+                  />
+                </div>
+                <button 
+                  onClick={() => {
+                    const canvas = document.getElementById('qr-code-canvas');
+                    const url = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.download = 'totalraffle-qr-code.png';
+                    link.href = url;
+                    link.click();
+                    toast.success('QR Code downloaded!');
+                  }}
+                  className="download-btn"
+                >
+                  <Download size={18} />
+                  Download QR Code
+                </button>
+                <small className="hint">
+                  ℹ️ Scan this QR code to visit http://www.totalraffle.co.uk
+                </small>
               </div>
             </div>
           )}
