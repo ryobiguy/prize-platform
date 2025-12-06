@@ -75,12 +75,16 @@
 /* Left Column - Prize Section */
 .prize-section {
   background: white;
-  padding: 2rem;
+  padding: 1rem 2rem 2rem 2rem;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   min-height: 500px;
   display: flex;
   flex-direction: column;
+}
+
+.prize-section .section-heading {
+  margin-bottom: 0.5rem;
 }
 
 .prize-display {

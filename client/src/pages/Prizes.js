@@ -200,10 +200,19 @@ const Prizes = () => {
                   <h3 className="prize-title">{prize.title}</h3>
                   <p className="prize-description">{prize.description}</p>
                   
-                  <div className="prize-value">
-                    <span className="value-label">Prize Value</span>
-                    <span className="value-amount">£{prize.value}</span>
-                  </div>
+                  {!prize.isInstantWin && (
+                    <div className="prize-value">
+                      <span className="value-label">Prize Value</span>
+                      <span className="value-amount">£{prize.value}</span>
+                    </div>
+                  )}
+                  
+                  {prize.isInstantWin && prize.prizePool && (
+                    <div className="prize-value">
+                      <span className="value-label">Prize Pool</span>
+                      <span className="value-amount">{prize.prizePool.length} Different Prizes</span>
+                    </div>
+                  )}
                   
                   <div className="prize-stats">
                     <div className="stat">
