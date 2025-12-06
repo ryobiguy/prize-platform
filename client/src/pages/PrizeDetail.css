@@ -118,8 +118,8 @@
 }
 
 .prize-icon-item {
-  width: 70px;
-  height: 70px;
+  width: 120px;
+  height: 59px;
   object-fit: contain;
   transition: all 0.3s;
 }
