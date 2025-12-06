@@ -210,7 +210,7 @@ const Prizes = () => {
                   {prize.isInstantWin && prize.prizePool && (
                     <div className="prize-value">
                       <span className="value-label">Prize Pool</span>
-                      <span className="value-amount">{prize.prizePool.length} Different Prizes</span>
+                      <span className="value-amount">Multiple Prizes</span>
                     </div>
                   )}
                   
