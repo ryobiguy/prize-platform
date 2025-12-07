@@ -110,6 +110,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
       const amount = payment.amount_money && payment.amount_money.amount;
       const currency = payment.amount_money && payment.amount_money.currency;
       const email = payment.buyer_email_address || payment.receipt_email;
+      const referenceId = payment.reference_id;
 
       if (!amount || currency !== 'GBP') {
         console.error('Square webhook: unsupported amount/currency', amount, currency);
@@ -121,52 +122,127 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
         return res.json({ received: true });
       }
 
-      // Map paid amount (in pence) to entries – must match your pricing
-      const AMOUNT_TO_ENTRIES = {
-        99: 100,    // £0.99 Starter
-        399: 525,   // £3.99 Popular
-        699: 1100,  // £6.99 Mega
-        1499: 1500, // £14.99 Ultimate
-      };
-
-      const entries = AMOUNT_TO_ENTRIES[amount];
-
-      if (!entries) {
-        console.error('Square webhook: no entry mapping for amount', amount);
-        return res.json({ received: true });
-      }
-
       const user = await User.findOne({ email });
       if (!user) {
         console.error('Square webhook: user not found for email', email);
         return res.json({ received: true });
       }
 
-      // Idempotency: if we've already recorded this paymentId, skip
-      if (paymentId && Array.isArray(user.purchases)) {
-        const alreadyProcessed = user.purchases.some(p => p.paymentId === paymentId);
-        if (alreadyProcessed) {
-          console.log('Square webhook: payment already processed, skipping', paymentId);
-          return res.json({ received: true });
+      // Check if this is a prize entry payment (reference_id starts with "prize:")
+      if (referenceId && referenceId.startsWith('prize:')) {
+        // Parse reference: "prize:PRIZE_ID:entries:NUM:user:USER_ID"
+        const parts = referenceId.split(':');
+        const prizeId = parts[1];
+        const numberOfEntries = parseInt(parts[3]);
+        const userId = parts[5];
+
+        if (prizeId && numberOfEntries && userId === user._id.toString()) {
+          // Process prize entry
+          const Prize = require('../models/Prize');
+          const prize = await Prize.findById(prizeId);
+
+          if (prize && prize.status === 'active') {
+            // Check for duplicate payment
+            const alreadyEntered = user.prizeEntries.some(e => e.paymentId === paymentId);
+            if (alreadyEntered) {
+              console.log('Square webhook: prize entry already processed', paymentId);
+              return res.json({ received: true });
+            }
+
+            // INSTANT WIN LOGIC
+            if (prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0) {
+              const winChance = 0.05; // 5% chance
+              let wonPrizes = [];
+
+              for (let i = 0; i < numberOfEntries; i++) {
+                const currentAvailable = prize.prizePool.filter(p => p.remaining > 0);
+                if (currentAvailable.length === 0) break;
+
+                const didWin = Math.random() < winChance;
+
+                if (didWin) {
+                  const weightedPrizes = [];
+                  currentAvailable.forEach(p => {
+                    let weight = 10;
+                    if (p.value >= 60) weight = 1;
+                    else if (p.value >= 25) weight = 2;
+                    else if (p.value >= 15) weight = 5;
+                    
+                    for (let w = 0; w < weight; w++) {
+                      weightedPrizes.push(p);
+                    }
+                  });
+                  
+                  const randomPrize = weightedPrizes[Math.floor(Math.random() * weightedPrizes.length)];
+                  const poolPrize = prize.prizePool.find(p => p.name === randomPrize.name);
+                  poolPrize.remaining -= 1;
+
+                  prize.winners.push({
+                    user: user._id,
+                    prizeName: randomPrize.name,
+                    prizeValue: randomPrize.value,
+                    prizeType: randomPrize.type,
+                    drawnAt: new Date()
+                  });
+
+                  user.wins.push({
+                    prize: prize._id,
+                    prizeName: randomPrize.name,
+                    prizeValue: randomPrize.value,
+                    prizeType: randomPrize.type,
+                    wonAt: new Date(),
+                    claimed: false
+                  });
+
+                  wonPrizes.push(randomPrize.name);
+                }
+              }
+
+              await prize.save();
+              console.log(`✅ Instant win processed: ${wonPrizes.length} prizes won`);
+            } else {
+              // REGULAR DRAW LOGIC
+              const existingEntry = prize.participants.find(p => p.user.toString() === user._id.toString());
+              
+              if (existingEntry) {
+                existingEntry.entries += numberOfEntries;
+              } else {
+                prize.participants.push({ user: user._id, entries: numberOfEntries });
+              }
+
+              await prize.save();
+              console.log(`✅ Regular draw entry processed: ${numberOfEntries} entries`);
+            }
+
+            // Record payment in user's prize entries
+            user.prizeEntries.push({
+              prize: prize._id,
+              amountPaid: amount / 100, // convert pence to pounds
+              paymentId: paymentId,
+              enteredAt: new Date()
+            });
+
+            prize.totalEntries += numberOfEntries;
+            await prize.save();
+            await user.save();
+
+            console.log(`✅ Prize entry payment processed for user ${user.email}`);
+          }
+        }
+      } else {
+        // Legacy entry package purchase (old system - can be removed later)
+        const AMOUNT_TO_ENTRIES = {
+          99: 100,
+          399: 525,
+          699: 1100,
+          1499: 1500,
+        };
+
+        const entries = AMOUNT_TO_ENTRIES[amount];
+        if (entries) {
+          console.log('⚠️ Legacy entry package purchase detected - this system is deprecated');
         }
       }
-
-      user.availableEntries += entries;
-      user.totalEntries += entries;
-
-      // Record purchase history
-      user.purchases = user.purchases || [];
-      user.purchases.push({
-        paymentId,
-        entries,
-        amountPence: amount,
-        provider: 'square',
-        createdAt: new Date()
-      });
-
-      await user.save();
-
-      console.log(`✅ Added ${entries} entries to user ${user.email} (amount: ${amount})`);
     } catch (error) {
       console.error('Error processing Square payment:', error);
     }
