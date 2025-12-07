@@ -70,7 +70,13 @@ const PrizeCarousel = ({ prizes }) => {
           </div>
           <div className="carousel-content">
             <h3>{currentPrize.title}</h3>
-            <p className="prize-value">Worth £{currentPrize.value}</p>
+            {currentPrize.isInstantWin && currentPrize.prizePool ? (
+              <p className="prize-value">
+                {currentPrize.prizePool.length} Different Prizes • Up to £{Math.max(...currentPrize.prizePool.map(p => p.value))}
+              </p>
+            ) : (
+              <p className="prize-value">Worth £{currentPrize.value}</p>
+            )}
             <p className="prize-entry-price">
               {currentPrize.isInstantWin 
                 ? `£${currentPrize.entryPrice?.toFixed(2) || '1.00'} per play` 
