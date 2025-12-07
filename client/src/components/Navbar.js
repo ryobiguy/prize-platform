@@ -25,6 +25,12 @@ const Navbar = () => {
         <div className="navbar-actions">
           {user ? (
             <>
+              {user.cashBalance > 0 && (
+                <div className="user-cash-balance">
+                  <Trophy size={18} />
+                  <span>£{user.cashBalance?.toFixed(2) || '0.00'} credit</span>
+                </div>
+              )}
               <div className="user-menu">
                 <button className="user-button">
                   <User size={20} />

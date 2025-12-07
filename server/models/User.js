@@ -41,6 +41,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  cashBalance: {
+    type: Number,
+    default: 0,
+    min: 0,
+    comment: 'Cash balance in GBP from daily bonuses'
+  },
   completedTasks: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Task'

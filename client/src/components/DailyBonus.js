@@ -30,7 +30,7 @@ const DailyBonus = ({ user, onClaim }) => {
     setClaiming(true);
     try {
       const response = await axios.post('/api/daily-bonus/claim');
-      toast.success(`🎉 You received ${response.data.bonusAmount} free entries!`);
+      toast.success(`🎉 You received £${response.data.bonusAmount.toFixed(2)} bonus credit!`);
       setBonusStatus({
         canClaim: false,
         hoursRemaining: 24,
@@ -61,7 +61,7 @@ const DailyBonus = ({ user, onClaim }) => {
         <h3>Daily Login Bonus</h3>
         {bonusStatus.canClaim ? (
           <>
-            <p className="bonus-amount">{bonusStatus.bonusAmount} Free Entries!</p>
+            <p className="bonus-amount">£{bonusStatus.bonusAmount.toFixed(2)} Free Credit!</p>
             <button 
               onClick={handleClaim} 
               disabled={claiming}

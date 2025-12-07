@@ -28,10 +28,9 @@ router.post('/claim', auth, async (req, res) => {
       }
     }
 
-    // Award bonus
-    const bonusAmount = 5;
-    user.availableEntries += bonusAmount;
-    user.totalEntries += bonusAmount;
+    // Award bonus (20p cash)
+    const bonusAmount = 0.20;
+    user.cashBalance = (user.cashBalance || 0) + bonusAmount;
     user.lastDailyBonus = now;
     
     await user.save();
@@ -39,7 +38,7 @@ router.post('/claim', auth, async (req, res) => {
     res.json({
       success: true,
       bonusAmount,
-      newBalance: user.availableEntries,
+      newBalance: user.cashBalance,
       nextClaimTime: new Date(now.getTime() + 24 * 60 * 60 * 1000)
     });
   } catch (error) {
@@ -77,7 +76,7 @@ router.get('/status', auth, async (req, res) => {
       canClaim,
       hoursRemaining,
       nextClaimTime,
-      bonusAmount: 5
+      bonusAmount: 0.20
     });
   } catch (error) {
     console.error('Daily bonus status error:', error);
