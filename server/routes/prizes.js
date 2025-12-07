@@ -100,10 +100,14 @@ router.post('/:id/create-payment', auth, async (req, res) => {
       return res.json({ url: link.url, paymentLinkId: link.id });
     }
 
+    console.error('Square API returned no payment link');
     return res.status(500).json({ error: 'Failed to create payment link' });
   } catch (error) {
-    console.error('Create payment error:', error);
-    return res.status(500).json({ error: 'Failed to create payment link' });
+    console.error('Create payment error:', error.response?.data || error.message || error);
+    return res.status(500).json({ 
+      error: 'Failed to create payment link',
+      details: error.response?.data?.errors || error.message 
+    });
   }
 });
 
