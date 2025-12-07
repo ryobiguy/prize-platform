@@ -244,13 +244,6 @@ const PrizeDetail = () => {
                 </button>
               )}
 
-              <div className="task-info">
-                <p>Need more entries?</p>
-                <button className="view-tasks-btn" onClick={() => navigate('/buy-entries')}>
-                  Buy Entries
-                </button>
-              </div>
-
               {/* How It Works Section */}
               <div className="how-it-works">
                 <h3 className="how-it-works-heading">How It Works</h3>
