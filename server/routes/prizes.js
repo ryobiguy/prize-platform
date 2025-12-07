@@ -46,7 +46,68 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Enter a prize draw with Square payment
+// Create Square payment for prize entry
+router.post('/:id/create-payment', auth, async (req, res) => {
+  try {
+    const { numberOfEntries } = req.body;
+    const prize = await Prize.findById(req.params.id);
+    
+    if (!prize) {
+      return res.status(404).json({ error: 'Prize not found' });
+    }
+
+    if (!numberOfEntries || numberOfEntries < 1) {
+      return res.status(400).json({ error: 'Invalid number of entries' });
+    }
+
+    const totalCost = prize.entryPrice * numberOfEntries;
+    const user = await User.findById(req.userId);
+
+    const crypto = require('crypto');
+    const idempotencyKey = crypto.randomUUID();
+    const axios = require('axios');
+
+    const squareBaseUrl = process.env.SQUARE_API_BASE_URL || 'https://connect.squareupsandbox.com';
+
+    const requestBody = {
+      idempotency_key: idempotencyKey,
+      redirect_url: `${process.env.CLIENT_URL}/prizes/${prize._id}`,
+      quick_pay: {
+        name: `${prize.title} - ${numberOfEntries} ${numberOfEntries === 1 ? 'Entry' : 'Entries'}`,
+        price_money: {
+          amount: Math.round(totalCost * 100), // convert to pence
+          currency: 'GBP',
+        },
+        location_id: process.env.SQUARE_LOCATION_ID,
+        reference_id: `prize:${prize._id}:entries:${numberOfEntries}:user:${req.userId}`,
+      },
+    };
+
+    const response = await axios.post(
+      `${squareBaseUrl}/v2/online-checkout/payment-links`,
+      requestBody,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,
+          'Square-Version': '2024-09-18',
+        },
+      }
+    );
+
+    const link = response.data && response.data.payment_link;
+    if (link && link.url) {
+      return res.json({ url: link.url, paymentLinkId: link.id });
+    }
+
+    return res.status(500).json({ error: 'Failed to create payment link' });
+  } catch (error) {
+    console.error('Create payment error:', error);
+    return res.status(500).json({ error: 'Failed to create payment link' });
+  }
+});
+
+// Enter a prize draw with Square payment (called after payment webhook)
 router.post('/:id/enter', auth, async (req, res) => {
   try {
     const { numberOfEntries, paymentId } = req.body;

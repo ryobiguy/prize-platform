@@ -52,46 +52,30 @@ const PrizeDetail = () => {
       return;
     }
 
-    if (entries < prize.entryCost) {
-      toast.error(`Minimum ${prize.entryCost} entries required`);
-      return;
-    }
-
-    if (user.availableEntries < entries) {
-      toast.error('Insufficient entries');
+    if (entries < 1) {
+      toast.error('Please select at least 1 entry');
       return;
     }
 
     try {
-      const response = await axios.post(`/api/prizes/${id}/enter`, { entries });
+      const loadingToast = toast.loading('Creating payment link...');
       
-      // Check if instant win
-      if (response.data.won !== undefined) {
-        if (response.data.won) {
-          toast.success(response.data.message, {
-            duration: 5000,
-            icon: '🎉',
-            style: {
-              background: '#4CAF50',
-              color: 'white',
-              fontSize: '16px',
-              fontWeight: 'bold'
-            }
-          });
-        } else {
-          toast(response.data.message, {
-            duration: 3000,
-            icon: '😔'
-          });
-        }
+      // Create Square payment link
+      const response = await axios.post(`/api/prizes/${id}/create-payment`, {
+        numberOfEntries: entries
+      });
+
+      toast.dismiss(loadingToast);
+
+      if (response.data.url) {
+        // Redirect to Square payment page
+        window.location.href = response.data.url;
       } else {
-        toast.success(`Entered with ${entries} entries!`);
+        toast.error('Failed to create payment link');
       }
-      
-      updateUser({ availableEntries: response.data.remainingEntries });
-      fetchPrize();
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Failed to enter');
+      console.error('Payment error:', error);
+      toast.error(error.response?.data?.error || 'Failed to create payment. Please try again.');
     }
   };
 
