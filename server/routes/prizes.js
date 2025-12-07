@@ -60,9 +60,95 @@ router.post('/:id/create-payment', auth, async (req, res) => {
       return res.status(400).json({ error: 'Invalid number of entries' });
     }
 
-    const totalCost = prize.entryPrice * numberOfEntries;
     const user = await User.findById(req.userId);
+    const totalCost = prize.entryPrice * numberOfEntries;
+    const cashBalance = user.cashBalance || 0;
+    const discount = Math.min(cashBalance, totalCost);
+    const finalCost = Math.max(0, totalCost - discount);
 
+    // If final cost is 0 (fully covered by cash balance), process entry directly
+    if (finalCost === 0) {
+      // Deduct from cash balance
+      user.cashBalance -= discount;
+      
+      // Process the entry directly (no payment needed)
+      if (prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0) {
+        // Instant win logic
+        const winChance = 0.05;
+        let wonPrizes = [];
+
+        for (let i = 0; i < numberOfEntries; i++) {
+          const currentAvailable = prize.prizePool.filter(p => p.remaining > 0);
+          if (currentAvailable.length === 0) break;
+
+          const didWin = Math.random() < winChance;
+          if (didWin) {
+            const weightedPrizes = [];
+            currentAvailable.forEach(p => {
+              let weight = 10;
+              if (p.value >= 60) weight = 1;
+              else if (p.value >= 25) weight = 2;
+              else if (p.value >= 15) weight = 5;
+              
+              for (let w = 0; w < weight; w++) {
+                weightedPrizes.push(p);
+              }
+            });
+            
+            const randomPrize = weightedPrizes[Math.floor(Math.random() * weightedPrizes.length)];
+            const poolPrize = prize.prizePool.find(p => p.name === randomPrize.name);
+            poolPrize.remaining -= 1;
+
+            prize.winners.push({
+              user: user._id,
+              prizeName: randomPrize.name,
+              prizeValue: randomPrize.value,
+              prizeType: randomPrize.type,
+              drawnAt: new Date()
+            });
+
+            user.wins.push({
+              prize: prize._id,
+              prizeName: randomPrize.name,
+              prizeValue: randomPrize.value,
+              prizeType: randomPrize.type,
+              wonAt: new Date(),
+              claimed: false
+            });
+
+            wonPrizes.push(randomPrize.name);
+          }
+        }
+      } else {
+        // Regular draw
+        const existingEntry = prize.participants.find(p => p.user.toString() === user._id.toString());
+        if (existingEntry) {
+          existingEntry.entries += numberOfEntries;
+        } else {
+          prize.participants.push({ user: user._id, entries: numberOfEntries });
+        }
+      }
+
+      // Record entry
+      user.prizeEntries.push({
+        prize: prize._id,
+        amountPaid: 0,
+        paymentId: 'FREE_CREDIT',
+        enteredAt: new Date()
+      });
+
+      prize.totalEntries += numberOfEntries;
+      await prize.save();
+      await user.save();
+
+      return res.json({ 
+        success: true, 
+        message: 'Entry successful using credit balance!',
+        freeEntry: true 
+      });
+    }
+
+    // Otherwise create Square payment for remaining amount
     const crypto = require('crypto');
     const idempotencyKey = crypto.randomUUID();
     const axios = require('axios');
@@ -73,13 +159,13 @@ router.post('/:id/create-payment', auth, async (req, res) => {
       idempotency_key: idempotencyKey,
       redirect_url: `${process.env.CLIENT_URL}/prizes/${prize._id}`,
       quick_pay: {
-        name: `${prize.title} - ${numberOfEntries} ${numberOfEntries === 1 ? 'Entry' : 'Entries'}`,
+        name: `${prize.title} - ${numberOfEntries} ${numberOfEntries === 1 ? 'Entry' : 'Entries'}${discount > 0 ? ` (£${discount.toFixed(2)} credit applied)` : ''}`,
         price_money: {
-          amount: Math.round(totalCost * 100), // convert to pence
+          amount: Math.round(finalCost * 100), // convert to pence
           currency: 'GBP',
         },
         location_id: process.env.SQUARE_LOCATION_ID,
-        reference_id: `prize:${prize._id}:entries:${numberOfEntries}:user:${req.userId}`,
+        reference_id: `prize:${prize._id}:entries:${numberOfEntries}:user:${req.userId}:discount:${discount.toFixed(2)}`,
       },
     };
 

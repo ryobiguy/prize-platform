@@ -58,16 +58,21 @@ const PrizeDetail = () => {
     }
 
     try {
-      const loadingToast = toast.loading('Creating payment link...');
+      const loadingToast = toast.loading('Processing entry...');
       
-      // Create Square payment link
+      // Create Square payment link (or process free entry)
       const response = await axios.post(`/api/prizes/${id}/create-payment`, {
         numberOfEntries: entries
       });
 
       toast.dismiss(loadingToast);
 
-      if (response.data.url) {
+      if (response.data.freeEntry) {
+        // Entry was free (covered by cash balance)
+        toast.success('🎉 ' + response.data.message);
+        fetchPrize(); // Refresh prize data
+        updateUser(); // Refresh user data to show updated balance
+      } else if (response.data.url) {
         // Redirect to Square payment page
         window.location.href = response.data.url;
       } else {
@@ -196,44 +201,57 @@ const PrizeDetail = () => {
                 </div>
               )}
 
-              {prize.status === 'active' && user && (
-                <div className="entry-controls">
-                  <label>Number of entries:</label>
-                  <div className="entry-input-group">
+              {prize.status === 'active' && user && (() => {
+                const totalCost = entries * (prize.entryPrice || 1);
+                const cashBalance = user.cashBalance || 0;
+                const discount = Math.min(cashBalance, totalCost);
+                const finalCost = Math.max(0, totalCost - discount);
+                
+                return (
+                  <div className="entry-controls">
+                    <label>Number of entries:</label>
+                    <div className="entry-input-group">
+                      <button 
+                        onClick={() => setEntries(Math.max(1, entries - 1))}
+                        className="entry-btn"
+                      >
+                        -
+                      </button>
+                      <input 
+                        type="number" 
+                        value={entries}
+                        onChange={(e) => setEntries(Math.max(1, Math.min(prize.maxEntriesPerUser - userEntries, parseInt(e.target.value) || 1)))}
+                        min={1}
+                        max={prize.maxEntriesPerUser - userEntries}
+                      />
+                      <button 
+                        onClick={() => setEntries(Math.min(prize.maxEntriesPerUser - userEntries, entries + 1))}
+                        className="entry-btn"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="entry-info-text">
+                      <p className="available-text">Price per entry: £{prize.entryPrice?.toFixed(2) || '1.00'}</p>
+                      <p className="minimum-text">Total cost: £{totalCost.toFixed(2)}</p>
+                      {discount > 0 && (
+                        <>
+                          <p className="discount-text" style={{color: '#10b981', fontWeight: '600'}}>Credit applied: -£{discount.toFixed(2)}</p>
+                          <p className="final-cost-text" style={{fontSize: '1.1rem', fontWeight: '700'}}>Final cost: £{finalCost.toFixed(2)}</p>
+                        </>
+                      )}
+                    </div>
+                    
                     <button 
-                      onClick={() => setEntries(Math.max(1, entries - 1))}
-                      className="entry-btn"
+                      className="enter-btn"
+                      onClick={handleEnter}
+                      disabled={entries < 1}
                     >
-                      -
-                    </button>
-                    <input 
-                      type="number" 
-                      value={entries}
-                      onChange={(e) => setEntries(Math.max(1, Math.min(prize.maxEntriesPerUser - userEntries, parseInt(e.target.value) || 1)))}
-                      min={1}
-                      max={prize.maxEntriesPerUser - userEntries}
-                    />
-                    <button 
-                      onClick={() => setEntries(Math.min(prize.maxEntriesPerUser - userEntries, entries + 1))}
-                      className="entry-btn"
-                    >
-                      +
+                      {finalCost === 0 ? 'Enter FREE!' : `Pay £${finalCost.toFixed(2)} & Enter`}
                     </button>
                   </div>
-                  <div className="entry-info-text">
-                    <p className="available-text">Price per entry: £{prize.entryPrice?.toFixed(2) || '1.00'}</p>
-                    <p className="minimum-text">Total cost: £{(entries * (prize.entryPrice || 1)).toFixed(2)}</p>
-                  </div>
-                  
-                  <button 
-                    className="enter-btn"
-                    onClick={handleEnter}
-                    disabled={entries < 1}
-                  >
-                    Pay £{(entries * (prize.entryPrice || 1)).toFixed(2)} & Enter
-                  </button>
-                </div>
-              )}
+                );
+              })()}
 
               {!user && (
                 <button 

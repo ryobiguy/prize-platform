@@ -130,13 +130,18 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
       // Check if this is a prize entry payment (reference_id starts with "prize:")
       if (referenceId && referenceId.startsWith('prize:')) {
-        // Parse reference: "prize:PRIZE_ID:entries:NUM:user:USER_ID"
+        // Parse reference: "prize:PRIZE_ID:entries:NUM:user:USER_ID:discount:AMOUNT"
         const parts = referenceId.split(':');
         const prizeId = parts[1];
         const numberOfEntries = parseInt(parts[3]);
         const userId = parts[5];
+        const discount = parts[7] ? parseFloat(parts[7]) : 0;
 
         if (prizeId && numberOfEntries && userId === user._id.toString()) {
+          // Deduct cash balance if discount was applied
+          if (discount > 0) {
+            user.cashBalance = Math.max(0, (user.cashBalance || 0) - discount);
+          }
           // Process prize entry
           const Prize = require('../models/Prize');
           const prize = await Prize.findById(prizeId);
