@@ -214,10 +214,10 @@ const PrizeDetail = () => {
 
               {prize.status === 'active' && user && (
                 <div className="entry-controls">
-                  <label>Enter with entries:</label>
+                  <label>Number of entries:</label>
                   <div className="entry-input-group">
                     <button 
-                      onClick={() => setEntries(Math.max(prize.entryCost, entries - 1))}
+                      onClick={() => setEntries(Math.max(1, entries - 1))}
                       className="entry-btn"
                     >
                       -
@@ -225,28 +225,28 @@ const PrizeDetail = () => {
                     <input 
                       type="number" 
                       value={entries}
-                      onChange={(e) => setEntries(Math.max(prize.entryCost, Math.min(prize.maxEntriesPerUser - userEntries, parseInt(e.target.value) || prize.entryCost)))}
-                      min={prize.entryCost}
+                      onChange={(e) => setEntries(Math.max(1, Math.min(prize.maxEntriesPerUser - userEntries, parseInt(e.target.value) || 1)))}
+                      min={1}
                       max={prize.maxEntriesPerUser - userEntries}
                     />
                     <button 
-                      onClick={() => setEntries(Math.min(prize.maxEntriesPerUser - userEntries, user.availableEntries, entries + 1))}
+                      onClick={() => setEntries(Math.min(prize.maxEntriesPerUser - userEntries, entries + 1))}
                       className="entry-btn"
                     >
                       +
                     </button>
                   </div>
                   <div className="entry-info-text">
-                    <p className="available-text">Available: {user.availableEntries} entries</p>
-                    <p className="minimum-text">Minimum: {prize.entryCost} entries</p>
+                    <p className="available-text">Price per entry: £{prize.entryPrice?.toFixed(2) || '1.00'}</p>
+                    <p className="minimum-text">Total cost: £{(entries * (prize.entryPrice || 1)).toFixed(2)}</p>
                   </div>
                   
                   <button 
                     className="enter-btn"
                     onClick={handleEnter}
-                    disabled={entries < prize.entryCost || user.availableEntries < entries}
+                    disabled={entries < 1}
                   >
-                    Enter Prize Draw
+                    Pay £{(entries * (prize.entryPrice || 1)).toFixed(2)} & Enter
                   </button>
                 </div>
               )}

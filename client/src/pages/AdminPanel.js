@@ -21,7 +21,7 @@ const AdminPanel = () => {
     value: '',
     imageUrl: '',
     totalWinners: 1,
-    entryCost: 1,
+    entryPrice: 1.00,
     maxEntriesPerUser: 100,
     minimumEntries: 50,
     drawFrequency: 'weekly',
@@ -376,7 +376,7 @@ const AdminPanel = () => {
                       value: '',
                       imageUrl: '',
                       totalWinners: 1,
-                      entryCost: 1,
+                      entryPrice: 1.00,
                       maxEntriesPerUser: 100,
                       minimumEntries: 50,
                       drawFrequency: 'weekly',
@@ -472,12 +472,13 @@ const AdminPanel = () => {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Entry Cost (entries to enter)</label>
+                      <label>Entry Price (£ per entry)</label>
                       <input
                         type="number"
-                        min="1"
-                        value={newPrize.entryCost}
-                        onChange={(e) => setNewPrize({ ...newPrize, entryCost: e.target.value })}
+                        min="0.01"
+                        step="0.01"
+                        value={newPrize.entryPrice}
+                        onChange={(e) => setNewPrize({ ...newPrize, entryPrice: e.target.value })}
                       />
                     </div>
                     <div className="form-group">

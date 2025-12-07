@@ -221,7 +221,7 @@ const Prizes = () => {
                     </div>
                     <div className="stat">
                       <TrendingUp size={16} />
-                      <span>{prize.entryCost} entry cost</span>
+                      <span>£{prize.entryPrice?.toFixed(2) || '1.00'} per entry</span>
                     </div>
                   </div>
                   
