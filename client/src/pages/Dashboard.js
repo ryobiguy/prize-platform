@@ -146,28 +146,8 @@ const Dashboard = () => {
                 <Trophy size={32} />
               </div>
               <div className="stat-content">
-                <div className="stat-value">{stats.totalEntries}</div>
-                <div className="stat-label">Total Entries</div>
-              </div>
-            </div>
-
-            <div className="stat-card success">
-              <div className="stat-icon">
-                <Award size={32} />
-              </div>
-              <div className="stat-content">
-                <div className="stat-value">{stats.availableEntries}</div>
-                <div className="stat-label">Available Entries</div>
-              </div>
-            </div>
-
-            <div className="stat-card secondary">
-              <div className="stat-icon">
-                <Gift size={32} />
-              </div>
-              <div className="stat-content">
-                <div className="stat-value">{totalTrackedEntries}</div>
-                <div className="stat-label">Entries Spent</div>
+                <div className="stat-value">{prizeEntries.length}</div>
+                <div className="stat-label">Prize Entries</div>
               </div>
             </div>
 

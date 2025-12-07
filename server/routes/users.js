@@ -32,8 +32,6 @@ router.get('/dashboard', auth, async (req, res) => {
     res.json({
       user,
       stats: {
-        totalEntries: user.totalEntries,
-        availableEntries: user.availableEntries,
         activePrizes: user.prizeEntries.length,
         tasksCompleted: completedTasks.length,
         totalWins: user.wins.length

@@ -21,12 +21,6 @@ const NavbarMobile = () => {
         <Link to="/" className="navbar-mobile-logo">
           <img src="/logo.png" alt="Total Raffle" className="logo-mobile-image" />
         </Link>
-        {user && (
-          <div className="mobile-entries">
-            <Trophy size={14} />
-            <span>{user.availableEntries}</span>
-          </div>
-        )}
         <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -51,9 +45,6 @@ const NavbarMobile = () => {
             <>
               <Link to="/referrals" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
                 Refer Friends
-              </Link>
-              <Link to="/buy-entries" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
-                Buy Entries
               </Link>
               <Link to="/dashboard" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
                 Dashboard

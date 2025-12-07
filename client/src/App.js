@@ -23,7 +23,6 @@ import About from './pages/About';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import ContestRules from './pages/ContestRules';
-import BuyEntries from './pages/BuyEntries';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Wins from './pages/Wins';
@@ -74,7 +73,6 @@ function App() {
             <Route path="/get-entries" element={<PrivateRoute><Tasks /></PrivateRoute>} />
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/my-entries" element={<PrivateRoute><MyEntries /></PrivateRoute>} />
-            <Route path="/buy-entries" element={<PrivateRoute><BuyEntries /></PrivateRoute>} />
             <Route path="/referrals" element={<PrivateRoute><Referrals /></PrivateRoute>} />
             <Route path="/wins" element={<PrivateRoute><Wins /></PrivateRoute>} />
             <Route path="/verify-email" element={<VerifyEmail />} />

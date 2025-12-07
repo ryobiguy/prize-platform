@@ -25,10 +25,6 @@ const Navbar = () => {
         <div className="navbar-actions">
           {user ? (
             <>
-              <div className="user-entries">
-                <Trophy size={18} />
-                <span>{user.availableEntries} entries</span>
-              </div>
               <div className="user-menu">
                 <button className="user-button">
                   <User size={20} />
@@ -82,9 +78,6 @@ const Navbar = () => {
             <>
               <Link to="/referrals" className="nav-link">
                 Refer Friends
-              </Link>
-              <Link to="/buy-entries" className="nav-link">
-                Buy Entries
               </Link>
               <Link to="/dashboard" className="nav-link">
                 Dashboard
