@@ -8,29 +8,13 @@ import CountdownTimer from '../components/CountdownTimer';
 import WinnersTicker from '../components/WinnersTicker';
 import WinnerAnnouncement from '../components/WinnerAnnouncement';
 import WinnerFeed from '../components/WinnerFeed';
+import PrizeCarousel from '../components/PrizeCarousel';
 import './Home.css';
 
 const Home = () => {
   const [featuredPrizes, setFeaturedPrizes] = useState([]);
   const [stats, setStats] = useState({ totalPrizes: 0, totalUsers: 0, totalWinners: 0 });
   const [latestWinner, setLatestWinner] = useState(null);
-  
-  // Check if signup bonus is still active (first 100 signups)
-  const [isBonusActive, setIsBonusActive] = useState(true);
-  const [spotsLeft, setSpotsLeft] = useState(100);
-
-  useEffect(() => {
-    const checkBonusStatus = async () => {
-      try {
-        const response = await axios.get('/api/auth/signup-bonus-status');
-        setIsBonusActive(response.data.active);
-        setSpotsLeft(response.data.spotsLeft);
-      } catch (error) {
-        console.error('Error checking bonus status:', error);
-      }
-    };
-    checkBonusStatus();
-  }, []);
 
   useEffect(() => {
     fetchFeaturedPrizes();
@@ -59,8 +43,9 @@ const Home = () => {
   const fetchFeaturedPrizes = async () => {
     try {
       const response = await axios.get('/api/prizes');
-      const featured = response.data.prizes.filter(p => p.featured).slice(0, 3);
-      setFeaturedPrizes(featured);
+      // Get all active prizes for carousel
+      const activePrizes = response.data.prizes.filter(p => p.status === 'active');
+      setFeaturedPrizes(activePrizes);
     } catch (error) {
       console.error('Error fetching prizes:', error);
       // Use mock data if API fails
@@ -91,29 +76,10 @@ const Home = () => {
         <WinnerFeed />
       </div>
 
-      {/* Signup Bonus Banner */}
-      {isBonusActive && (
-        <div className="container" style={{ marginTop: '2rem' }}>
-          <div className="signup-bonus-banner">
-            <div className="bonus-header">
-              <Gift size={40} />
-              <h2>LIMITED TIME OFFER!</h2>
-            </div>
-            <div className="bonus-content">
-              <p>
-                Sign up now and get <span className="bonus-entries">25 FREE ENTRIES</span> (worth £2.50!)
-              </p>
-              <div className="bonus-countdown">
-                <Clock size={22} />
-                <span>First 100 signups only • {spotsLeft} spots left!</span>
-              </div>
-              <Link to="/register" className="bonus-cta">
-                Claim Your 25 Free Entries →
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Prize Carousel */}
+      <div className="container" style={{ marginTop: '2rem' }}>
+        <PrizeCarousel prizes={featuredPrizes} />
+      </div>
 
       {/* Hero Section */}
       <section className="hero">
