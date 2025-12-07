@@ -36,10 +36,11 @@ const prizeSchema = new mongoose.Schema({
     type: Number,
     default: 1
   },
-  entryCost: {
+  entryPrice: {
     type: Number,
-    default: 1,
-    min: 1
+    required: true,
+    min: 0.01,
+    comment: 'Price in GBP per entry (e.g., 1.00 for £1, 2.00 for £2)'
   },
   maxEntriesPerUser: {
     type: Number,

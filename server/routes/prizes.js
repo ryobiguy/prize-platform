@@ -46,10 +46,10 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Enter a prize draw
+// Enter a prize draw with Square payment
 router.post('/:id/enter', auth, async (req, res) => {
   try {
-    const { entries } = req.body;
+    const { numberOfEntries, paymentId } = req.body;
     const prize = await Prize.findById(req.params.id);
     
     if (!prize) {
@@ -62,11 +62,18 @@ router.post('/:id/enter', auth, async (req, res) => {
       return res.status(400).json({ error: 'Prize is not active' });
     }
 
+    if (!numberOfEntries || numberOfEntries < 1) {
+      return res.status(400).json({ error: 'Invalid number of entries' });
+    }
+
+    if (!paymentId) {
+      return res.status(400).json({ error: 'Payment ID required' });
+    }
+
     const user = await User.findById(req.userId);
     
-    if (user.availableEntries < entries) {
-      return res.status(400).json({ error: 'Insufficient entries' });
-    }
+    // Calculate total cost
+    const totalCost = prize.entryPrice * numberOfEntries;
 
     // INSTANT WIN LOGIC
     if (prize.isInstantWin && prize.prizePool && prize.prizePool.length > 0) {
@@ -77,23 +84,22 @@ router.post('/:id/enter', auth, async (req, res) => {
         return res.status(400).json({ error: 'All prizes have been won!' });
       }
 
-      // Calculate number of plays (each play costs entryCost entries)
-      const numberOfPlays = Math.floor(entries / prize.entryCost);
-      
-      if (numberOfPlays === 0) {
-        return res.status(400).json({ error: `Minimum ${prize.entryCost} entries required to play` });
-      }
+      // Record payment in user's prize entries
+      user.prizeEntries.push({
+        prize: prize._id,
+        amountPaid: totalCost,
+        paymentId: paymentId,
+        enteredAt: new Date()
+      });
 
-      // Deduct entries
-      const totalEntriesUsed = numberOfPlays * prize.entryCost;
-      user.availableEntries -= totalEntriesUsed;
-      prize.totalEntries += totalEntriesUsed;
+      // Update prize total entries
+      prize.totalEntries += numberOfEntries;
 
       // Play multiple times
       const winChance = 0.05; // 5% chance (1 in 20)
       let wonPrizes = [];
 
-      for (let i = 0; i < numberOfPlays; i++) {
+      for (let i = 0; i < numberOfEntries; i++) {
         // Check if prizes still available
         const currentAvailable = prize.prizePool.filter(p => p.remaining > 0);
         if (currentAvailable.length === 0) break;
@@ -157,51 +163,53 @@ router.post('/:id/enter', auth, async (req, res) => {
           won: true,
           prizes: wonPrizes,
           message: `🎉 Congratulations! You won ${wonPrizes.length} prize${wonPrizes.length > 1 ? 's' : ''}: ${prizeList}!`,
-          plays: numberOfPlays,
-          remainingEntries: user.availableEntries
+          plays: numberOfEntries,
+          totalPaid: totalCost
         });
       } else {
         return res.json({
           won: false,
-          message: `No wins this time. You played ${numberOfPlays} times. Try again!`,
-          plays: numberOfPlays,
-          remainingEntries: user.availableEntries
+          message: `No wins this time. You played ${numberOfEntries} times. Try again!`,
+          plays: numberOfEntries,
+          totalPaid: totalCost
         });
       }
     }
 
-    // REGULAR DRAW LOGIC (existing code)
+    // REGULAR DRAW LOGIC
     // Check if user already entered
     const existingEntry = prize.participants.find(p => p.user.toString() === req.userId.toString());
     
     if (existingEntry) {
-      const totalEntries = existingEntry.entries + entries;
+      const totalEntries = existingEntry.entries + numberOfEntries;
       if (totalEntries > prize.maxEntriesPerUser) {
         return res.status(400).json({ error: `Maximum ${prize.maxEntriesPerUser} entries per user` });
       }
-      existingEntry.entries += entries;
+      existingEntry.entries += numberOfEntries;
     } else {
-      if (entries > prize.maxEntriesPerUser) {
+      if (numberOfEntries > prize.maxEntriesPerUser) {
         return res.status(400).json({ error: `Maximum ${prize.maxEntriesPerUser} entries per user` });
       }
-      prize.participants.push({ user: req.userId, entries });
+      prize.participants.push({ user: req.userId, entries: numberOfEntries });
     }
 
-    prize.totalEntries += entries;
-    await prize.save();
-
-    // Update user entries
-    user.availableEntries -= entries;
+    // Record payment in user's prize entries
     user.prizeEntries.push({
       prize: prize._id,
-      entriesUsed: entries
+      amountPaid: totalCost,
+      paymentId: paymentId,
+      enteredAt: new Date()
     });
+
+    prize.totalEntries += numberOfEntries;
+    await prize.save();
     await user.save();
 
     res.json({ 
       message: 'Entries submitted successfully',
-      prize,
-      remainingEntries: user.availableEntries
+      totalPaid: totalCost,
+      entriesSubmitted: numberOfEntries,
+      prize
     });
   } catch (error) {
     console.error('Enter prize error:', error);
@@ -241,7 +249,7 @@ router.post('/admin/create-daily-mystery', auth, async (req, res) => {
       currency: 'GBP',
       imageUrl: '/prizes/mystery-prize.png',
       totalWinners: 31,
-      entryCost: 10,
+      entryPrice: 1.00,
       maxEntriesPerUser: 10000,
       minimumEntries: 1,
       drawFrequency: 'instant',

@@ -41,14 +41,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  totalEntries: {
-    type: Number,
-    default: 0
-  },
-  availableEntries: {
-    type: Number,
-    default: 0
-  },
   completedTasks: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Task'
@@ -67,9 +59,14 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Prize'
     },
-    entriesUsed: {
+    amountPaid: {
       type: Number,
-      default: 0
+      default: 0,
+      comment: 'Amount paid in GBP for this entry'
+    },
+    paymentId: {
+      type: String,
+      comment: 'Square payment ID'
     },
     enteredAt: {
       type: Date,
@@ -181,28 +178,6 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
-  // Entry purchases (Square payments)
-  purchases: [{
-    paymentId: {
-      type: String
-    },
-    entries: {
-      type: Number,
-      default: 0
-    },
-    amountPence: {
-      type: Number,
-      default: 0
-    },
-    provider: {
-      type: String,
-      default: 'square'
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now
-    }
-  }],
   // Level System
   level: {
     type: Number,
