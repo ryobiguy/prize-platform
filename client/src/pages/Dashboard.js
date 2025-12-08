@@ -141,6 +141,16 @@ const Dashboard = () => {
         {/* Stats Overview with Daily Bonus */}
         <div className="stats-grid-with-bonus">
           <div className="stats-cards-row">
+            <div className="stat-card success">
+              <div className="stat-icon">
+                <Gift size={32} />
+              </div>
+              <div className="stat-content">
+                <div className="stat-value">£{(user.cashBalance || 0).toFixed(2)}</div>
+                <div className="stat-label">Bonus Credit</div>
+              </div>
+            </div>
+
             <div className="stat-card primary">
               <div className="stat-icon">
                 <Trophy size={32} />

@@ -64,7 +64,7 @@
 /* Stats Grid with Daily Bonus Layout */
 .stats-grid-with-bonus {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 3fr 1fr;
   gap: 1.5rem;
   margin: -3rem 0 2rem;
   position: relative;
@@ -73,7 +73,7 @@
 
 .stats-cards-row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
