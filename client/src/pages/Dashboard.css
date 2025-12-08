@@ -22,7 +22,7 @@
 
 .win-notification {
   margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   padding: 1.25rem 1.5rem;
   border-radius: 14px;
   background: linear-gradient(135deg, #ecfccb, #fef9c3);
@@ -30,6 +30,8 @@
   align-items: center;
   gap: 1rem;
   box-shadow: var(--shadow-sm);
+  position: relative;
+  z-index: 20;
 }
 
 .win-notification-icon {
