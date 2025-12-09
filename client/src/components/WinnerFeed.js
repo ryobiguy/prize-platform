@@ -36,6 +36,14 @@ const WinnerFeed = () => {
 
   if (loading || winners.length === 0) return null;
 
+  // Format name to hide last name (e.g., "John Smith" -> "John S.")
+  const formatName = (name) => {
+    if (!name) return 'Anonymous';
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) return parts[0];
+    return `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
+  };
+
   // Only duplicate for scroll animation if we have enough winners
   const displayWinners = winners.length >= 5 ? winners.concat(winners) : winners;
 
@@ -51,7 +59,7 @@ const WinnerFeed = () => {
             <div key={index} className="winner-item">
               <div className="winner-icon">🎉</div>
               <div className="winner-details">
-                <span className="winner-name">{winner.username}</span>
+                <span className="winner-name">{formatName(winner.username)}</span>
                 <span className="winner-text">won</span>
                 <span className="winner-prize">{winner.prizeName}</span>
                 <span className="winner-value">£{winner.prizeValue}</span>
