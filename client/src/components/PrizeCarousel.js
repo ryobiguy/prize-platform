@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Trophy, Clock } from 'lucide-react';
 import './PrizeCarousel.css';
 
 const PrizeCarousel = ({ prizes }) => {
