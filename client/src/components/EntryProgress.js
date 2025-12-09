@@ -2,7 +2,7 @@ import React from 'react';
 import { Users, Ticket } from 'lucide-react';
 import './EntryProgress.css';
 
-const EntryProgress = ({ userEntries, totalEntries, prizeName }) => {
+const EntryProgress = ({ userEntries = 0, totalEntries = 0, prizeName }) => {
   const percentage = totalEntries > 0 ? (userEntries / totalEntries) * 100 : 0;
   const displayPercentage = Math.min(percentage, 100);
 
@@ -12,12 +12,12 @@ const EntryProgress = ({ userEntries, totalEntries, prizeName }) => {
         <div className="progress-stat">
           <Ticket size={18} />
           <span className="stat-label">Your Entries:</span>
-          <span className="stat-value">{userEntries.toLocaleString()}</span>
+          <span className="stat-value">{(userEntries || 0).toLocaleString()}</span>
         </div>
         <div className="progress-stat">
           <Users size={18} />
           <span className="stat-label">Total Entries:</span>
-          <span className="stat-value">{totalEntries.toLocaleString()}</span>
+          <span className="stat-value">{(totalEntries || 0).toLocaleString()}</span>
         </div>
       </div>
       
