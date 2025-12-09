@@ -9,6 +9,7 @@ const PrizeCarousel = ({ prizes }) => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [slideDirection, setSlideDirection] = useState('right');
 
   // Auto-advance carousel every 5 seconds
   useEffect(() => {
@@ -52,25 +53,34 @@ const PrizeCarousel = ({ prizes }) => {
   const goToPrevious = () => {
     if (isTransitioning) return;
     setIsAutoPlaying(false);
+    setSlideDirection('left');
     setIsTransitioning(true);
-    setCurrentIndex((prev) => (prev - 1 + prizes.length) % prizes.length);
-    setTimeout(() => setIsTransitioning(false), 500);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev - 1 + prizes.length) % prizes.length);
+      setIsTransitioning(false);
+    }, 50);
   };
 
   const goToNext = () => {
     if (isTransitioning) return;
     setIsAutoPlaying(false);
+    setSlideDirection('right');
     setIsTransitioning(true);
-    setCurrentIndex((prev) => (prev + 1) % prizes.length);
-    setTimeout(() => setIsTransitioning(false), 500);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % prizes.length);
+      setIsTransitioning(false);
+    }, 50);
   };
 
   const goToSlide = (index) => {
     if (isTransitioning) return;
     setIsAutoPlaying(false);
+    setSlideDirection(index > currentIndex ? 'right' : 'left');
     setIsTransitioning(true);
-    setCurrentIndex(index);
-    setTimeout(() => setIsTransitioning(false), 500);
+    setTimeout(() => {
+      setCurrentIndex(index);
+      setIsTransitioning(false);
+    }, 50);
   };
 
   if (!prizes || prizes.length === 0) return null;
@@ -100,7 +110,8 @@ const PrizeCarousel = ({ prizes }) => {
         {/* Prize Slide */}
         <Link 
           to={`/prizes/${currentPrize._id}`} 
-          className="carousel-slide"
+          className={`carousel-slide slide-${slideDirection}`}
+          key={currentIndex}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
