@@ -63,11 +63,18 @@ const Prizes = () => {
     }
   };
 
-  const filteredPrizes = prizes.filter(prize => {
-    const typeMatch = filter === 'all' || prize.type === filter;
-    const categoryMatch = categoryFilter === 'all' || prize.category === categoryFilter;
-    return typeMatch && categoryMatch;
-  });
+  const filteredPrizes = prizes
+    .filter(prize => {
+      const typeMatch = filter === 'all' || prize.type === filter;
+      const categoryMatch = categoryFilter === 'all' || prize.category === categoryFilter;
+      return typeMatch && categoryMatch;
+    })
+    .sort((a, b) => {
+      // Sort upcoming prizes to the bottom
+      if (a.status === 'upcoming' && b.status !== 'upcoming') return 1;
+      if (a.status !== 'upcoming' && b.status === 'upcoming') return -1;
+      return 0;
+    });
 
   const getTimeRemaining = (endDate) => {
     const now = new Date();
