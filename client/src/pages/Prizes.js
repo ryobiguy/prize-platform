@@ -183,6 +183,12 @@ const Prizes = () => {
                       <Gift size={64} />
                     </div>
                   )}
+                  {prize.status === 'upcoming' && (
+                    <div className="coming-soon-overlay">
+                      <Clock size={48} />
+                      <span>COMING SOON</span>
+                    </div>
+                  )}
                   {prize.featured && <span className="featured-badge">Featured</span>}
                 </div>
                 

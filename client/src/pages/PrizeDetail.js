@@ -15,10 +15,39 @@ const PrizeDetail = () => {
   const [entries, setEntries] = useState(1);
   const [loading, setLoading] = useState(true);
   const [recentEntries, setRecentEntries] = useState(0);
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     fetchPrize();
   }, [id]);
+
+  // Countdown timer for upcoming prizes
+  useEffect(() => {
+    if (!prize || prize.status !== 'upcoming') return;
+
+    const updateCountdown = () => {
+      const now = new Date();
+      const start = new Date(prize.startDate);
+      const diff = start - now;
+
+      if (diff <= 0) {
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      setCountdown({ days, hours, minutes, seconds });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [prize]);
 
   const fetchPrize = async () => {
     try {
@@ -198,6 +227,44 @@ const PrizeDetail = () => {
                 <div className="task-completed">
                   <Trophy size={20} />
                   <span>You have {userEntries} entries in this draw</span>
+                </div>
+              )}
+
+              {/* Countdown for upcoming prizes */}
+              {prize.status === 'upcoming' && (
+                <div className="upcoming-countdown">
+                  <h3>Prize Starts In:</h3>
+                  <div className="countdown-display">
+                    <div className="countdown-unit">
+                      <span className="countdown-value">{countdown.days}</span>
+                      <span className="countdown-label">Days</span>
+                    </div>
+                    <div className="countdown-separator">:</div>
+                    <div className="countdown-unit">
+                      <span className="countdown-value">{countdown.hours}</span>
+                      <span className="countdown-label">Hours</span>
+                    </div>
+                    <div className="countdown-separator">:</div>
+                    <div className="countdown-unit">
+                      <span className="countdown-value">{countdown.minutes}</span>
+                      <span className="countdown-label">Minutes</span>
+                    </div>
+                    <div className="countdown-separator">:</div>
+                    <div className="countdown-unit">
+                      <span className="countdown-value">{countdown.seconds}</span>
+                      <span className="countdown-label">Seconds</span>
+                    </div>
+                  </div>
+                  <p className="start-date-text">
+                    Starts on {new Date(prize.startDate).toLocaleDateString('en-GB', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
                 </div>
               )}
 

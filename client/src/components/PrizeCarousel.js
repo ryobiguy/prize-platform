@@ -64,6 +64,12 @@ const PrizeCarousel = ({ prizes }) => {
               src={currentPrize.imageUrl || '/prizes/prize.jpg'} 
               alt={currentPrize.title}
             />
+            {currentPrize.status === 'upcoming' && (
+              <div className="coming-soon-overlay">
+                <Clock size={48} />
+                <span>COMING SOON</span>
+              </div>
+            )}
             {currentPrize.isInstantWin && (
               <div className="instant-win-badge">INSTANT WIN</div>
             )}
