@@ -8,6 +8,7 @@ const PrizeCarousel = ({ prizes }) => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Auto-advance carousel every 5 seconds
   useEffect(() => {
@@ -49,18 +50,27 @@ const PrizeCarousel = ({ prizes }) => {
   };
 
   const goToPrevious = () => {
+    if (isTransitioning) return;
     setIsAutoPlaying(false);
+    setIsTransitioning(true);
     setCurrentIndex((prev) => (prev - 1 + prizes.length) % prizes.length);
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   const goToNext = () => {
+    if (isTransitioning) return;
     setIsAutoPlaying(false);
+    setIsTransitioning(true);
     setCurrentIndex((prev) => (prev + 1) % prizes.length);
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   const goToSlide = (index) => {
+    if (isTransitioning) return;
     setIsAutoPlaying(false);
+    setIsTransitioning(true);
     setCurrentIndex(index);
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   if (!prizes || prizes.length === 0) return null;
