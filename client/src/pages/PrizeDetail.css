@@ -559,6 +559,42 @@
     min-height: auto;
   }
 
+  /* Mobile countdown adjustments */
+  .upcoming-countdown {
+    padding: 1.5rem 1rem;
+  }
+
+  .upcoming-countdown h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .countdown-display {
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .countdown-unit {
+    padding: 0.5rem 0.25rem;
+    min-width: 50px;
+  }
+
+  .countdown-value {
+    font-size: 1.5rem;
+  }
+
+  .countdown-label {
+    font-size: 0.65rem;
+  }
+
+  .countdown-separator {
+    font-size: 1.5rem;
+  }
+
+  .start-date-text {
+    font-size: 0.85rem;
+  }
+
   .section-heading {
     font-size: 1rem;
     margin-bottom: 1rem;
