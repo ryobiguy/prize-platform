@@ -37,7 +37,7 @@
   text-decoration: none;
   color: inherit;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  min-height: 300px;
+  height: 350px;
 }
 
 .carousel-slide:hover {
