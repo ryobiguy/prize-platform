@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import NavbarMobile from './components/NavbarMobile';
 import Footer from './components/Footer';
 import CookieBanner from './components/CookieBanner';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Prizes from './pages/Prizes';
 import PrizeDetail from './pages/PrizeDetail';
@@ -56,6 +57,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <div className="App">
           <Navbar />
           <NavbarMobile />
