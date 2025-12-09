@@ -6,6 +6,8 @@ import './PrizeCarousel.css';
 const PrizeCarousel = ({ prizes }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   // Auto-advance carousel every 5 seconds
   useEffect(() => {
@@ -17,6 +19,34 @@ const PrizeCarousel = ({ prizes }) => {
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, prizes.length]);
+
+  // Touch handlers for swipe
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      goToNext();
+    }
+    if (isRightSwipe) {
+      goToPrevious();
+    }
+
+    // Reset
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
 
   const goToPrevious = () => {
     setIsAutoPlaying(false);
@@ -58,7 +88,13 @@ const PrizeCarousel = ({ prizes }) => {
         )}
 
         {/* Prize Slide */}
-        <Link to={`/prizes/${currentPrize._id}`} className="carousel-slide">
+        <Link 
+          to={`/prizes/${currentPrize._id}`} 
+          className="carousel-slide"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className="carousel-image">
             <img 
               src={currentPrize.imageUrl || '/prizes/prize.jpg'} 
