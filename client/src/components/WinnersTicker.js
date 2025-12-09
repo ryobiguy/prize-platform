@@ -24,6 +24,14 @@ const WinnersTicker = () => {
 
   if (winners.length === 0) return null;
 
+  // Format name to hide last name (e.g., "John Smith" -> "John S.")
+  const formatName = (name) => {
+    if (!name) return 'Anonymous';
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) return parts[0];
+    return `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
+  };
+
   return (
     <div className="winners-ticker">
       <div className="ticker-header">
@@ -34,7 +42,7 @@ const WinnersTicker = () => {
         <div className="ticker-scroll">
           {[...winners, ...winners].map((winner, index) => (
             <div key={index} className="ticker-item">
-              <span className="winner-name">{winner.username}</span>
+              <span className="winner-name">{formatName(winner.username)}</span>
               <span className="winner-separator">won</span>
               <span className="winner-prize">{winner.prize?.title || 'a prize'}</span>
               <span className="winner-dot">•</span>
