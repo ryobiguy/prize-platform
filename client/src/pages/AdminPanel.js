@@ -316,6 +316,15 @@ const AdminPanel = () => {
                     <div className="stat-label">Active Prizes</div>
                   </div>
                 </div>
+                <div className="stat-card">
+                  <div className="stat-icon">
+                    <Users size={32} />
+                  </div>
+                  <div className="stat-info">
+                    <div className="stat-value">{stats.totalUsers || 0}</div>
+                    <div className="stat-label">Total Users</div>
+                  </div>
+                </div>
               </div>
               
               <div className="admin-actions" style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
