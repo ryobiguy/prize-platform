@@ -33,6 +33,7 @@ const AdminPanel = () => {
   });
   const [testEmail, setTestEmail] = useState('');
   const [emailSending, setEmailSending] = useState(false);
+  const [creatingDaily, setCreatingDaily] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -177,6 +178,98 @@ const AdminPanel = () => {
     
     setActiveTab('createPrize');
     toast.success('Prize details copied! Adjust dates and create.');
+  };
+
+  const handleCreateDailyPrizes = async () => {
+    if (!newPrize.title || !newPrize.description || !newPrize.value || !newPrize.startDate || !newPrize.endDate) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    const startDate = new Date(newPrize.startDate);
+    const endDate = new Date(newPrize.endDate);
+    
+    // Calculate number of days
+    const daysDiff = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    
+    if (daysDiff < 1) {
+      toast.error('End date must be after start date');
+      return;
+    }
+
+    if (!window.confirm(`This will create ${daysDiff} separate daily prizes. Continue?`)) {
+      return;
+    }
+
+    setCreatingDaily(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    try {
+      for (let i = 0; i < daysDiff; i++) {
+        const currentDay = new Date(startDate);
+        currentDay.setDate(startDate.getDate() + i);
+        
+        // Set start time to 00:00
+        const dayStart = new Date(currentDay);
+        dayStart.setHours(0, 0, 0, 0);
+        
+        // Set end time to 23:59
+        const dayEnd = new Date(currentDay);
+        dayEnd.setHours(23, 59, 59, 999);
+
+        const payload = {
+          ...newPrize,
+          title: `${newPrize.title} - ${currentDay.toLocaleDateString('en-GB')}`,
+          value: Number(newPrize.value),
+          entryPrice: Number(newPrize.entryPrice),
+          totalWinners: Number(newPrize.totalWinners),
+          maxEntriesPerUser: Number(newPrize.maxEntriesPerUser),
+          minimumEntries: Number(newPrize.minimumEntries),
+          startDate: dayStart,
+          endDate: dayEnd,
+          drawDay: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayEnd.getDay()],
+          drawTime: '23:59'
+        };
+
+        try {
+          await axios.post('/api/admin/prizes', payload);
+          successCount++;
+        } catch (error) {
+          console.error(`Failed to create prize for ${currentDay.toLocaleDateString()}:`, error);
+          failCount++;
+        }
+      }
+
+      toast.success(`Created ${successCount} daily prizes!${failCount > 0 ? ` (${failCount} failed)` : ''}`);
+      
+      // Reset form
+      setNewPrize({
+        title: '',
+        description: '',
+        type: 'cash',
+        category: 'other',
+        value: '',
+        imageUrl: '',
+        totalWinners: 1,
+        entryPrice: 1.00,
+        maxEntriesPerUser: 100,
+        minimumEntries: 50,
+        drawFrequency: 'weekly',
+        drawDay: 'Friday',
+        drawTime: '20:00',
+        startDate: '',
+        endDate: '',
+        featured: false
+      });
+
+      fetchStats();
+      fetchReadyPrizes();
+    } catch (error) {
+      toast.error('Failed to create daily prizes');
+    } finally {
+      setCreatingDaily(false);
+    }
   };
 
   const handleTestEmail = async (e) => {
@@ -601,13 +694,28 @@ const AdminPanel = () => {
                       </label>
                     </div>
                   </div>
-                  <button
-                    type="submit"
-                    className="trigger-btn"
-                    disabled={creatingPrize}
-                  >
-                    {creatingPrize ? 'Creating...' : 'Create Prize'}
-                  </button>
+                  <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                    <button
+                      type="submit"
+                      className="trigger-btn"
+                      disabled={creatingPrize || creatingDaily}
+                      style={{ flex: 1 }}
+                    >
+                      {creatingPrize ? 'Creating...' : 'Create Single Prize'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCreateDailyPrizes}
+                      className="trigger-btn"
+                      disabled={creatingPrize || creatingDaily}
+                      style={{ 
+                        flex: 1,
+                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                      }}
+                    >
+                      {creatingDaily ? 'Creating Daily Prizes...' : '📅 Create Daily Prizes'}
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>
