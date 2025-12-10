@@ -149,6 +149,36 @@ const AdminPanel = () => {
     }
   };
 
+  const handleDuplicatePrize = async (prize) => {
+    // Pre-fill the form with the prize data
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const nextWeek = new Date();
+    nextWeek.setDate(nextWeek.getDate() + 7);
+
+    setNewPrize({
+      title: prize.title,
+      description: prize.description,
+      type: prize.type || 'cash',
+      category: prize.category || 'other',
+      value: prize.value,
+      imageUrl: prize.imageUrl || '',
+      totalWinners: prize.totalWinners || 1,
+      entryPrice: prize.entryPrice || 1.00,
+      maxEntriesPerUser: prize.maxEntriesPerUser || 100,
+      minimumEntries: prize.minimumEntries || 50,
+      drawFrequency: prize.drawFrequency || 'weekly',
+      drawDay: prize.drawDay || 'Friday',
+      drawTime: prize.drawTime || '20:00',
+      startDate: tomorrow.toISOString().slice(0, 16),
+      endDate: nextWeek.toISOString().slice(0, 16),
+      featured: prize.featured || false
+    });
+    
+    setActiveTab('createPrize');
+    toast.success('Prize details copied! Adjust dates and create.');
+  };
+
   const handleTestEmail = async (e) => {
     e.preventDefault();
     if (!testEmail) {
@@ -627,7 +657,7 @@ const AdminPanel = () => {
                             Draw Day: {prize.drawDay || 'Friday'} • Ended: {new Date(prize.endDate).toLocaleDateString()}
                           </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                           <button
                             className="draw-btn"
                             onClick={() => handleDrawWinner(prize._id)}
@@ -636,6 +666,25 @@ const AdminPanel = () => {
                           >
                             <Trophy size={20} />
                             {loading ? 'Drawing...' : meetsMinimum ? 'Draw Winner' : 'Not Ready'}
+                          </button>
+                          <button
+                            onClick={() => handleDuplicatePrize(prize)}
+                            title="Duplicate this prize"
+                            style={{ 
+                              background: '#3b82f6', 
+                              color: 'white',
+                              padding: '0.75rem 1.5rem',
+                              border: 'none',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                              fontSize: '0.875rem',
+                              fontWeight: '600'
+                            }}
+                          >
+                            📋 Duplicate
                           </button>
                           {!meetsMinimum && (
                             <button
